@@ -1,13 +1,14 @@
-import React, { Component } from 'react';
+import { combineReducers } from 'redux';
+import users from '../pages/public/Login/reducers';
+import homeGame from '../pages/public/HomePage/reducers';
+import detailGame from '../pages/public/DetailPage/reducers';
+import categoryGame from '../pages/public/CategoryPage/reducers';
 
-class index extends Component {
-    render() {
-        return (
-            <div>
-                
-            </div>
-        );
-    }
-}
+const appReducers = combineReducers({
+    users,
+    homeGame,
+    detailGame,
+    categoryGame
+});
 
-export default index;
+export default appReducers;
