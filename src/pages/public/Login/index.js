@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { checkLogin } from './actions';
 import { connect } from 'react-redux';
-
+import { withRouter } from 'react-router-dom';
 
 class LoginPage extends Component {
   constructor(props) {
@@ -13,16 +13,17 @@ class LoginPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    var { history } = this.props;
-
+     var { history } = this.props;
+      console.log(history);
     if (nextProps && nextProps.state.users) {
       var { users } = nextProps.state;
 
       if (users.success === false) {
         alert(users.msg);
-      } else {        
+      } else {       
         localStorage.setItem("session", JSON.stringify(users.data))
-        history.push({ pathname: '/' })
+          history.push({ pathname: '/' })
+    
       }
 
     }
@@ -94,4 +95,4 @@ function mapStateToProps(state) {
 }
 
 
-export default connect(mapStateToProps)(LoginPage);
+export default withRouter(connect(mapStateToProps)(LoginPage));

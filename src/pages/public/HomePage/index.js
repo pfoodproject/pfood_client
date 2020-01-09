@@ -43,7 +43,7 @@ class Homepage extends Component {
     }
 
     render() {
-        const { t } = this.props;
+     
 
         return (
 
@@ -55,7 +55,7 @@ class Homepage extends Component {
                             <h1 id="newest-Game">&nbsp;</h1>
                         </div>
                         <div className="col-md-12">
-                            <h1 className="title">{t('common.home.type.new')}</h1>
+                         hello world
                            
                         </div>
 

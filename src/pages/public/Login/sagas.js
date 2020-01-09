@@ -12,9 +12,7 @@ export function checkLoginApi(username, password) {
 export function* login( action ) {
     try {        
         const { user } = action
-        const msg = yield call(checkLoginApi,user.username, user.password)
-        console.log(msg);
-        
+        const msg = yield call(checkLoginApi,user.username, user.password)        
         if (msg.success === true) {            
             yield put(actions.loginSuccess(msg));
         } else {

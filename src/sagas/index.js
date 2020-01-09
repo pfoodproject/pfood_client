@@ -7,7 +7,7 @@ import { fork } from 'redux-saga/effects'
 
 export default function* IndexSaga () {  
   yield fork(LoginSaga);
-  yield fork(HomeSaga);
-  yield fork(DetailSaga);
-  yield fork(CategorySaga);
+  // yield fork(HomeSaga);
+  // yield fork(DetailSaga);
+  // yield fork(CategorySaga);
 }
