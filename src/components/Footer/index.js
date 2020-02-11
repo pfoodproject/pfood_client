@@ -27,7 +27,7 @@ class index extends Component {
                         <a href="#0">Contact</a>
                     </p>
 
-                    <p>Tai Game Khung &copy; 2019</p>
+                    <p>Foody &copy; 2020</p>
                 </div>
 
             </footer>
