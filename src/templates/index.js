@@ -5,27 +5,29 @@ import _ from 'lodash';
 import AdminLayout from './admin';
 import adminRoutes from './routes/adminRoutes';
 
+import { ThemeProvider } from '@material-ui/styles';
+import theme from '../theme';
 class Template extends Component {
     render() {
         return (
-            <BrowserRouter>
-                <Switch>
+            <ThemeProvider theme={theme}>
+                <BrowserRouter>
+                    <Switch>
 
-                    {_.map(adminRoutes, (route, key) => {
-                        const { component, path, exact } = route;
-                        return (
-                            <Route
-                                key={key}
-                                render={(route) => <AdminLayout component={component} route={route} />}
-                                path={path}
-                                exact={exact}
-                            />
-                        )
-                    })}
-
-
-                </Switch>
-            </BrowserRouter>
+                        {_.map(adminRoutes, (route, key) => {
+                            const { component, path, exact } = route;
+                            return (
+                                <Route
+                                    key={key}
+                                    render={(route) => <AdminLayout component={component} route={route} />}
+                                    path={path}
+                                    exact={exact}
+                                />
+                            )
+                        })}
+                    </Switch>
+                </BrowserRouter>
+            </ThemeProvider>
         );
     }
 }

@@ -2,12 +2,10 @@ import React, { Component } from 'react';
 import './main.css';
 import { connect } from 'react-redux';
 
+
+  
 class Homepage extends Component {
 
-    constructor(props) {
-        super(props);
-    
-    }
     componentDidMount() {
        
     }
