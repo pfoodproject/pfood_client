@@ -17,7 +17,7 @@ import {
 } from './components';
 
 
-class Homepage extends Component {
+class ProductPage extends Component {
 
     componentDidMount() {
 
@@ -129,4 +129,4 @@ const mapDispatchToProps = (dispatch, props) => {
     return {
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Homepage);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductPage);
