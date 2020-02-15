@@ -55,7 +55,7 @@ const Sidebar = props => {
     },
     {
       title: 'Products',
-      href: '/products',
+      href: '/product',
       icon: <ShoppingBasketIcon />
     },
     {
