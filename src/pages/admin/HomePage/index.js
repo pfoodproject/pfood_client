@@ -2,25 +2,7 @@ import React, { Component } from 'react';
 import './main.css';
 import { connect } from 'react-redux';
 
-import { makeStyles } from '@material-ui/styles';
-import { Grid } from '@material-ui/core';
 
-import {
-  Budget,
-  TotalUsers,
-  TasksProgress,
-  TotalProfit,
-  LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
-} from './components';
-
-const useStyles = makeStyles(theme => ({
-    root: {
-      padding: theme.spacing(4)
-    }
-  }));
   
 class Homepage extends Component {
 
