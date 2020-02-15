@@ -18,11 +18,9 @@ class LoginPage extends Component {
     return (
         <div>
             <ReactTable
-<<<<<<< HEAD
             data={data}
             columns={columns}
             defaultPageSize={5}
-=======
               data={data}
               defaultPageSize={5}
               columns={[{
@@ -39,8 +37,6 @@ class LoginPage extends Component {
                 header: props => <span>Friend Age</span>, // Tùy biến component Header
                 accessor: 'friend.age' // Khi 1 thuộc tính của dữ liệu có kiểu là 1 đối tượng, chúng ta cũng có thể cung cấp đường dẫn đến thuộc tính cần lấy giá trị.
               }]}
-              
->>>>>>> dev
             />
         </div>
     );
