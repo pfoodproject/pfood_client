@@ -18,19 +18,19 @@ import MyLoadingComponent from "../../components/LoadingComponent";
 
 const routes = {
     HomePage: {
-        path: '/',
+        path: '/admin',
         exact: true,
         component: HomePage,
         private: true
     },
     ProductPage: {
-      path: '/product',
+      path: '/admin/product',
       exact: true,
       component: ProductPage,
       private: true
   },
     LoginPage: {
-        path: '/login',
+        path: '/admin/login',
         exact: true,
         component: 
             (localStorage.getItem("session") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0) 
