@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MinimalLayout from '../../layouts/Minimal';
+import PartnerLayout from '../../layouts/Partner';
 
 class index extends Component {
     render() {
@@ -10,9 +10,9 @@ class index extends Component {
         
         return (
             <div>
-                <MinimalLayout>
+                <PartnerLayout>
                     <Component route={route} />
-                </MinimalLayout>
+                </PartnerLayout>
             </div>
         );
     }
