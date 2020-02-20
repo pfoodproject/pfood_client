@@ -21,27 +21,32 @@ const LoginPage = Loadable({
   loading: MyLoadingComponent
 });
 
+const SignUpPage = Loadable({
+  loader: () => import("../../pages/partner/SignUp"),
+  loading: MyLoadingComponent
+});
+
 const routes = {
   AccountPage: {
     path: '/partner/account',
     exact: true,
     component: AccountPage,
     private: true,
-    layout: 'a'
+    layout: 'PartnerLayout'
   },
   ProductPage: {
     path: '/partner/product',
     exact: true,
     component: ProductPage,
     private: true,
-    layout: 'a'
+    layout: 'PartnerLayout'
   },
   HomePage: {
     path: '/partner',
     exact: true,
     component: HomePage,
     private: true,
-    layout: 'a'
+    layout: 'PartnerLayout'
   },
   LoginPage: {
     path: '/partner/login',
@@ -52,7 +57,18 @@ const routes = {
         : LoginPage
       ),
     private: false,
-    layout: 'a'
+    layout: 'LoginLayout'
+  },
+  SignUpPage: {
+    path: '/partner/sign-up',
+    exact: true,
+    component:
+      (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
+        ? HomePage
+        : SignUpPage
+      ),
+    private: false,
+    layout: 'LoginLayout'
   }
 };
 
