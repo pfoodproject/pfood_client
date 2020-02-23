@@ -171,21 +171,33 @@ const SignUp = props => {
     }));
   };
 
-  const [response, setResponse] = useState({})
-
-    useEffect(() => {
-      const fetchData = async () => callApiUnAuth(`signin`, 'POST', { username: formState.values.username, password: formState.values.password })
-        .then(res => setResponse(res))
-        .catch(error => setResponse(error.response.data));
-    }, [])
-
-  const handleSignIn = event => {
-    event.preventDefault();
-   
-    
+ 
+ 
+  const [isSubmit, setIsSubmit] = useState({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {}
+  });
+  const [signinResponse, setSigninResponse] = useState({});
+  useEffect(() => {
+    console.log(isSubmit);
+    const fetchData = async () => callApiUnAuth(`signin`, 'POST', { username: isSubmit.values.username, password: isSubmit.values.password })
+      .then(res => setSigninResponse(res))
+      .catch(error => setSigninResponse(error.response.data));
+      fetchData();
+  }, [isSubmit]);
+  const handleSignUp = event => {    
+    setIsSubmit(formState);
     // history.push('/');
   };
 
+  useEffect(() => {
+    console.log(signinResponse);
+    
+  }, [signinResponse])
+
+  
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -196,6 +208,7 @@ const SignUp = props => {
         className={classes.grid}
 
       >
+        {/* {signinResponse} */}
         <div className={classes.content}>
           <div className={classes.contentHeader}>
             <IconButton onClick={handleBack}>
@@ -205,7 +218,6 @@ const SignUp = props => {
           <div className={classes.contentBody}>
             <form
               className={classes.form}
-              onSubmit={handleSignIn}
             >
               <Typography
                 className={classes.title}
@@ -285,8 +297,9 @@ const SignUp = props => {
                       disabled={!formState.isValid}
                       fullWidth
                       size="large"
-                      type="submit"
+                      type="button"
                       variant="contained"
+                      onClick={handleSignUp}
                     >
                       Sign in now
                 </Button>
