@@ -26,7 +26,7 @@ const AccountDetails = props => {
     firstName: 'Shen',
     lastName: 'Zhi',
     email: 'shen.zhi@devias.io',
-    phone: '',
+    phone: '0123456789',
     state: 'Alabama',
     country: 'USA'
   });
@@ -79,8 +79,8 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
+                helperText=""
+                label="Tên cửa hàng"
                 margin="dense"
                 name="firstName"
                 onChange={handleChange}
@@ -96,23 +96,7 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Last name"
-                margin="dense"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
+                label="Email"
                 margin="dense"
                 name="email"
                 onChange={handleChange}
@@ -128,11 +112,12 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Phone Number"
+                label="Số điện thoại"
                 margin="dense"
                 name="phone"
                 onChange={handleChange}
                 type="number"
+                required
                 value={values.phone}
                 variant="outlined"
               />
@@ -167,18 +152,20 @@ const AccountDetails = props => {
             </Grid>
             <Grid
               item
-              md={6}
+              md={12}
               xs={12}
             >
               <TextField
                 fullWidth
-                label="Country"
+                label="Mô tả"
                 margin="dense"
                 name="country"
                 onChange={handleChange}
                 required
                 value={values.country}
                 variant="outlined"
+                multiline={true}
+                rows={4}
               />
             </Grid>
           </Grid>

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import moment from 'moment';
+// import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
+import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
 import {
   Card,
   CardActions,
@@ -11,7 +12,7 @@ import {
   Typography,
   Divider,
   Button,
-  LinearProgress
+  // LinearProgress
 } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -39,13 +40,22 @@ const AccountProfile = props => {
 
   const classes = useStyles();
 
-  const user = {
-    name: 'Shen Zhi',
-    city: 'Los Angeles',
-    country: 'USA',
-    timezone: 'GTM-7',
-    avatar: '/images/avatars/avatar_11.png'
-  };
+
+  const [user, setUser] = useState({
+    PartnerName: 'Anonymous',
+    PartnerAddress: 'Locate',
+    CityName: 'Locate',
+    // timezone: 'GTM-7',
+    PartnerImage: '/images/avatars/avatar_11.png',
+    PartnerDescription:''
+  });
+  useEffect(() => {
+    const partner = JSON.parse(localStorage.getItem('regPartner'));
+    const fetchData = async () => callApiUnAuth(`partner/${partner.user.CustomerID}`, 'GET', {})
+      .then(res => setUser(res.data[0]));
+      fetchData();
+  }, []);
+
 
   return (
     <Card
@@ -59,34 +69,44 @@ const AccountProfile = props => {
               gutterBottom
               variant="h2"
             >
-              John Doe
+              {user.PartnerName}
             </Typography>
             <Typography
               className={classes.locationText}
               color="textSecondary"
               variant="body1"
             >
-              {user.city}, {user.country}
+              {user.PartnerAddress}
+            </Typography>
+            <Typography
+              className={classes.locationText}
+              color="textSecondary"
+              variant="body1"
+            >
+              Thành phố :  {user.CityName}
             </Typography>
             <Typography
               className={classes.dateText}
               color="textSecondary"
               variant="body1"
             >
-              {moment().format('hh:mm A')} ({user.timezone})
+              {/* {moment().format('hh:mm A')} ({user.timezone}) */}
             </Typography>
           </div>
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={user.PartnerImage}
           />
         </div>
         <div className={classes.progress}>
-          <Typography variant="body1">Profile Completeness: 70%</Typography>
-          <LinearProgress
+          <Typography variant="body1">
+            {/* Profile Completeness: 70% */}
+            {user.PartnerDescription} 
+            </Typography>
+          {/* <LinearProgress
             value={70}
             variant="determinate"
-          />
+          /> */}
         </div>
       </CardContent>
       <Divider />
@@ -96,9 +116,9 @@ const AccountProfile = props => {
           color="primary"
           variant="text"
         >
-          Upload picture
+          Tải lên
         </Button>
-        <Button variant="text">Remove picture</Button>
+        {/* <Button variant="text">Remove picture</Button> */}
       </CardActions>
     </Card>
   );

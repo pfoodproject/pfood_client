@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
@@ -170,9 +170,7 @@ const SignUp = props => {
       }
     }));
   };
-
- 
- 
+  const firstUpdate = useRef(true);
   const [isSubmit, setIsSubmit] = useState({
     isValid: false,
     values: {},
@@ -181,23 +179,32 @@ const SignUp = props => {
   });
   const [signinResponse, setSigninResponse] = useState({});
   useEffect(() => {
-    console.log(isSubmit);
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    // console.log(isSubmit);
     const fetchData = async () => callApiUnAuth(`signin`, 'POST', { username: isSubmit.values.username, password: isSubmit.values.password })
       .then(res => setSigninResponse(res))
-      .catch(error => setSigninResponse(error.response.data));
+      .catch(error => setSigninResponse(error.response));
       fetchData();
   }, [isSubmit]);
+  
   const handleSignUp = event => {    
     setIsSubmit(formState);
-    // history.push('/');
   };
-
+  // const [redirect, setRedirect] = useState(false);
   useEffect(() => {
-    console.log(signinResponse);
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    if(signinResponse.status===200){
+      localStorage.setItem("regPartner", JSON.stringify(signinResponse.data))
+      // setRedirect(true);
+    }
     
   }, [signinResponse])
-
-  
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -225,14 +232,7 @@ const SignUp = props => {
               >
                 Đăng ký
                 </Typography>
-              <Typography
-                align="center"
-                className={classes.sugestion}
-                color="textSecondary"
-                variant="body1"
-              >
-                Xác thực tài khoản khách hàng của bạn để trở thành đối tác của chúng tôi !
-                </Typography>
+              
               <Grid
                 className={classes.socialButtons}
                 container
@@ -244,6 +244,14 @@ const SignUp = props => {
                   xs={6}
                   item
                 >
+                  <Typography
+                align="center"
+                className={classes.sugestion}
+                color="textSecondary"
+                variant="body1"
+              >
+                Xác thực tài khoản khách hàng của bạn để trở thành đối tác của chúng tôi !
+                </Typography>
                   <div className={classes.contentText}>
                     <TextField
                       className={classes.textField}
@@ -256,15 +264,7 @@ const SignUp = props => {
                       variant="outlined"
                     />
                   </div>
-                </Grid>
 
-                <Grid
-                  lg={3}
-                  sm={6}
-                  xl={6}
-                  xs={6}
-                  item
-                >
                   <div className={classes.contentText}>
                     <TextField
                       className={classes.textField}
@@ -290,6 +290,16 @@ const SignUp = props => {
                   xs={6}
                   item
                 >
+                  
+                </Grid>
+
+                <Grid
+                  lg={3}
+                  sm={6}
+                  xl={6}
+                  xs={6}
+                  item
+                >
                   <div className={classes.contentText}>
                     <Button
                       className={classes.signInButton}
@@ -301,19 +311,19 @@ const SignUp = props => {
                       variant="contained"
                       onClick={handleSignUp}
                     >
-                      Sign in now
+                      Xác nhận
                 </Button>
                     <Typography
                       color="textSecondary"
                       variant="body1"
                     >
-                      Don't have an account?{' '}
+                      Bạn đã có tài khoản ?{' '}
                       <Link
                         component={RouterLink}
-                        to="/sign-up"
+                        to="/partner/login"
                         variant="h6"
                       >
-                        Sign up
+                        Đăng nhập
                   </Link>
                     </Typography>
                   </div>
