@@ -10,6 +10,11 @@ import MyLoadingComponent from "../../components/LoadingComponent";
     loader: () => import("../../pages/admin/Product"),
     loading: MyLoadingComponent
   });
+
+  const PartnerPage = Loadable({
+    loader: () => import("../../pages/admin/PartnerController"),
+    loading: MyLoadingComponent
+  });
   
   const LoginPage = Loadable({
     loader: () => import("../../pages/admin/Login"),
@@ -29,6 +34,12 @@ const routes = {
       component: ProductPage,
       private: true
   },
+  PartnerPage: {
+    path: '/partnermanager',
+    exact: true,
+    component: PartnerPage,
+    private: true
+},
     LoginPage: {
         path: '/login',
         exact: true,

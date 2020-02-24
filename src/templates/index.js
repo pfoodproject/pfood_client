@@ -7,11 +7,13 @@ import adminRoutes from './routes/adminRoutes';
 
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../theme';
+
 class Template extends Component {
+    
     render() {
         return (
             <ThemeProvider theme={theme}>
-                <BrowserRouter>
+                <BrowserRouter >
                     <Switch>
 
                         {_.map(adminRoutes, (route, key) => {
