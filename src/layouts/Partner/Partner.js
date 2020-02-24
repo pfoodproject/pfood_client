@@ -33,9 +33,9 @@ const Partner = props => {
 
   const [openSidebar, setOpenSidebar] = useState(false);
 
-  const handleSidebarOpen = () => {
-    setOpenSidebar(true);
-  };
+  // const handleSidebarOpen = () => {
+  //   setOpenSidebar(true);
+  // };
 
   const handleSidebarClose = () => {
     setOpenSidebar(false);
@@ -50,7 +50,9 @@ const Partner = props => {
         [classes.shiftContent]: isDesktop
       })}
     >
-      <Topbar onSidebarOpen={handleSidebarOpen} />
+      <Topbar
+      //  onSidebarOpen={handleSidebarOpen}
+       />
       <Sidebar
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}

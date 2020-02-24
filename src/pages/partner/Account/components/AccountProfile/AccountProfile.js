@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 // import moment from 'moment';
 import { makeStyles } from '@material-ui/styles';
-import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
+import { useStore} from 'react-redux';
 import {
   Card,
   CardActions,
@@ -45,18 +45,14 @@ const AccountProfile = props => {
     PartnerName: 'Anonymous',
     PartnerAddress: 'Locate',
     CityName: 'Locate',
-    // timezone: 'GTM-7',
     PartnerImage: '/images/avatars/avatar_11.png',
     PartnerDescription:''
   });
+
+  const store = useStore();
   useEffect(() => {
-    const partner = JSON.parse(localStorage.getItem('regPartner'));
-    const fetchData = async () => callApiUnAuth(`partner/${partner.user.CustomerID}`, 'GET', {})
-      .then(res => setUser(res.data[0]));
-      fetchData();
-  }, []);
-
-
+      setUser(store.getState().partnerInfo.data[0])
+  }, [store]);
   return (
     <Card
       {...rest}
@@ -116,7 +112,7 @@ const AccountProfile = props => {
           color="primary"
           variant="text"
         >
-          Tải lên
+          Tải ảnh lên
         </Button>
         {/* <Button variant="text">Remove picture</Button> */}
       </CardActions>

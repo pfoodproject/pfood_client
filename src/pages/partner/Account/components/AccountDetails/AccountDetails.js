@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useStore} from 'react-redux';
+
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -23,13 +25,17 @@ const AccountDetails = props => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '0123456789',
-    state: 'Alabama',
-    country: 'USA'
+    PartnerName: 'Shen',
+    PartnerAddress: 'Zhi',
+    PartnerEmail: 'shen.zhi@devias.io',
+    PartnerPhone: '0123456789',
+    PartnerDescription: 'Alabama',
+    CityName: 'USA'
   });
+  const store = useStore();
+  useEffect(() => {
+    setValues(store.getState().partnerInfo.data[0])
+  }, [store]);
 
   const handleChange = event => {
     setValues({
@@ -85,7 +91,7 @@ const AccountDetails = props => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.PartnerName}
                 variant="outlined"
               />
             </Grid>
@@ -101,7 +107,7 @@ const AccountDetails = props => {
                 name="email"
                 onChange={handleChange}
                 required
-                value={values.email}
+                value={values.PartnerEmail}
                 variant="outlined"
               />
             </Grid>
@@ -118,7 +124,7 @@ const AccountDetails = props => {
                 onChange={handleChange}
                 type="number"
                 required
-                value={values.phone}
+                value={values.PartnerPhone}
                 variant="outlined"
               />
             </Grid>
@@ -137,7 +143,7 @@ const AccountDetails = props => {
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.state}
+                value={values.CityName}
                 variant="outlined"
               >
                 {states.map(option => (
@@ -162,7 +168,7 @@ const AccountDetails = props => {
                 name="country"
                 onChange={handleChange}
                 required
-                value={values.country}
+                value={values.PartnerDescription}
                 variant="outlined"
                 multiline={true}
                 rows={4}
