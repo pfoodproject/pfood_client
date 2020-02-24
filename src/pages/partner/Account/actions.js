@@ -20,3 +20,24 @@ export const fetchPartnerFail = (msg) => {
         msg
     }
 }
+//////// update partner
+export const updatePartner = (partner) => {
+    return {
+        type : Types.UPDATE_PARTNER,
+        partner
+    }
+}
+
+export const updatePartnerSuccess = (user) => {
+    return {
+        type : Types.UPDATE_PARTNER_SUCCESS,
+        user
+    }
+}
+
+export const updatePartnerFail = (msg) => {
+    return {
+        type : Types.UPDATE_PARTNER_FAIL,
+        msg
+    }
+}

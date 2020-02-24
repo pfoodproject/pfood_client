@@ -10,6 +10,21 @@ const users = (state = initialState, action) => {
           return action.user
         case Types.FETCH_PARTNER_FAIL:
           return action.msg
+        // update partner
+        case Types.UPDATE_PARTNER:
+          {
+            console.log(1+state);
+            return state;
+          }
+        case Types.UPDATE_PARTNER_SUCCESS:            
+          {
+            console.log(action);
+            
+            return state
+          }
+        case Types.UPDATE_PARTNER_FAIL:
+          return action.msg
+
         default:
           return state
       }

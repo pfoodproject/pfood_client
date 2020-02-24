@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useStore} from 'react-redux';
-
+import { useStore, useDispatch} from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+import { updatePartner } from '../../actions';
 import {
   Card,
   CardHeader,
@@ -32,9 +32,13 @@ const AccountDetails = props => {
     PartnerDescription: 'Alabama',
     CityName: 'USA'
   });
+
+  const [city, setCity] = useState([]);
+
   const store = useStore();
   useEffect(() => {
-    setValues(store.getState().partnerInfo.data[0])
+    setValues(store.getState().partnerInfo.partner.data[0])
+    setCity(store.getState().partnerInfo.city.data)
   }, [store]);
 
   const handleChange = event => {
@@ -43,21 +47,10 @@ const AccountDetails = props => {
       [event.target.name]: event.target.value
     });
   };
-
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
+  const dispatch = useDispatch();
+  const handleChangeInfo = () => {
+    dispatch(updatePartner(values));
+  }
 
   return (
     <Card
@@ -88,7 +81,7 @@ const AccountDetails = props => {
                 helperText=""
                 label="Tên cửa hàng"
                 margin="dense"
-                name="firstName"
+                name="PartnerName"
                 onChange={handleChange}
                 required
                 value={values.PartnerName}
@@ -104,7 +97,7 @@ const AccountDetails = props => {
                 fullWidth
                 label="Email"
                 margin="dense"
-                name="email"
+                name="PartnerEmail"
                 onChange={handleChange}
                 required
                 value={values.PartnerEmail}
@@ -120,7 +113,7 @@ const AccountDetails = props => {
                 fullWidth
                 label="Số điện thoại"
                 margin="dense"
-                name="phone"
+                name="PartnerPhone"
                 onChange={handleChange}
                 type="number"
                 required
@@ -137,7 +130,7 @@ const AccountDetails = props => {
                 fullWidth
                 label="Select State"
                 margin="dense"
-                name="state"
+                name="CityName"
                 onChange={handleChange}
                 required
                 select
@@ -146,12 +139,12 @@ const AccountDetails = props => {
                 value={values.CityName}
                 variant="outlined"
               >
-                {states.map(option => (
+                {city.map(option => (
                   <option
-                    key={option.value}
-                    value={option.value}
+                    key={option.CityID}
+                    value={option.CityName}
                   >
-                    {option.label}
+                    {option.CityName}
                   </option>
                 ))}
               </TextField>
@@ -165,7 +158,7 @@ const AccountDetails = props => {
                 fullWidth
                 label="Mô tả"
                 margin="dense"
-                name="country"
+                name="PartnerDescription"
                 onChange={handleChange}
                 required
                 value={values.PartnerDescription}
@@ -181,6 +174,7 @@ const AccountDetails = props => {
           <Button
             color="primary"
             variant="contained"
+            onClick={handleChangeInfo}
           >
             Save details
           </Button>

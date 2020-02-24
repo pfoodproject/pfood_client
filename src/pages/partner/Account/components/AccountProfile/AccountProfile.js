@@ -51,7 +51,7 @@ const AccountProfile = props => {
 
   const store = useStore();
   useEffect(() => {
-      setUser(store.getState().partnerInfo.data[0])
+       setUser(store.getState().partnerInfo.partner.data[0])      
   }, [store]);
   return (
     <Card
