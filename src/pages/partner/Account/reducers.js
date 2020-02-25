@@ -12,14 +12,12 @@ const users = (state = initialState, action) => {
           return action.msg
         // update partner
         case Types.UPDATE_PARTNER:
-          {
-            console.log(111);
-            
+          {            
             return state;
           }
         case Types.UPDATE_PARTNER_SUCCESS:            
           {
-            console.log(2222);
+            console.log(action);
             
             return state
           }

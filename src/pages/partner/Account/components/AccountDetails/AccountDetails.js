@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useStore, useDispatch} from 'react-redux';
+import { useStore, useDispatch } from 'react-redux';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -49,6 +49,13 @@ const AccountDetails = props => {
   };
   const dispatch = useDispatch();
   const handleChangeInfo = () => {
+    console.log(values);
+    city.forEach(e => {
+      if (e.CityName === values.CityName) {
+        values.CityID = e.CityID;
+        delete values.CityName;
+      }
+    });
     dispatch(updatePartner(values));
   }
 
@@ -111,13 +118,12 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Số điện thoại"
+                label="Mô tả"
                 margin="dense"
-                name="PartnerPhone"
+                name="PartnerAddress"
                 onChange={handleChange}
-                type="number"
                 required
-                value={values.PartnerPhone}
+                value={values.PartnerAddress}
                 variant="outlined"
               />
             </Grid>
@@ -151,7 +157,24 @@ const AccountDetails = props => {
             </Grid>
             <Grid
               item
-              md={12}
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Số điện thoại"
+                margin="dense"
+                name="PartnerPhone"
+                onChange={handleChange}
+                type="number"
+                required
+                value={values.PartnerPhone}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
               xs={12}
             >
               <TextField
