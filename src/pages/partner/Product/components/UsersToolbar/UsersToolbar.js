@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useStore, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { SearchInput } from '../../../../../components/index';
 import { DropzoneArea } from 'material-ui-dropzone'
+import {addProduct} from '../../actions';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -24,13 +26,17 @@ const useStyles = makeStyles(theme => ({
   },
   searchInput: {
     marginRight: theme.spacing(1)
+  },
+  dialogContent:{
+    overflowX: 'hidden',
+    overflowY: 'hidden'
   }
 }));
 
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-
+  const firstUpdate = useRef(true);
 
   const [open, setOpen] = React.useState(false);
 
@@ -43,6 +49,7 @@ const UsersToolbar = props => {
   };
 
   const [values, setValues] = useState({
+    PartnerID: 'partner0000000000001',
     ItemName: '',
     description: '',
     ItemImage: ''
@@ -54,13 +61,27 @@ const UsersToolbar = props => {
       [event.target.name]: event.target.value
     });
   };
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+   
+  // },[file])
 
-  const [file, setFile] = useState({});
-  useEffect(() => {
-    console.log(file);
-    
-  },[file])
-  }
+  const handleChangeFile = file => {
+    setValues({
+      ...values,
+      ItemImage:file[0].name
+    })
+  };
+  const store = useStore();
+  const handleAccept= ()=> {
+    console.log(values);
+    dispatch(addProduct(values));
+  };
+  
   return (
     <div
       {...rest}
@@ -86,8 +107,8 @@ const UsersToolbar = props => {
           aria-labelledby="responsive-dialog-title"
         >
           <DialogTitle id="responsive-dialog-title">{"Thông tin sản phẩm"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
+          <DialogContent className={classes.dialogContent}>
+            {/* <DialogContentText> */}
               <Grid
                 container
                 spacing={3}
@@ -120,10 +141,10 @@ const UsersToolbar = props => {
                     helperText=""
                     label="Mô tả"
                     margin="dense"
-                    name="ItemName"
+                    name="description"
                     onChange={handleChange}
                     required
-                    value={values.ItemName}
+                    value={values.description}
                     variant="outlined"
                   />
                 </Grid>
@@ -133,19 +154,25 @@ const UsersToolbar = props => {
                   xs={12}
                 >
                   <DropzoneArea
-                    onChange={setFile(this)}
+                    onChange={handleChangeFile}
+                    acceptedFiles={['image/*']}
+                    filesLimit={1}
+                    dropzoneText={'Ảnh sản phẩm'}
+                    showPreviews={true}
+                    showPreviewsInDropzone={false}
+                    initialFiles={[]}
                   />
                 </Grid>
 
               </Grid>
-            </DialogContentText>
+            {/* </DialogContentText> */}
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={handleClose} color="primary">
-              Disagree
+              Huỷ
           </Button>
-            <Button onClick={handleClose} color="primary" autoFocus>
-              Agree
+            <Button onClick={handleAccept} color="primary" autoFocus>
+              Xác nhận
           </Button>
           </DialogActions>
         </Dialog>
