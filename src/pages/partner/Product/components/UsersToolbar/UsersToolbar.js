@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
-import { Button, Modal, Backdrop } from '@material-ui/core';
-import { useSpring, animated } from 'react-spring/web.cjs';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { SearchInput } from '../../../../../components/index';
-
+import { DropzoneArea } from 'material-ui-dropzone'
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -25,65 +24,43 @@ const useStyles = makeStyles(theme => ({
   },
   searchInput: {
     marginRight: theme.spacing(1)
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-
+  }
 }));
-
-const Fade = React.forwardRef(function Fade(props, ref) {
-  const { in: open, children, onEnter, onExited, ...other } = props;
-  const style = useSpring({
-    from: { opacity: 0 },
-    to: { opacity: open ? 1 : 0 },
-    onStart: () => {
-      if (open && onEnter) {
-        onEnter();
-      }
-    },
-    onRest: () => {
-      if (!open && onExited) {
-        onExited();
-      }
-    },
-  });
-
-  return (
-    <animated.div ref={ref} style={style} {...other}>
-      {children}
-    </animated.div>
-  );
-});
-
-Fade.propTypes = {
-  children: PropTypes.element,
-  in: PropTypes.bool.isRequired,
-  onEnter: PropTypes.func,
-  onExited: PropTypes.func,
-};
 
 const UsersToolbar = props => {
   const { className, ...rest } = props;
-
   const classes = useStyles();
+
+
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => {
+  const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  const [values, setValues] = useState({
+    ItemName: '',
+    description: '',
+    ItemImage: ''
+  });
+
+  const handleChange = event => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const [file, setFile] = useState({});
+  useEffect(() => {
+    console.log(file);
+    
+  },[file])
+  }
   return (
     <div
       {...rest}
@@ -96,29 +73,82 @@ const UsersToolbar = props => {
         <Button
           color="primary"
           variant="contained"
-          onClick={handleOpen}
+          onClick={handleClickOpen}
         >
-          Add user
+          THÊM SẢN PHẨM
         </Button>
-        <Modal
-        aria-labelledby="spring-modal-title"
-        aria-describedby="spring-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <div className={classes.paper}>
-            <h2 id="spring-modal-title">Spring modal</h2>
-            <p id="spring-modal-description">react-spring animates me.dddddddddaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-          </div>
-        </Fade>
-      </Modal>
+        <Dialog
+          fullWidth={true}
+          maxWidth={'sm'}
+          scroll={'body'}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="responsive-dialog-title"
+        >
+          <DialogTitle id="responsive-dialog-title">{"Thông tin sản phẩm"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <Grid
+                container
+                spacing={3}
+              >
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    helperText=""
+                    label="Tên sản phẩm"
+                    margin="dense"
+                    name="ItemName"
+                    onChange={handleChange}
+                    required
+                    value={values.ItemName}
+                    variant="outlined"
+                  />
+                </Grid>
+
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    helperText=""
+                    label="Mô tả"
+                    margin="dense"
+                    name="ItemName"
+                    onChange={handleChange}
+                    required
+                    value={values.ItemName}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <DropzoneArea
+                    onChange={setFile(this)}
+                  />
+                </Grid>
+
+              </Grid>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Disagree
+          </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              Agree
+          </Button>
+          </DialogActions>
+        </Dialog>
       </div>
       <div className={classes.row}>
         <SearchInput
