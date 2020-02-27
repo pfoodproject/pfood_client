@@ -16,6 +16,18 @@ function addProductApi(product) {
         .catch(error => error.response.data);
 }
 
+function deleteProductApi(productId) {
+    return callApiUnAuth(`partner/product/${productId}`, 'DELETE', [])
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
+function updateProductApi(product) {
+    return callApiUnAuth(`partner/product`, 'PUT', product)
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
 function* fetchProduct(action) {
     try {
         const { partnerId } = action
@@ -47,10 +59,44 @@ function* addProduct(action) {
     }
 }
 
+function* updateProduct(action) {
+    try {
+        const { product } = action
+        yield call(updateProductApi, product)
+
+        // if (msg.success === true) {            
+        yield put(actions.updateProductSuccess(product));
+        // } else {
+        // yield put(actions.fetchPartnerFail(partner));
+        // }
+
+    } catch (error) {
+        yield put(actions.updateProductFail(error));
+    }
+}
+
+function* deleteProduct(action) {
+    try {
+        const { productId } = action
+        yield call(deleteProductApi, productId)
+
+        // if (msg.success === true) {            
+        yield put(actions.deleteProductSuccess(productId));
+        // } else {
+        // yield put(actions.fetchPartnerFail(partner));
+        // }
+
+    } catch (error) {
+        yield put(actions.deleteProductFail(error));
+    }
+}
+
 
 function* watchSaga() {
     yield takeLatest(Types.FETCH_PRODUCT, fetchProduct);
     yield takeLatest(Types.ADD_PRODUCT, addProduct);
+    yield takeLatest(Types.DELETE_PRODUCT, deleteProduct);
+    yield takeLatest(Types.UPDATE_PRODUCT, updateProduct);
 }
 
 export default watchSaga;

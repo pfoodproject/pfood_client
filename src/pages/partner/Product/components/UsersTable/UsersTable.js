@@ -17,26 +17,51 @@ import {
   Search,
   ViewColumn
 } from '@material-ui/icons';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { DropzoneArea } from 'material-ui-dropzone'
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchProduct } from '../../actions';
+import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
+
+const useStyles = makeStyles(theme => ({
+  root: {},
+  row: {
+    height: '42px',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1)
+  },
+  spacer: {
+    flexGrow: 1
+  },
+  importButton: {
+    marginRight: theme.spacing(1)
+  },
+  exportButton: {
+    marginRight: theme.spacing(1)
+  },
+  searchInput: {
+    marginRight: theme.spacing(1)
+  },
+  dialogContent: {
+    overflowX: 'hidden',
+    overflowY: 'hidden'
+  }
+}));
 
 const UsersTable = () => {
-  const [columns, setColumns] = useState([
+  const classes = useStyles();
+  const columns = [
     { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, borderRadius: '50%' }} /> },
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Mô tả', field: 'description' },
-  ]);
-
-
-  const [data, setData] = useState([
-    { ItemImage: 'https://avatars0.githubusercontent.com/u/7895451?s=460&v=4', ItemName: 'ok', description: 'ok', ItemID: 'items000000000000001' },
-    { ItemImage: 'https://avatars0.githubusercontent.com/u/7895451?s=460&v=4', ItemName: 'ok1', description: 'ok1', ItemID: 'items000000000000002' },
-  ]);
-
+  ];
+  const [data, setData] = useState([]);
   const count = useSelector(state => state);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const firstUpdate = useRef(true);
+
   useEffect(() => {
     dispatch(fetchProduct('partner0000000000001'));
   }, [dispatch]);
@@ -50,13 +75,44 @@ const UsersTable = () => {
     setIsLoading(false);
   }, [count]);
 
-  const handleDelete = (rowData) =>{
-    alert('Delete : ' + rowData.ItemID)
+  const handleDelete = (rowData) => {
+    dispatch(deleteProduct(rowData.ItemID));
   }
 
-  const handleEdit = (rowData) =>{
-    alert('Edit : ' + rowData.ItemID)
+  const [values, setValues] = useState({
+    ItemID: '',
+    ItemName: '',
+    description: '',
+    ItemImage: ''
+  });
+
+  const [open, setOpen] = useState(false);
+  const handleEdit = (rowData) => {
+    setValues(rowData)
+    setOpen(true);
   }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = event => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleChangeFile = file => {
+    setValues({
+      ...values,
+      ItemImage: file[0].name
+    })
+  };
+  const handleAccept = () => {
+    console.log(values);
+    dispatch(updateProduct(values));
+  };
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -83,27 +139,108 @@ const UsersTable = () => {
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
-          <MaterialTable
-            title="Sản Phẩm"
-            columns={columns}
-            data={data}
-            icons={tableIcons}
-            actions={[
-              {
-                icon: Edit,
-                tooltip: 'Sửa',
-                onClick: (event, rowData) => handleEdit(rowData)
-              },
-              {
-                icon: DeleteOutline,
-                tooltip: 'Xóa',
-                onClick: (event, rowData) => handleDelete(rowData)
-              }
-            ]}
-            options={{
-              actionsColumnIndex: -1
-            }}
-          />
+          <div>
+            <MaterialTable
+              title="Sản Phẩm"
+              columns={columns}
+              data={data}
+              icons={tableIcons}
+              actions={[
+                {
+                  icon: Edit,
+                  tooltip: 'Sửa',
+                  onClick: (event, rowData) => handleEdit(rowData)
+                },
+                {
+                  icon: DeleteOutline,
+                  tooltip: 'Xóa',
+                  onClick: (event, rowData) => handleDelete(rowData)
+                }
+              ]}
+              options={{
+                actionsColumnIndex: -1
+              }}
+            />
+
+            <Dialog
+              fullWidth={true}
+              maxWidth={'sm'}
+              scroll={'body'}
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="responsive-dialog-title"
+            >
+              <DialogTitle id="responsive-dialog-title">{"Thông tin sản phẩm"}</DialogTitle>
+              <DialogContent className={classes.dialogContent}>
+                <Grid
+                  container
+                  spacing={3}
+                >
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Tên sản phẩm"
+                      margin="dense"
+                      name="ItemName"
+                      onChange={handleChange}
+                      required
+                      value={values.ItemName}
+                      variant="outlined"
+                    />
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Mô tả"
+                      margin="dense"
+                      name="description"
+                      onChange={handleChange}
+                      required
+                      value={values.description}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <DropzoneArea
+                      onChange={handleChangeFile}
+                      acceptedFiles={['image/*']}
+                      filesLimit={1}
+                      dropzoneText={'Ảnh sản phẩm'}
+                      showPreviews={true}
+                      showPreviewsInDropzone={false}
+                      initialFiles={[]}
+                    />
+                    <img src={values.ItemImage} alt={values.ItemName} style={{ width: 40, borderRadius: '50%' }} />
+                  </Grid>
+
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={handleClose} color="primary">
+                  Huỷ
+          </Button>
+                <Button onClick={handleAccept} color="primary" autoFocus>
+                  Xác nhận
+          </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
+
         )}
     </div>
   );

@@ -24,6 +24,13 @@ const product = (state = initialState, action) => {
       return state
     case Types.DELETE_PRODUCT_FAIL:
       return state
+
+    case Types.UPDATE_PRODUCT:
+      return state
+    case Types.UPDATE_PRODUCT_SUCCESS:
+      return state
+    case Types.UPDATE_PRODUCT_FAIL:
+      return state
     default:
       return state
   }

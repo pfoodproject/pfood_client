@@ -45,10 +45,10 @@ export const addProductFail = (msg) => {
 }
 
 // Delete Product
-export const deleteProduct = (id) => {
+export const deleteProduct = (productId) => {
     return {
         type : Types.DELETE_PRODUCT,
-        id
+        productId
     }
 }
 
@@ -62,6 +62,28 @@ export const deleteProductSuccess = (msg) => {
 export const deleteProductFail = (msg) => {
     return {
         type : Types.ADD_PRODUCT_FAIL,
+        msg
+    }
+}
+
+// Update Product
+export const updateProduct = (product) => {
+    return {
+        type : Types.UPDATE_PRODUCT,
+        product
+    }
+}
+
+export const updateProductSuccess = (msg) => {
+    return {
+        type : Types.UPDATE_PRODUCT_SUCCESS,
+        msg
+    }
+}
+
+export const updateProductFail = (msg) => {
+    return {
+        type : Types.UPDATE_PRODUCT_FAIL,
         msg
     }
 }
