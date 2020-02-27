@@ -59,7 +59,8 @@ const Account = () => {
               <AccountDetails />
             </Grid>
           </Grid>
-        )}
+      )}
+        
     </div>
   );
 };

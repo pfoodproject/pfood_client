@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useStore, useDispatch } from 'react-redux';
+import React, { useState} from 'react';
+import {  useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
-import { SearchInput } from '../../../../../components/index';
 import { DropzoneArea } from 'material-ui-dropzone'
 import {addProduct} from '../../actions';
 const useStyles = makeStyles(theme => ({
@@ -36,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  const firstUpdate = useRef(true);
+  // const firstUpdate = useRef(true);
 
   const [open, setOpen] = React.useState(false);
 
@@ -62,21 +61,12 @@ const UsersToolbar = props => {
     });
   };
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   if (firstUpdate.current) {
-  //     firstUpdate.current = false;
-  //     return;
-  //   }
-   
-  // },[file])
-
   const handleChangeFile = file => {
     setValues({
       ...values,
       ItemImage:file[0].name
     })
   };
-  const store = useStore();
   const handleAccept= ()=> {
     console.log(values);
     dispatch(addProduct(values));
@@ -108,7 +98,6 @@ const UsersToolbar = props => {
         >
           <DialogTitle id="responsive-dialog-title">{"Thông tin sản phẩm"}</DialogTitle>
           <DialogContent className={classes.dialogContent}>
-            {/* <DialogContentText> */}
               <Grid
                 container
                 spacing={3}
@@ -165,7 +154,6 @@ const UsersToolbar = props => {
                 </Grid>
 
               </Grid>
-            {/* </DialogContentText> */}
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={handleClose} color="primary">
@@ -176,12 +164,6 @@ const UsersToolbar = props => {
           </Button>
           </DialogActions>
         </Dialog>
-      </div>
-      <div className={classes.row}>
-        <SearchInput
-          className={classes.searchInput}
-          placeholder="Search user"
-        />
       </div>
     </div>
   );
