@@ -15,7 +15,8 @@ import {
   Remove,
   SaveAlt,
   Search,
-  ViewColumn
+  ViewColumn,
+  Add
 } from '@material-ui/icons';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -55,6 +56,7 @@ const UsersTable = () => {
     { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, borderRadius: '50%' }} /> },
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Mô tả', field: 'description' },
+    { title: 'Trạng thái', field: 'StatusName' },
   ];
   const [data, setData] = useState([]);
   const count = useSelector(state => state);
@@ -78,12 +80,15 @@ const UsersTable = () => {
   const handleDelete = (rowData) => {
     dispatch(deleteProduct(rowData.ItemID));
   }
+  const handleAdd = (rowData) => {
 
+  }
   const [values, setValues] = useState({
     ItemID: '',
     ItemName: '',
     description: '',
-    ItemImage: ''
+    ItemImage: '',
+    StatusID:''
   });
 
   const [open, setOpen] = useState(false);
@@ -155,10 +160,17 @@ const UsersTable = () => {
                   icon: DeleteOutline,
                   tooltip: 'Xóa',
                   onClick: (event, rowData) => handleDelete(rowData)
-                }
+                },
+                rowData => ({
+                  icon: Add,
+                  tooltip: 'Thêm',
+                  onClick: (event, rowData) => handleAdd(rowData),
+                  hidden: rowData.StatusID !==1
+                })
               ]}
               options={{
-                actionsColumnIndex: -1
+                actionsColumnIndex: -1,
+                exportButton: true
               }}
             />
 
