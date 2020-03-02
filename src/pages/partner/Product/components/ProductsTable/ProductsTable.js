@@ -23,6 +23,7 @@ import { makeStyles } from '@material-ui/styles';
 import { DropzoneArea } from 'material-ui-dropzone'
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
+import ProductAdd from '../ProductAdd';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -80,9 +81,7 @@ const UsersTable = () => {
   const handleDelete = (rowData) => {
     dispatch(deleteProduct(rowData.ItemID));
   }
-  const handleAdd = (rowData) => {
-
-  }
+ 
   const [values, setValues] = useState({
     ItemID: '',
     ItemName: '',
@@ -92,9 +91,17 @@ const UsersTable = () => {
   });
 
   const [open, setOpen] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
   const handleEdit = (rowData) => {
     setValues(rowData)
     setOpen(true);
+  }
+
+  const handleAdd = (rowData) => {
+    // setValues(rowData)
+    console.log(1);
+    ProductAdd.setOpen(true);
+    setOpenAdd(true);
   }
 
   const handleClose = () => {
@@ -251,6 +258,8 @@ const UsersTable = () => {
           </Button>
               </DialogActions>
             </Dialog>
+             {/* Dialog add */}
+              <ProductAdd open={openAdd} />
           </div>
 
         )}
