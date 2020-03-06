@@ -15,20 +15,20 @@ const Account = () => {
   const classes = useStyles();
   const count = useSelector(state => state);
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-  const firstUpdate = useRef(true);
-  useEffect(() => {
-    const partner = JSON.parse(localStorage.getItem('regPartner'));
-    dispatch(fetchPartner(partner.user.CustomerID));
-  }, [dispatch]);
+  const [isLoading, setIsLoading] = useState(false);
+  // const firstUpdate = useRef(true);
+  // useEffect(() => {
+  //   const partner = JSON.parse(localStorage.getItem('regPartner'));
+  //   dispatch(fetchPartner(partner.user.CustomerID));
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    setIsLoading(false);
-  }, [count]);
+  // useEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+  //   setIsLoading(false);
+  // }, [count]);
   return (
     <div className={classes.root}>
       {isLoading ? (

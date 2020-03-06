@@ -6,7 +6,7 @@ import product from '../pages/partner/Product/reducers';
 const appReducers = combineReducers({
     users,
     partnerInfo,
-    product
+    product,
 });
 
 export default appReducers;

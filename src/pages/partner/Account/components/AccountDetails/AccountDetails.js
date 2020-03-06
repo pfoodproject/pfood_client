@@ -35,10 +35,17 @@ const AccountDetails = props => {
 
   const [city, setCity] = useState([]);
 
-  const store = useStore();
+  const store = useStore().getState().partnerToken;
   useEffect(() => {
-    setValues(store.getState().partnerInfo.partner.data[0])
-    setCity(store.getState().partnerInfo.city.data)
+    setValues({
+      PartnerName: store.token.user.PartnerName,
+      PartnerAddress: store.token.user.PartnerAddress,
+      PartnerEmail: store.token.user.PartnerEmail,
+      PartnerPhone: store.token.user.PartnerPhone,
+      PartnerDescription: store.token.user.PartnerDescription,
+      CityName: store.token.user.CityName
+    })
+    setCity(store.city)
   }, [store]);
 
   const handleChange = event => {

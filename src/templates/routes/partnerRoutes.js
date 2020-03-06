@@ -32,32 +32,32 @@ const routes = {
     exact: true,
     component: AccountPage,
     private: true,
-    layout: 'PartnerLayout'
+    layout: 'Partner'
   },
   ProductPage: {
     path: '/partner/product',
     exact: true,
     component: ProductPage,
     private: true,
-    layout: 'PartnerLayout'
+    layout: 'Partner'
   },
   HomePage: {
     path: '/partner',
     exact: true,
     component: HomePage,
     private: true,
-    layout: 'PartnerLayout'
+    layout: 'Partner'
   },
   LoginPage: {
     path: '/partner/login',
     exact: true,
-    component:
-      (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
-        ? HomePage
-        : LoginPage
-      ),
+    component:LoginPage,
+      // (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
+      //   ? HomePage
+      //   : LoginPage
+      // ),
     private: false,
-    layout: 'LoginLayout'
+    layout: 'Minimal'
   },
   SignUpPage: {
     path: '/partner/sign-up',
@@ -68,7 +68,7 @@ const routes = {
         : SignUpPage
       ),
     private: false,
-    layout: 'LoginLayout'
+    layout: 'Minimal'
   }
 };
 

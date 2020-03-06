@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, withRouter } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
@@ -8,17 +8,15 @@ import {
   Button,
   IconButton,
   TextField,
-  Link,
   Typography
 } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-
-import { Facebook as FacebookIcon, Google as GoogleIcon } from '../../../icons';
-
+import { useDispatch, useSelector } from 'react-redux';
+// import { signIn } from './actions';
+import { signIn } from '../Account/actions';
 const schema = {
-  email: {
+  username: {
     presence: { allowEmpty: false, message: 'is required' },
-    email: true,
     length: {
       maximum: 64
     }
@@ -169,11 +167,29 @@ const SignIn = props => {
       }
     }));
   };
-
+  const dispatch = useDispatch();
   const handleSignIn = event => {
     event.preventDefault();
-    history.push('/');
+    dispatch(signIn(formState.values))
   };
+  
+  const firstUpdate = useRef(true);
+  const store = useSelector(state => state);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    // if(store.partnerToken.success===true){      
+    //   console.log();
+        
+    // }
+    // localStorage.set("sessionPartner", )
+    console.log(store);
+    
+  }, [store]);
+
+
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -244,53 +260,18 @@ const SignIn = props => {
                 >
                   Sign in with social media
                 </Typography>
-                <Grid
-                  className={classes.socialButtons}
-                  container
-                  spacing={2}
-                >
-                  <Grid item>
-                    <Button
-                      color="primary"
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <FacebookIcon className={classes.socialIcon} />
-                      Login with Facebook
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button
-                      onClick={handleSignIn}
-                      size="large"
-                      variant="contained"
-                    >
-                      <GoogleIcon className={classes.socialIcon} />
-                      Login with Google
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Typography
-                  align="center"
-                  className={classes.sugestion}
-                  color="textSecondary"
-                  variant="body1"
-                >
-                  or login with email address
-                </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('email')}
+                  error={hasError('username')}
                   fullWidth
                   helperText={
-                    hasError('email') ? formState.errors.email[0] : null
+                    hasError('username') ? formState.errors.username[0] : null
                   }
-                  label="Email address"
-                  name="email"
+                  label="Username"
+                  name="username"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.email || ''}
+                  value={formState.values.username || ''}
                   variant="outlined"
                 />
                 <TextField
@@ -318,7 +299,7 @@ const SignIn = props => {
                 >
                   Sign in now
                 </Button>
-                <Typography
+                {/* <Typography
                   color="textSecondary"
                   variant="body1"
                 >
@@ -330,7 +311,7 @@ const SignIn = props => {
                   >
                     Sign up
                   </Link>
-                </Typography>
+                </Typography> */}
               </form>
             </div>
           </div>
