@@ -1,6 +1,5 @@
 import Loadable from "react-loadable";
 import MyLoadingComponent from "../../components/LoadingComponent";
-
 const HomePage = Loadable({
   loader: () => import("../../pages/partner/HomePage"),
   loading: MyLoadingComponent
@@ -26,6 +25,7 @@ const SignUpPage = Loadable({
   loading: MyLoadingComponent
 });
 
+
 const routes = {
   AccountPage: {
     path: '/partner/account',
@@ -44,29 +44,29 @@ const routes = {
   HomePage: {
     path: '/partner',
     exact: true,
-    component: HomePage,
-    private: true,
+    component: HomePage
+    ,
     layout: 'Partner'
   },
   LoginPage: {
     path: '/partner/login',
     exact: true,
-    component:LoginPage,
-      // (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
-      //   ? HomePage
-      //   : LoginPage
-      // ),
+    component: LoginPage,
+    // (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
+    //   ? HomePage
+    //   : LoginPage
+    // ),
     private: false,
     layout: 'Minimal'
   },
   SignUpPage: {
     path: '/partner/sign-up',
     exact: true,
-    component:
-      (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
-        ? HomePage
-        : SignUpPage
-      ),
+    component:SignUpPage,
+      // (localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0)
+      //   ? HomePage
+      //   : SignUpPage
+      // ),
     private: false,
     layout: 'Minimal'
   }

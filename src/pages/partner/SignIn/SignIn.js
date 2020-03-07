@@ -184,8 +184,7 @@ const SignIn = props => {
     //   console.log();
         
     // }
-    // localStorage.set("sessionPartner", )
-    console.log(store);
+    localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo))
     
   }, [store]);
 

@@ -24,7 +24,7 @@ const Topbar = props => {
       position="fixed"
     >
       <Toolbar>
-        <RouterLink to="/">
+        <RouterLink to="/partner">
           <img
             alt="Logo"
             src="/images/logos/logo--white.svg"

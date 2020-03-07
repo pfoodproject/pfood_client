@@ -3,11 +3,6 @@ import callApiUnAuth from '../../../utils/apis/apiUnAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
-function fetchPartnerApi(customerID) {
-    return callApiUnAuth(`partner/${customerID}`, 'GET', {})
-        .then(res => res)
-        .catch(error => error.response.data);
-}
 function updatePartnerApi(partner) {
     return callApiUnAuth(`partner`, 'PUT', partner)
         .then(res => res)
@@ -27,24 +22,6 @@ function signInApi(user) {
 }
 
 /////////////////////////////
-
-function* fetchPartner(action) {
-    try {
-        const { id } = action
-        const partner = yield call(fetchPartnerApi, id)
-        const city = yield call(fetchCityApi)
-
-        // if (msg.success === true) {            
-        yield put(actions.fetchPartnerSuccess({ partner: partner, city: city }));
-        // } else {
-        // yield put(actions.fetchPartnerFail(partner));
-        // }
-
-    } catch (error) {
-        yield put(actions.fetchPartnerFail(error));
-    }
-
-}
 
 function* signIn(action) {
     try {
@@ -82,7 +59,6 @@ function* putPartner(action) {
 }
 
 function* watchfetchPartner() {
-    yield takeLatest(Types.FETCH_PARTNER, fetchPartner);
     yield takeLatest(Types.UPDATE_PARTNER, putPartner);
     yield takeLatest(Types.PARTNER_SIGNIN, signIn);
 }

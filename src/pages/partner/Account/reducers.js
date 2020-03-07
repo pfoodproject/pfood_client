@@ -4,23 +4,11 @@ var initialState = null;
 const users = (state = initialState, action) => {
 
   switch (action.type) {
-    case Types.FETCH_PARTNER:
-      return state
-    case Types.FETCH_PARTNER_SUCCESS:
-      return action.user
-    case Types.FETCH_PARTNER_FAIL:
-      return action.msg
     // update partner
     case Types.UPDATE_PARTNER:
-      {
         return state;
-      }
     case Types.UPDATE_PARTNER_SUCCESS:
-      {
-        console.log(action);
-
         return state
-      }
     case Types.UPDATE_PARTNER_FAIL:
       return action.msg
     // Sign in
@@ -30,7 +18,9 @@ const users = (state = initialState, action) => {
       return action.token
     case Types.PARTNER_SIGNIN_FAIL:
       return action.msg
-
+    //
+    case Types.MLTS:
+      return action.partner
     default:
       return state
   }
