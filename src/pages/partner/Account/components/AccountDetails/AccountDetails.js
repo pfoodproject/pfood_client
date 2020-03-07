@@ -38,6 +38,7 @@ const AccountDetails = props => {
   const store = useStore().getState().partnerInfo;
   useEffect(() => {
     setValues({
+      PartnerID: store.token.user.PartnerID,
       PartnerName: store.token.user.PartnerName,
       PartnerAddress: store.token.user.PartnerAddress,
       PartnerEmail: store.token.user.PartnerEmail,
@@ -56,7 +57,6 @@ const AccountDetails = props => {
   };
   const dispatch = useDispatch();
   const handleChangeInfo = () => {
-    console.log(values);
     city.forEach(e => {
       if (e.CityName === values.CityName) {
         values.CityID = e.CityID;

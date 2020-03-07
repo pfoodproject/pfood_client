@@ -180,12 +180,7 @@ const SignIn = props => {
       firstUpdate.current = false;
       return;
     }
-    // if(store.partnerToken.success===true){      
-    //   console.log();
-        
-    // }
     localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo))
-    
   }, [store]);
 
 

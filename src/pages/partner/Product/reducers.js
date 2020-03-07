@@ -31,6 +31,7 @@ const product = (state = initialState, action) => {
       return state
     case Types.UPDATE_PRODUCT_FAIL:
       return state
+
     default:
       return state
   }

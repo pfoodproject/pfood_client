@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -20,20 +20,23 @@ const Template = () => {
       
     const store = useStore();
     const dispatch = useDispatch();
-    const a = (privateComponent) => {
-        console.log(store.getState().partnerInfo);
-        
+    const comp = (privateComponent) => {
         if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo) {
-            console.log(222);
            return privateComponent
         }
-        if(store.getState().partnerInfo === null){
-            console.log(111111111111111111111111111);
-            
+        if((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo === null){            
             dispatch(mlts(JSON.parse(localStorage.getItem("sessionpartner"))))
             return privateComponent
         }
+        localStorage.removeItem("sessionpartner")
         return LoginPage
+    }
+    const lay = (layout) => {
+        
+        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) ) {
+           return layout
+        }
+        return 'Minimal'
     }
     return (
         <ThemeProvider theme={theme}>
@@ -57,7 +60,7 @@ const Template = () => {
                         return (
                             <Route
                                 key={key}
-                                render={(route) => <PartnerLayout component={a(component)} route={route} layout={layout} />}
+                                render={(route) => <PartnerLayout component={comp(component)} route={route} layout={lay(layout)} />}
                                 path={path}
                                 exact={exact}
                             />

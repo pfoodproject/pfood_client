@@ -21,7 +21,7 @@ import {
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { DropzoneArea } from 'material-ui-dropzone'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
 import ProductAdd from '../ProductAdd';
 
@@ -64,10 +64,10 @@ const UsersTable = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const firstUpdate = useRef(true);
-
+  const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
-    dispatch(fetchProduct('partner0000000000001'));
-  }, [dispatch]);
+    dispatch(fetchProduct(store));
+  }, [dispatch, store]);
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -92,20 +92,23 @@ const UsersTable = () => {
 
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
+  const [addData, setAddData] = useState({});
   const handleEdit = (rowData) => {
     setValues(rowData)
     setOpen(true);
   }
 
+  const closeAdd = () => {
+    setOpenAdd(false);
+  }
+
   const handleAdd = (rowData) => {
-    // setValues(rowData)
-    console.log(1);
-    ProductAdd.setOpen(true);
-    setOpenAdd(true);
+    setOpenAdd(true);    
+    setAddData(rowData)
   }
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen('false');
   };
 
   const handleChange = event => {
@@ -170,7 +173,7 @@ const UsersTable = () => {
                 },
                 rowData => ({
                   icon: Add,
-                  tooltip: 'Thêm',
+                  tooltip: 'Đăng bán',
                   onClick: (event, rowData) => handleAdd(rowData),
                   hidden: rowData.StatusID !==1
                 })
@@ -259,7 +262,7 @@ const UsersTable = () => {
               </DialogActions>
             </Dialog>
              {/* Dialog add */}
-              <ProductAdd open={openAdd} />
+              <ProductAdd open={openAdd} updateParent={closeAdd} data={addData}/>
           </div>
 
         )}

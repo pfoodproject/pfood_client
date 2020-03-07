@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
-import { useStore } from 'react-redux';
+import { useStore, useSelector } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -39,6 +39,17 @@ const Profile = props => {
       PartnerImage: store.token.user.PartnerImage,
     })
   }, [store]);
+
+  const store2 = useSelector(state => state).partnerInfo.token.user.PartnerName;
+  useEffect(() => {    
+    // setUser({
+    //   PartnerName: store2.token.user.PartnerName,
+    //   CityName: store2.token.user.CityName,
+    //   PartnerImage: store2.token.user.PartnerImage,
+    // })
+    console.log(store2);
+    
+  }, [store2]);
   return (
     <div
       {...rest}

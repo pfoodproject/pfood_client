@@ -80,7 +80,7 @@ const UsersToolbar = props => {
       <div className={classes.row}>
         <span className={classes.spacer} />
         <Button className={classes.importButton}>Import</Button>
-        <Button className={classes.exportButton}>Export</Button>
+        {/* <Button className={classes.exportButton}>Export</Button> */}
         <Button
           color="primary"
           variant="contained"

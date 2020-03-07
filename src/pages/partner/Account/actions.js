@@ -8,10 +8,10 @@ export const updatePartner = (partner) => {
     }
 }
 
-export const updatePartnerSuccess = (user) => {
+export const updatePartnerSuccess = (partner) => {
     return {
         type : Types.UPDATE_PARTNER_SUCCESS,
-        user
+        partner
     }
 }
 

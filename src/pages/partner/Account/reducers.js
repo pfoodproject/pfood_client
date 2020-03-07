@@ -8,7 +8,11 @@ const users = (state = initialState, action) => {
     case Types.UPDATE_PARTNER:
         return state;
     case Types.UPDATE_PARTNER_SUCCESS:
-        return state
+        {
+          state.token.user= Object.assign(state.token.user, action.partner);
+          localStorage.setItem('sessionpartner', JSON.stringify(state));
+          return state
+        }
     case Types.UPDATE_PARTNER_FAIL:
       return action.msg
     // Sign in
