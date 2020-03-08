@@ -46,7 +46,9 @@ const AccountDetails = props => {
       PartnerDescription: store.token.user.PartnerDescription,
       CityName: store.token.user.CityName
     })
-    setCity(store.city)
+    setCity(store.city.data)
+    console.log(store.city.data);
+    
   }, [store]);
 
   const handleChange = event => {
