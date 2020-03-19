@@ -70,6 +70,7 @@ const UsersToolbar = props => {
   const handleAccept= ()=> {
     console.log(values);
     dispatch(addProduct(values));
+    setOpen(false);
   };
   
   return (

@@ -14,6 +14,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useDispatch, useSelector } from 'react-redux';
 // import { signIn } from './actions';
 import { signIn } from '../Account/actions';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 const schema = {
   username: {
     presence: { allowEmpty: false, message: 'is required' },
@@ -180,8 +182,15 @@ const SignIn = props => {
       firstUpdate.current = false;
       return;
     }
-    localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo))
-  }, [store]);
+    if (store.partnerInfo.token.success === true) {
+      localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
+      history.push('/partner');
+    } else {
+      NotificationManager.error('Error', store.partnerInfo.token.msg, 3000);
+    }
+    
+    
+  }, [store, history]);
 
 
 
@@ -190,6 +199,7 @@ const SignIn = props => {
 
   return (
     <div className={classes.root}>
+      <NotificationContainer/>
       <Grid
         className={classes.grid}
         container
