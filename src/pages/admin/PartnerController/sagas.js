@@ -4,7 +4,7 @@ import * as actions from './actions'
 import * as Types from './constants'
 import callApiUnauthWithBody from "../../../utils/apis/apiUnAuth"
 
-function* wathManagerAction(){
+function* wathPartnerAction(){
     yield takeLatest (Types.GET_DATA, getDataSaga)
     yield takeLatest (Types.CHANGE_STATUS, changeStatus)
 }
@@ -34,4 +34,4 @@ function*  changeStatus({payload}){
     }
 }
 
-export default wathManagerAction;
+export default wathPartnerAction;

@@ -1,9 +1,13 @@
 import LoginSaga from '../pages/admin/Login/sagas';
-import ManagerSaga from '../pages/admin/PartnerController/sagas';
+import PartnerSaga from '../pages/admin/PartnerController/sagas';
+import ProductSaga from '../pages/admin/ProductController/sagas';
+import UserSaga from '../pages/admin/UserController/sagas';
 import { fork } from 'redux-saga/effects'
 
 
 export default function* IndexSaga () {  
   yield fork(LoginSaga);
-  yield fork(ManagerSaga);
+  yield fork(PartnerSaga);
+  yield fork(ProductSaga);
+  yield fork(UserSaga);
 }

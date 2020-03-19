@@ -5,7 +5,7 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { getData, changeStatus } from './actions';
 import ReactPaginate from 'react-paginate';
-import "./index.css";
+import "../../../theme/css/paginationAndTogle.css";
 import Toggle from 'react-toggle'
 
 class Manager extends Component {
