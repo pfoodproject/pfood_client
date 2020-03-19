@@ -6,12 +6,14 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import configureStore from './stores/configureStore';
 import rootSaga from './sagas';
+import { useToasts } from 'react-toast-notifications'
 
 
 const store = configureStore()
 store.runSaga(rootSaga)
 
 ReactDOM.render(
+    
 <Provider store={store}>
     <Template />
 </Provider>, 

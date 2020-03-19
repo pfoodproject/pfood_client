@@ -12,6 +12,7 @@ import { useStore, useDispatch } from 'react-redux';
 import {mlts} from '../pages/partner/Account/actions'
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../theme';
+
 const Template = () => {
     const LoginPage = Loadable({
         loader: () => import("../pages/partner/SignIn"),

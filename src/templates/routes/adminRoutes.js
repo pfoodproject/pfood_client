@@ -6,8 +6,18 @@ import MyLoadingComponent from "../../components/LoadingComponent";
     loading: MyLoadingComponent
   });
 
+  const UserPage = Loadable({
+    loader: () => import("../../pages/admin/UserController"),
+    loading: MyLoadingComponent
+  });
+
   const ProductPage = Loadable({
-    loader: () => import("../../pages/admin/Product"),
+    loader: () => import("../../pages/admin/ProductController"),
+    loading: MyLoadingComponent
+  });
+
+  const PartnerPage = Loadable({
+    loader: () => import("../../pages/admin/PartnerController"),
     loading: MyLoadingComponent
   });
   
@@ -23,12 +33,25 @@ const routes = {
         component: HomePage,
         private: true
     },
+    UserPage: {
+      path: '/usercontroller',
+      exact: true,
+      component: UserPage,
+      private: true
+  },
     ProductPage: {
       path: '/admin/product',
+      path: '/productcontroller',
       exact: true,
       component: ProductPage,
       private: true
   },
+  PartnerPage: {
+    path: '/partnercontroller',
+    exact: true,
+    component: PartnerPage,
+    private: true
+},
     LoginPage: {
         path: '/admin/login',
         exact: true,

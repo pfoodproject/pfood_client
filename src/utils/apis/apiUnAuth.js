@@ -6,6 +6,8 @@ export default function callApiUnauthWithBody(endpoint, method = 'GET', body){
         method: method,
         url: `${Config.API_URL}/${endpoint}`,
         data: body 
+      })
+      .catch(err => {
       });
 }
 
