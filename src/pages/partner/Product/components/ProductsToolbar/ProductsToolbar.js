@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import {  useDispatch } from 'react-redux';
+import {  useDispatch, useStore } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
@@ -46,12 +46,11 @@ const UsersToolbar = props => {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const store = useStore().getState().partnerInfo;
   const [values, setValues] = useState({
-    PartnerID: 'partner0000000000001',
+    PartnerID: store.token.user.PartnerID,
     ItemName: '',
     description: '',
-    ItemImage: ''
   });
 
   const handleChange = event => {
@@ -64,7 +63,7 @@ const UsersToolbar = props => {
   const handleChangeFile = file => {
     setValues({
       ...values,
-      ItemImage:file[0].name
+      img: file
     })
   };
   const handleAccept= ()=> {

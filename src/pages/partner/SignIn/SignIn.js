@@ -16,15 +16,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../Account/actions';
 import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { Link } from 'react-router-dom'
 const schema = {
   username: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'Tên đăng nhập không được để trống !' },
     length: {
       maximum: 64
     }
   },
   password: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
     length: {
       maximum: 128
     }
@@ -256,13 +257,7 @@ const SignIn = props => {
                   className={classes.title}
                   variant="h2"
                 >
-                  Sign in
-                </Typography>
-                <Typography
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Sign in with social media
+                  Đăng nhập
                 </Typography>
                 <TextField
                   className={classes.textField}
@@ -271,7 +266,7 @@ const SignIn = props => {
                   helperText={
                     hasError('username') ? formState.errors.username[0] : null
                   }
-                  label="Username"
+                  label="Tên đăng nhập"
                   name="username"
                   onChange={handleChange}
                   type="text"
@@ -285,7 +280,7 @@ const SignIn = props => {
                   helperText={
                     hasError('password') ? formState.errors.password[0] : null
                   }
-                  label="Password"
+                  label="Mật khẩu"
                   name="password"
                   onChange={handleChange}
                   type="password"
@@ -301,21 +296,20 @@ const SignIn = props => {
                   type="submit"
                   variant="contained"
                 >
-                  Sign in now
+                  Đăng nhập
                 </Button>
-                {/* <Typography
+                <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Don't have an account?{' '}
+                  Bạn chưa có tài khoản ?{' '}
                   <Link
-                    component={RouterLink}
                     to="/partner/sign-up"
                     variant="h6"
                   >
-                    Sign up
+                    Đăng ký ngay
                   </Link>
-                </Typography> */}
+                </Typography>
               </form>
             </div>
           </div>

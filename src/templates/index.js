@@ -20,12 +20,16 @@ const Template = () => {
       
     const store = useStore();
     const dispatch = useDispatch();
-    const comp = (privateComponent) => {
-        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo) {
+    const comp = (privateComponent, path) => {
+        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo && path!=='/partner/sign-up') {
            return privateComponent
         }
-        if((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo === null){            
+        if((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo === null && path!=='/partner/sign-up'){            
             dispatch(mlts(JSON.parse(localStorage.getItem("sessionpartner"))))
+            return privateComponent
+        }
+        if(path==='/partner/sign-up'){
+            localStorage.removeItem("sessionpartner");
             return privateComponent
         }
         localStorage.removeItem("sessionpartner")
@@ -35,7 +39,7 @@ const Template = () => {
         
         if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) ) {
            return layout
-        }
+        }        
         return 'Minimal'
     }
     return (
@@ -60,7 +64,7 @@ const Template = () => {
                         return (
                             <Route
                                 key={key}
-                                render={(route) => <PartnerLayout component={comp(component)} route={route} layout={lay(layout)} />}
+                                render={(route) => <PartnerLayout component={comp(component, path)} route={route} layout={lay(layout)} />}
                                 path={path}
                                 exact={exact}
                             />
