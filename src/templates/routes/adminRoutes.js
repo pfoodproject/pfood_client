@@ -40,7 +40,6 @@ const routes = {
       private: true
   },
     ProductPage: {
-      path: '/admin/product',
       path: '/productcontroller',
       exact: true,
       component: ProductPage,

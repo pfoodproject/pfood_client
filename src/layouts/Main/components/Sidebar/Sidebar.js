@@ -40,20 +40,20 @@ const Sidebar = props => {
   const pages = [
     {
       title: 'Dashboard',
-      href: '/',
+      href: '/admin',
       icon: <DashboardIcon />
     },
     {
       title: 'Users',
-      href: '/user',
+      href: '/usercontroller',
       icon: <PeopleIcon />
     },{
       title: 'Parter',
-      href: '/parter',
+      href: '/partnercontroller',
       icon: <PeopleIcon />
     },{
       title: 'Products',
-      href: '/product',
+      href: '/productcontroller',
       icon: <ShoppingBasketIcon />
     }
     
