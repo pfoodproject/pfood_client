@@ -38,8 +38,8 @@ const ProductAdd = props => {
       ItemID: null,
       Summary:0,
       Price:1000,
-      StartTime:moment(Date.now()).format('YYYY-MM-DDThh:mm'),
-      EndTime:moment(Date.now()).format('YYYY-MM-DDThh:mm'),
+      StartTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+      EndTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
       Description:''
     });
 

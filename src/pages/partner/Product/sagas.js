@@ -1,5 +1,6 @@
 import { put, call, takeLatest } from 'redux-saga/effects'
 import callApiUnAuth from '../../../utils/apis/apiUnAuth';
+import {imagesUpload} from '../../../utils/apis/apiAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
@@ -15,6 +16,13 @@ function addProductApi(product) {
         .then(res => res)
         .catch(error => error.response.data);
 }
+
+function uploadImagesApi(img) {
+    return imagesUpload(img)
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
 
 function deleteProductApi(productId) {
     return callApiUnAuth(`partner/product/${productId}`, 'DELETE', [])
@@ -46,8 +54,13 @@ function* fetchProduct(action) {
 function* addProduct(action) {
     try {
         const { product } = action
-        yield call(addProductApi, product)
+        
+      
+            let rs = yield call(uploadImagesApi, product.img[0])
+            product.img = rs.data.data.link
 
+         yield call(addProductApi, product)
+        
         // if (msg.success === true) {            
         yield put(actions.addProductSuccess(product));
         // } else {

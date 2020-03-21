@@ -12,13 +12,17 @@ import {
   Divider,
   Grid,
   Button,
-  TextField
+  TextField,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core';
+import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
-
 const AccountDetails = props => {
   const { className, ...rest } = props;
 
@@ -34,7 +38,7 @@ const AccountDetails = props => {
   });
 
   const [city, setCity] = useState([]);
-
+  
   const store = useStore().getState().partnerInfo;
   useEffect(() => {
     setValues({
@@ -44,17 +48,19 @@ const AccountDetails = props => {
       PartnerEmail: store.token.user.PartnerEmail,
       PartnerPhone: store.token.user.PartnerPhone,
       PartnerDescription: store.token.user.PartnerDescription,
-      CityName: store.token.user.CityName
+      CityName: store.token.user.CityName,
+      ship: store.token.user.ship
     })
-    setCity(store.city.data)
-    console.log(store.city.data);
     
+    setCity(store.city.data)    
   }, [store]);
-
   const handleChange = event => {
     setValues({
       ...values,
-      [event.target.name]: event.target.value
+      [event.target.name]:  
+        event.target.type === 'checkbox'
+          ? (event.target.checked ? 1 : 0)
+          : event.target.value
     });
   };
   const dispatch = useDispatch();
@@ -66,20 +72,23 @@ const AccountDetails = props => {
       }
     });
     dispatch(updatePartner(values));
+    NotificationManager.success('Success', 'Done !', 3000);
   }
+
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
+      <NotificationContainer />
       <form
         autoComplete="off"
         noValidate
       >
         <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
+          subheader="!@#$%^&*()_+"
+          title="Thông tin đối tác"
         />
         <Divider />
         <CardContent>
@@ -186,6 +195,23 @@ const AccountDetails = props => {
               md={6}
               xs={12}
             >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    icon={<CheckBoxOutlineBlank fontSize="small" />}
+                    checkedIcon={<CheckBox fontSize="small" />}
+                    name="ship" checked={values.ship===0 ? false : true}
+                    onChange={handleChange}
+                  />
+                }
+                label="Giao hàng"
+              />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              xs={12}
+            >
               <TextField
                 fullWidth
                 label="Mô tả"
@@ -208,7 +234,7 @@ const AccountDetails = props => {
             variant="contained"
             onClick={handleChangeInfo}
           >
-            Save details
+            Lưu
           </Button>
         </CardActions>
       </form>

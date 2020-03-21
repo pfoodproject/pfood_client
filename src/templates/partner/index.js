@@ -6,6 +6,7 @@ class index extends Component {
         let Component = this.props.component;        
         let route = this.props.route;
         let layout = this.props.layout;
+        console.log(layout);
         
         return (
             <div> {layout==='Minimal' ? (

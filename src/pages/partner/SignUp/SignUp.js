@@ -1,32 +1,58 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validate from 'validate.js';
 import { makeStyles } from '@material-ui/styles';
+import { Link } from 'react-router-dom'
 import {
   Grid,
   Button,
-  IconButton,
   TextField,
-  Link,
-  Typography
+  Typography,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import callApiUnAuth from '../../../utils/apis/apiUnAuth';
-
 const schema = {
   username: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'Tên tài khoản không được để trống !' },
     length: {
       maximum: 64
     }
   },
   password: {
-    presence: { allowEmpty: false, message: 'is required' },
+    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
     length: {
-      maximum: 128
+      minimum: 5,
+      maximum: 20,
+      message: 'Độ dài mật khẩu từ 5-20 !'
     }
-  }
+  },
+  name: {
+    presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  },
+  email: {
+    presence: { allowEmpty: false, message: 'Email không được để trống !' },
+    email: true
+  },
+  phone: {
+    presence: { allowEmpty: false, message: 'Số điện thoại không được để trống !' },
+    length: {
+      minimum: 10,
+      maximum: 11,
+      message: 'Số dt không hợp lệ!'
+    }
+  },
+  address: {
+    presence: { allowEmpty: false, message: 'Địa chỉ không được để trống !' },
+  },
 };
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +97,7 @@ const useStyles = makeStyles(theme => ({
   contentContainer: {},
   content: {
     height: '100%',
-    // display: 'flex',
+    display: 'flex',
     flexDirection: 'column'
   },
   contentHeader: {
@@ -87,7 +113,7 @@ const useStyles = makeStyles(theme => ({
   },
   contentBody: {
     flexGrow: 1,
-    // display: 'flex',
+    display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.down('md')]: {
       justifyContent: 'center'
@@ -97,7 +123,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 100,
     paddingRight: 100,
     paddingBottom: 125,
-    // flexBasis: 700,
+    flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2)
@@ -120,9 +146,6 @@ const useStyles = makeStyles(theme => ({
   },
   signInButton: {
     margin: theme.spacing(2, 0)
-  },
-  contentText: {
-    padding: '10px'
   }
 }));
 
@@ -131,16 +154,35 @@ const SignUp = props => {
 
   const classes = useStyles();
 
+  const [city, setCity] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await callApiUnAuth(`city`, 'GET', {})
+      setCity(result.data);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (city.length > 0) {
+      setIsLoading(false);
+    }
+  }, [city]);
+
   const [formState, setFormState] = useState({
     isValid: false,
-    values: {},
+    values: {
+      ship:1,
+      description:'',
+      city:1
+    },
     touched: {},
     errors: {}
   });
 
   useEffect(() => {
     const errors = validate(formState.values, schema);
-
     setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
@@ -148,20 +190,15 @@ const SignUp = props => {
     }));
   }, [formState.values]);
 
-  const handleBack = () => {
-    history.goBack();
-  };
-
   const handleChange = event => {
-    event.persist();
-
+    event.persist();    
     setFormState(formState => ({
       ...formState,
       values: {
         ...formState.values,
         [event.target.name]:
           event.target.type === 'checkbox'
-            ? event.target.checked
+            ? (event.target.checked ? 1 : 0)
             : event.target.value
       },
       touched: {
@@ -170,102 +207,135 @@ const SignUp = props => {
       }
     }));
   };
-  const firstUpdate = useRef(true);
-  const [isSubmit, setIsSubmit] = useState({
-    isValid: false,
-    values: {},
-    touched: {},
-    errors: {}
-  });
-  const [signinResponse, setSigninResponse] = useState({});
-  useEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
+
+  const handleSignUp = async event => {
+    event.preventDefault();
+    setFormState(formState => ({
+      ...formState,
+      isValid:false
+    }))
+    const result = await callApiUnAuth(`partner`, 'POST', formState.values)
+    console.log(result);
+    if (result.data.errors) {
+      result.data.errors.forEach(e => {
+        NotificationManager.error('Error', e.msg, 3000);
+        setFormState(formState => ({
+          ...formState,
+          isValid:true
+        }))
+      });
+    } else {
+      NotificationManager.success('Success', 'Đăng ký thành công !', 3000);
+      setFormState({
+        isValid: false,
+        values: {
+          ship:1,
+          description:'',
+          city:1
+        },
+        touched: {},
+        errors: {}
+      });
     }
-    // console.log(isSubmit);
-    const fetchData = async () => callApiUnAuth(`signin`, 'POST', { username: isSubmit.values.username, password: isSubmit.values.password })
-      .then(res => setSigninResponse(res))
-      .catch(error => setSigninResponse(error.response));
-      fetchData();
-  }, [isSubmit]);
-  
-  const handleSignUp = event => {    
-    setIsSubmit(formState);
+
   };
-  // const [redirect, setRedirect] = useState(false);
+
+  const firstUpdate = useRef(true);
+  const store = useSelector(state => state);
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
     }
-    if(signinResponse.status===200){
-      localStorage.setItem("regPartner", JSON.stringify(signinResponse.data))
-      // setRedirect(true);
+    if (store.partnerInfo.token.success === true) {
+      localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
+      history.push('/partner');
+    } else {
+      NotificationManager.error('Error', store.partnerInfo.token.msg, 3000);
     }
-    
-  }, [signinResponse])
+
+
+  }, [store, history]);
+
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div className={classes.root}>
-      <Grid
-        className={classes.grid}
+      <NotificationContainer />
 
-      >
-        {/* {signinResponse} */}
-        <div className={classes.content}>
-          <div className={classes.contentHeader}>
-            <IconButton onClick={handleBack}>
-              <ArrowBackIcon />
-            </IconButton>
-          </div>
-          <div className={classes.contentBody}>
-            <form
-              className={classes.form}
+
+      {isLoading ? (
+        <div>Loading ...</div>
+      ) : (
+          <Grid
+            className={classes.grid}
+            container
+          >
+            <Grid
+              className={classes.quoteContainer}
+              item
+              lg={5}
             >
-              <Typography
-                className={classes.title}
-                variant="h2"
-              >
-                Đăng ký
-                </Typography>
-              
-              <Grid
-                className={classes.socialButtons}
-                container
-              >
-                <Grid
-                  lg={3}
-                  sm={6}
-                  xl={6}
-                  xs={6}
-                  item
-                >
+              <div className={classes.quote}>
+                <div className={classes.quoteInner}>
                   <Typography
-                align="center"
-                className={classes.sugestion}
-                color="textSecondary"
-                variant="body1"
-              >
-                Xác thực tài khoản khách hàng của bạn để trở thành đối tác của chúng tôi !
+                    className={classes.quoteText}
+                    variant="h1"
+                  >
+                    Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
+                    they sold out High Life.
+              </Typography>
+                  <div className={classes.person}>
+                    <Typography
+                      className={classes.name}
+                      variant="body1"
+                    >
+                      Takamaru Ayako
                 </Typography>
-                  <div className={classes.contentText}>
+                    <Typography
+                      className={classes.bio}
+                      variant="body2"
+                    >
+                      Manager at inVision
+                </Typography>
+                  </div>
+                </div>
+              </div>
+            </Grid>
+            <Grid
+              className={classes.content}
+              item
+              lg={7}
+              xs={12}
+            >
+              <div className={classes.content}>
+                <div className={classes.contentBody}>
+                  <form
+                    className={classes.form}
+                    onSubmit={handleSignUp}
+                  >
+                    <Typography
+                      className={classes.title}
+                      variant="h2"
+                    >
+                      Đăng ký
+                </Typography>
                     <TextField
                       className={classes.textField}
+                      error={hasError('username')}
                       fullWidth
-                      label="Tên đăng nhập"
+                      helperText={
+                        hasError('username') ? formState.errors.username[0] : null
+                      }
+                      label="Tên tài khoản khách hàng"
                       name="username"
                       onChange={handleChange}
                       type="text"
                       value={formState.values.username || ''}
                       variant="outlined"
                     />
-                  </div>
-
-                  <div className={classes.contentText}>
                     <TextField
                       className={classes.textField}
                       error={hasError('password')}
@@ -280,69 +350,146 @@ const SignUp = props => {
                       value={formState.values.password || ''}
                       variant="outlined"
                     />
-                  </div>
-                </Grid>
+                    <TextField
+                      className={classes.textField}
+                      error={hasError('name')}
+                      fullWidth
+                      helperText={
+                        hasError('name') ? formState.errors.name[0] : null
+                      }
+                      label="Tên đối tác"
+                      name="name"
+                      onChange={handleChange}
+                      type="text"
+                      value={formState.values.name || ''}
+                      variant="outlined"
+                    />
+                    <TextField
+                      className={classes.textField}
+                      error={hasError('phone')}
+                      fullWidth
+                      helperText={
+                        hasError('phone') ? formState.errors.phone[0] : null
+                      }
+                      label="Số điện thoại"
+                      name="phone"
+                      onChange={handleChange}
+                      type="number"
+                      value={formState.values.phone || ''}
+                      variant="outlined"
+                    />
+                    <TextField
+                      className={classes.textField}
+                      error={hasError('email')}
+                      fullWidth
+                      helperText={
+                        hasError('email') ? formState.errors.email[0] : null
+                      }
+                      label="Email"
+                      name="email"
+                      onChange={handleChange}
+                      type="text"
+                      value={formState.values.email || ''}
+                      variant="outlined"
+                    />
+                    <TextField
+                      className={classes.textField}
+                      error={hasError('address')}
+                      fullWidth
+                      helperText={
+                        hasError('address') ? formState.errors.address[0] : null
+                      }
+                      label="Địa chỉ đối tác"
+                      name="address"
+                      onChange={handleChange}
+                      type="text"
+                      value={formState.values.address || ''}
+                      variant="outlined"
+                    />
+                    <TextField
+                      className={classes.textField}
+                      fullWidth
+                      label="Tỉnh/ Thành phố"
+                      margin="dense"
+                      name="city"
+                      onChange={handleChange}
+                      required
+                      select
+                      // eslint-disable-next-line react/jsx-sort-props
+                      SelectProps={{ native: true }}
+                      value={formState.values.city || ''}
+                      variant="outlined"
+                    >
+                      {city.map(option => (
+                        <option
+                          key={option.CityID}
+                          value={option.CityID}
+                        >
+                          {option.CityName}
+                        </option>
+                      ))}
+                    </TextField>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlank fontSize="small" />}
+                          checkedIcon={<CheckBox fontSize="small" />}
+                          name="ship" defaultChecked 
+                          onChange={handleChange}
+                        />
+                      }
+                      label="Giao hàng"
+                    />
+                    <TextField
+                      className={classes.textField}
+                      fullWidth
+                      label="Mô tả"
+                      name="description"
+                      onChange={handleChange}
+                      type="text"
+                      value={formState.values.description || ''}
+                      variant="outlined"
+                      multiline={true}
+                      rows={4}
+                    />
 
-                <Grid
-                  lg={3}
-                  sm={6}
-                  xl={6}
-                  xs={6}
-                  item
-                >
-                  
-                </Grid>
-
-                <Grid
-                  lg={3}
-                  sm={6}
-                  xl={6}
-                  xs={6}
-                  item
-                >
-                  <div className={classes.contentText}>
                     <Button
                       className={classes.signInButton}
                       color="primary"
                       disabled={!formState.isValid}
                       fullWidth
                       size="large"
-                      type="button"
+                      type="submit"
                       variant="contained"
-                      onClick={handleSignUp}
                     >
-                      Xác nhận
+                      Đăng ký ngay
                 </Button>
                     <Typography
                       color="textSecondary"
                       variant="body1"
                     >
-                      Bạn đã có tài khoản ?{' '}
+                      Bạn đã có tài khoản ? {' '}
                       <Link
-                        component={RouterLink}
                         to="/partner/login"
                         variant="h6"
                       >
                         Đăng nhập
                   </Link>
                     </Typography>
-                  </div>
-                </Grid>
-              </Grid>
+                  </form>
+                </div>
+              </div>
+            </Grid>
+          </Grid>
+        )}
 
 
-            </form>
-          </div>
-        </div>
-      </Grid>
     </div>
   );
 };
-
-
 
 SignUp.propTypes = {
   history: PropTypes.object
 };
 
-export default SignUp;
+export default withRouter(SignUp);

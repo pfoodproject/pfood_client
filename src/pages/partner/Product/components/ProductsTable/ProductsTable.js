@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 const UsersTable = () => {
   const classes = useStyles();
   const columns = [
-    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, borderRadius: '50%' }} /> },
+    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height:40, borderRadius: '50%' }} /> },
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Mô tả', field: 'description' },
     { title: 'Trạng thái', field: 'StatusName' },
@@ -108,7 +108,7 @@ const UsersTable = () => {
   }
 
   const handleClose = () => {
-    setOpen('false');
+    setOpen(false);
   };
 
   const handleChange = event => {
