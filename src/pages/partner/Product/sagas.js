@@ -41,7 +41,7 @@ function* fetchProduct(action) {
         const { partnerId } = action
         let product = yield call(fetchProductApi, partnerId)   
         // if (msg.success === true) {            
-        yield put(actions.fetchProductSuccess(product));
+        yield put(actions.fetchProductSuccess(product.data));
         // } else {
         // yield put(actions.fetchPartnerFail(partner));
         // }
@@ -59,13 +59,12 @@ function* addProduct(action) {
             let rs = yield call(uploadImagesApi, product.img[0])
             product.img = rs.data.data.link
 
-         yield call(addProductApi, product)
-        
-        // if (msg.success === true) {            
-        yield put(actions.addProductSuccess(product));
-        // } else {
-        // yield put(actions.fetchPartnerFail(partner));
-        // }
+        let rsAdd= yield call(addProductApi, product)
+         if (rsAdd.data.type === 'success') {                        
+        yield put(actions.addProductSuccess(rsAdd.data));
+        } else {
+        yield put(actions.addProductFail(rsAdd.data));
+        }
 
     } catch (error) {
         yield put(actions.addProductFail(error));
@@ -91,13 +90,12 @@ function* updateProduct(action) {
 function* deleteProduct(action) {
     try {
         const { productId } = action
-        yield call(deleteProductApi, productId)
-
-        // if (msg.success === true) {            
-        yield put(actions.deleteProductSuccess(productId));
-        // } else {
-        // yield put(actions.fetchPartnerFail(partner));
-        // }
+       let rs =  yield call(deleteProductApi, productId)        
+         if (rs.data.type === 'success') {            
+        yield put(actions.deleteProductSuccess(rs.data));
+         } else {
+         yield put(actions.deleteProductFail(rs.data));
+         }
 
     } catch (error) {
         yield put(actions.deleteProductFail(error));

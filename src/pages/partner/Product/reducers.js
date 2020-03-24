@@ -1,5 +1,9 @@
 import * as Types from './constants';
-var initialState = null;
+var initialState = {
+  lst: null,
+  msg: '',
+  type:''
+};
 
 const product = (state = initialState, action) => {
 
@@ -7,21 +11,42 @@ const product = (state = initialState, action) => {
     case Types.FETCH_PRODUCT:
       return state
     case Types.FETCH_PRODUCT_SUCCESS:
-      return action.listProduct
+      {
+        state.lst = action.listProduct        
+        return state
+      }
     case Types.FETCH_PRODUCT_FAIL:
       return action.msg
 
     case Types.ADD_PRODUCT:
       return state
     case Types.ADD_PRODUCT_SUCCESS:
-      return state
+      {
+        state.msg = action.response.msg
+        state.type = action.response.type
+         state.lst.push(action.response.product[0])
+        return state
+      }
     case Types.ADD_PRODUCT_FAIL:
-      return state
+      {
+        state.msg = action.response.msg
+        state.type = action.response.type
+        return state
+      }
 
     case Types.DELETE_PRODUCT:
       return state
     case Types.DELETE_PRODUCT_SUCCESS:
-      return state
+      {        
+        state.msg = action.response.msg
+        state.type = action.response.type  
+        state.lst.find((e, i) => {
+            if(e.ItemID===action.response.productId){                            
+              state.lst.splice(i, 1);
+            }
+        })        
+        return state
+      }
     case Types.DELETE_PRODUCT_FAIL:
       return state
 

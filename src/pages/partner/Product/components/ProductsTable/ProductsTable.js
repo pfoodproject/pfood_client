@@ -24,7 +24,8 @@ import { DropzoneArea } from 'material-ui-dropzone'
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
 import ProductAdd from '../ProductAdd';
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -59,8 +60,7 @@ const UsersTable = () => {
     { title: 'Mô tả', field: 'description' },
     { title: 'Trạng thái', field: 'StatusName' },
   ];
-  const [data, setData] = useState([]);
-  const count = useSelector(state => state);
+  
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const firstUpdate = useRef(true);
@@ -68,20 +68,37 @@ const UsersTable = () => {
   useEffect(() => {
     dispatch(fetchProduct(store));
   }, [dispatch, store]);
+  const {data, msg, type} = useSelector(state => ({
+    data: state.product.lst,
+    msg: state.product.msg,
+    type: state.product.type
+  }));
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }    
+    setIsLoading(false);
+  }, [data]);
 
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
+    }    
+    console.log(type);
+    
+    if (type === 'success' && type !==null) {
+      NotificationManager.success(type, msg, 3000);
+    }else if (type !== 'success' && type !=='') {
+
+      NotificationManager.error(type, msg, 3000);
     }
-    setData(count.product.data);
-    setIsLoading(false);
-  }, [count]);
+  }, [msg, type]);
 
   const handleDelete = (rowData) => {
-    dispatch(deleteProduct(rowData.ItemID));
+     dispatch(deleteProduct(rowData.ItemID));
   }
- 
   const [values, setValues] = useState({
     ItemID: '',
     ItemName: '',
@@ -125,7 +142,6 @@ const UsersTable = () => {
     })
   };
   const handleAccept = () => {
-    console.log(values);
     dispatch(updateProduct(values));
   };
 
@@ -151,6 +167,7 @@ const UsersTable = () => {
 
   return (
     <div>
+      <NotificationContainer/>
       {isLoading ? (
         <div>Loading ...</div>
       ) : (

@@ -183,6 +183,7 @@ const SignIn = props => {
       firstUpdate.current = false;
       return;
     }
+    
     if (store.partnerInfo.token.success === true) {
       localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
       history.push('/partner');
