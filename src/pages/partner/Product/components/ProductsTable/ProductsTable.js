@@ -59,19 +59,30 @@ const UsersTable = () => {
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Mô tả', field: 'description' },
     { title: 'Trạng thái', field: 'StatusName' },
+    {
+      title: 'Đăng bán', field: 'StatusID', render: rowData => {
+
+        if ( rowData.StatusID === 1) {
+          return (<Button variant="outlined" color="primary" disabled={isAdding} onClick={() => handleAdd(rowData)}>Đăng bán</Button>)
+        }
+      }
+    },
   ];
   
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const firstUpdate = useRef(true);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
     dispatch(fetchProduct(store));
   }, [dispatch, store]);
-  const {data, msg, type} = useSelector(state => ({
+  const {data, msg, type, msgSourceOfItems, typeSourceOfItems} = useSelector(state => ({
     data: state.product.lst,
     msg: state.product.msg,
-    type: state.product.type
+    type: state.product.type,
+    msgSourceOfItems:state.sourceOfItems.msg,
+    typeSourceOfItems: state.sourceOfItems.type
   }));
   useEffect(() => {
     if (firstUpdate.current) {
@@ -85,9 +96,7 @@ const UsersTable = () => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
-    }    
-    console.log(type);
-    
+    }        
     if (type === 'success' && type !==null) {
       NotificationManager.success(type, msg, 3000);
     }else if (type !== 'success' && type !=='') {
@@ -95,6 +104,20 @@ const UsersTable = () => {
       NotificationManager.error(type, msg, 3000);
     }
   }, [msg, type]);
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }        
+    if (typeSourceOfItems === 'success' && typeSourceOfItems !==null) {
+      NotificationManager.success(typeSourceOfItems, msgSourceOfItems, 3000);
+    }else if (typeSourceOfItems !== 'success' && typeSourceOfItems !=='') {
+
+      NotificationManager.error(typeSourceOfItems, msgSourceOfItems, 3000);
+    }
+    setIsAdding(false)
+  }, [msgSourceOfItems, typeSourceOfItems]);
 
   const handleDelete = (rowData) => {
      dispatch(deleteProduct(rowData.ItemID));
@@ -117,11 +140,13 @@ const UsersTable = () => {
 
   const closeAdd = () => {
     setOpenAdd(false);
+    setIsAdding(false);
   }
 
   const handleAdd = (rowData) => {
     setOpenAdd(true);    
     setAddData(rowData)
+    setIsAdding(true);
   }
 
   const handleClose = () => {
@@ -138,7 +163,7 @@ const UsersTable = () => {
   const handleChangeFile = file => {
     setValues({
       ...values,
-      ItemImage: file[0].name
+      ItemImage: file
     })
   };
   const handleAccept = () => {
@@ -187,13 +212,7 @@ const UsersTable = () => {
                   icon: DeleteOutline,
                   tooltip: 'Xóa',
                   onClick: (event, rowData) => handleDelete(rowData)
-                },
-                rowData => ({
-                  icon: Add,
-                  tooltip: 'Đăng bán',
-                  onClick: (event, rowData) => handleAdd(rowData),
-                  hidden: rowData.StatusID !==1
-                })
+                }
               ]}
               options={{
                 actionsColumnIndex: -1,

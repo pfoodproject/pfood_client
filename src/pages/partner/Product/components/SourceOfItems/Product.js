@@ -34,8 +34,8 @@ const ItemsTable = () => {
     { title: 'Thời gian kết thúc', field: 'EndTime', render: rowData => moment(rowData.EndTime).format('DD-MM-YYYY hh:mm') },
     { title: 'Lượt xem', field: 'view' },
   ];
-  const [data, setData] = useState([]);
-  const count = useSelector(state => state);
+  // const [data, setData] = useState([]);
+  // const count = useSelector(state => state);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const firstUpdate = useRef(true);
@@ -46,14 +46,29 @@ const ItemsTable = () => {
     dispatch(fetchSourceOfItems(store));
   }, [dispatch, store]);
 
+  // useEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+  //   setData(count.sourceOfItems.data);
+  //   setIsLoading(false);
+  // }, [count]);
+
+  const {data, msg, type} = useSelector(state => ({
+    data: state.sourceOfItems.lst,
+    msg: state.sourceOfItems.msg,
+    type: state.sourceOfItems.type
+  }));
+  console.log(msg);
+  
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
-    }
-    setData(count.sourceOfItems.data);
+    }    
     setIsLoading(false);
-  }, [count]);
+  }, [data]);
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),

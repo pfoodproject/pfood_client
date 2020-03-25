@@ -1,5 +1,6 @@
 import { put, call, takeLatest } from 'redux-saga/effects'
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
+import {imagesUpload} from '../../../../../utils/apis/apiAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
@@ -12,6 +13,11 @@ function fetchSourceOfItemsApi(partnerId) {
 
 function addSourceOfItemsApi(item) {
     return callApiUnAuth(`partner/sourceofitems`, 'POST', item)
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+function uploadImagesApi(img) {
+    return imagesUpload(img)
         .then(res => res)
         .catch(error => error.response.data);
 }
@@ -32,8 +38,9 @@ function* fetchPSourceOfItemsApi(action) {
     try {
         const { partnerId } = action
         let items = yield call(fetchSourceOfItemsApi, partnerId)   
-        // if (msg.success === true) {            
-        yield put(actions.fetchSourceOfItemsSuccess(items));
+        // if (msg.success === true) {      
+                  
+        yield put(actions.fetchSourceOfItemsSuccess(items.data));
         // } else {
         // yield put(actions.fetchPartnerFail(partner));
         // }
@@ -46,13 +53,14 @@ function* fetchPSourceOfItemsApi(action) {
 function* addSourceOfItems(action) {
     try {
         const { item } = action
-        yield call(addSourceOfItemsApi, item)
-
-        // if (msg.success === true) {            
-        yield put(actions.addSourceOfItemsSuccess(item));
-        // } else {
-        // yield put(actions.fetchPartnerFail(partner));
-        // }
+        let rs = yield call(uploadImagesApi, item.Image[0])
+        item.Image = rs.data.data.link
+        let rsItem = yield call(addSourceOfItemsApi, item)        
+        if (rsItem.data.type === 'success') {            
+        yield put(actions.addSourceOfItemsSuccess(rsItem.data));
+         } else {
+         yield put(actions.addSourceOfItemsFail(rsItem.data));
+         }
 
     } catch (error) {
         yield put(actions.addSourceOfItemsFail(error));

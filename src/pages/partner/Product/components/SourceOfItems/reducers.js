@@ -1,5 +1,9 @@
 import * as Types from './constants';
-var initialState = null;
+var initialState = {
+  lst: null,
+  msg: '',
+  type:''
+};
 
 const product = (state = initialState, action) => {
 
@@ -8,14 +12,22 @@ const product = (state = initialState, action) => {
     case Types.FETCH_SOURCEOFITEMS:
       return state
     case Types.FETCH_SOURCEOFITEMS_SUCCESS:
-      return action.items
+      {
+        state.lst = action.items   
+        return state
+      }
+      
     case Types.FETCH_SOURCEOFITEMS_FAIL:
       return state
 
     case Types.ADD_SOURCEOFITEMS:
       return state
     case Types.ADD_SOURCEOFITEMS_SUCCESS:
-      return state
+      {
+        state.msg = action.response.msg
+        state.type = action.response.type
+        return state
+      }
     case Types.ADD_SOURCEOFITEMS_FAIL:
       return state
 

@@ -30,16 +30,16 @@ export const addSourceOfItems = (item) => {
     }
 }
 
-export const addSourceOfItemsSuccess = (item) => {
+export const addSourceOfItemsSuccess = (response) => {
     return {
         type : Types.ADD_SOURCEOFITEMS_SUCCESS,
-        item
+        response
     }
 }
 
-export const addSourceOfItemsFail = (msg) => {
+export const addSourceOfItemsFail = (response) => {
     return {
         type : Types.ADD_SOURCEOFITEMS_FAIL,
-        msg
+        response
     }
 }

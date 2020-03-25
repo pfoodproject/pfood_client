@@ -4,6 +4,32 @@ import moment from 'moment';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { addSourceOfItems } from '../SourceOfItems/actions';
+import { DropzoneArea } from 'material-ui-dropzone'
+import validate from 'validate.js';
+const schema = {
+  Summary: {
+    presence: { allowEmpty: false, message: 'Số lượng không được để trống !' },
+    length: {
+      maximum: 10,
+      message: ' Độ dài không hợp lệ !'
+    },
+    
+  },
+  username: {
+    presence: { allowEmpty: false, message: 'Tên đăng nhập không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  },
+  password: {
+    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
+    length: {
+      maximum: 128
+    }
+  }
+};
+
+
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -33,40 +59,75 @@ const useStyles = makeStyles(theme => ({
 const ProductAdd = props => {
   const classes = useStyles();
     const [open, setOpen] = useState(props.open);
-    
-    const [data, setData] = useState({
-      ItemID: null,
-      Summary:0,
-      Price:1000,
-      StartTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-      EndTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-      Description:''
+    const [data, setData] = useState({});
+    const [formState, setFormState] = useState({
+      isValid: false,
+      values: {},
+      touched: {},
+      errors: {}
     });
 
     useEffect(() => {   
-      setData(prevData => {
-        prevData.ItemID=props.data.ItemID;
-        return prevData
-      });
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ItemID: props.data.ItemID,
+          Summary:0,
+          Price:1000,
+          StartTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+          EndTime:moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+          Description:'',
+          Image:''
+        }
+      }))
       setOpen(props.open);      
     }, [props]);
 
-  
+  useEffect(() => {
+    const errors = validate(formState.values, schema, {fullMessages :false});    
+    setFormState(formState => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
+    }));
+  }, [formState.values]);
+
   const handleClose = ()=>{
     props.updateParent()
   }
 
   const handleChange = event => {
-    setData({
-      ...data,
-      [event.target.name]: event.target.value
-    });
+    event.persist();
+
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === 'checkbox'
+            ? event.target.checked
+            : event.target.value
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true
+      }
+    }));
   };
   const dispatch = useDispatch();
   const handleSubmit = () => {
     dispatch(addSourceOfItems(data))
     props.updateParent()
   }
+  const handleChangeFile = file => {
+    setData({
+      ...data,
+      Image: file
+    })
+  };
+
+  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false;
   return (
     
     <div>
@@ -91,6 +152,10 @@ const ProductAdd = props => {
                   >
                     <TextField
                       fullWidth
+                      error={hasError('Summary')}
+                      helperText={
+                        hasError('Summary') ? formState.errors.Summary[0] : null
+                      }
                       helperText=""
                       label="Số lượng"
                       margin="dense"
@@ -98,7 +163,7 @@ const ProductAdd = props => {
                       onChange={handleChange}
                       type="number"
                       required
-                      value={data.Summary}
+                      value={formState.values.Summary}
                       variant="outlined"
                     />
                   </Grid>
@@ -110,6 +175,10 @@ const ProductAdd = props => {
                   >
                     <TextField
                       fullWidth
+                      error={hasError('price')}
+                      helperText={
+                        hasError('price') ? formState.errors.Price[0] : null
+                      }
                       helperText=""
                       label="Giá"
                       margin="dense"
@@ -178,6 +247,21 @@ const ProductAdd = props => {
                       required
                       value={data.Description}
                       variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <DropzoneArea
+                      onChange={handleChangeFile}
+                      acceptedFiles={['image/*']}
+                      filesLimit={1}
+                      dropzoneText={'Ảnh sản phẩm'}
+                      showPreviews={true}
+                      showPreviewsInDropzone={false}
+                      initialFiles={[]}
                     />
                   </Grid>
                 </Grid>
