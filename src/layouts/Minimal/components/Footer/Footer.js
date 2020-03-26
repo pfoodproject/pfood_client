@@ -18,7 +18,7 @@ const Footer = props => {
   return (
     <div
       {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root, className, 'footer')}
     >
       <Typography variant="body1">
         &copy;{' '}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import _ from 'lodash';
 
@@ -6,6 +6,7 @@ import AdminLayout from './admin';
 import PartnerLayout from './partner';
 import adminRoutes from './routes/adminRoutes';
 import partnerRoutes from './routes/partnerRoutes';
+import publicRoutes from './routes/publicRoutes';
 import Loadable from "react-loadable";
 import MyLoadingComponent from "../components/LoadingComponent";
 import { useStore, useDispatch } from 'react-redux';
@@ -65,6 +66,19 @@ const Template = () => {
                             <Route
                                 key={key}
                                 render={(route) => <PartnerLayout component={comp(component, path)} route={route} layout={lay(layout)} />}
+                                path={path}
+                                exact={exact}
+                            />
+                        )
+                    })}
+
+                    {_.map(publicRoutes, (route, key) => {
+                        const { component, path, exact } = route;
+                        let Component = component;
+                        return (
+                            <Route
+                                key={key}
+                                render={(route) => <Component  route={route}  />}
                                 path={path}
                                 exact={exact}
                             />
