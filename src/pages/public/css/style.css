@@ -1792,3 +1792,9 @@ h1, h2, h3, h4, h5,
   .post-meta a {
     color: #fff;
     border-bottom: 1px solid rgba(255, 255, 255, 0.5); }
+
+.sticky {
+      position: fixed;
+      top: 0;
+      z-index: 100; /* this is optional and should be different for every project */
+    }
