@@ -1,98 +1,327 @@
-import React, { Component } from 'react';
-import { checkLogin } from './actions';
-import { connect } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
 import { withRouter } from 'react-router-dom';
-
-class LoginPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      txtName: '',
-      txtPass: ''
+import PropTypes from 'prop-types';
+import validate from 'validate.js';
+import { makeStyles } from '@material-ui/styles';
+import {
+  Grid,
+  Button,
+  IconButton,
+  TextField,
+  Typography
+} from '@material-ui/core';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { useDispatch, useSelector } from 'react-redux';
+// import { signIn } from './actions';
+import { signIn } from './actions';
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { Link } from 'react-router-dom'
+const schema = {
+  email: {
+    presence: { allowEmpty: false, message: 'Email không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  },
+  password: {
+    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
+    length: {
+      maximum: 128
     }
   }
+};
 
-  componentWillReceiveProps(nextProps) {
-     var { history } = this.props;
-      console.log(history);
-    if (nextProps && nextProps.state.users) {
-      var { users } = nextProps.state;
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: theme.palette.background.default,
+    height: '100%'
+  },
+  grid: {
+    height: '100%'
+  },
+  quoteContainer: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
+  },
+  quote: {
+    backgroundColor: theme.palette.neutral,
+    height: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundImage: 'url(/images/auth.jpg)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center'
+  },
+  quoteInner: {
+    textAlign: 'center',
+    flexBasis: '600px'
+  },
+  quoteText: {
+    color: theme.palette.white,
+    fontWeight: 300
+  },
+  name: {
+    marginTop: theme.spacing(3),
+    color: theme.palette.white
+  },
+  bio: {
+    color: theme.palette.white
+  },
+  contentContainer: {},
+  content: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  contentHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingTop: theme.spacing(5),
+    paddingBototm: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
+  },
+  logoImage: {
+    marginLeft: theme.spacing(4)
+  },
+  contentBody: {
+    flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'center'
+    }
+  },
+  form: {
+    paddingLeft: 100,
+    paddingRight: 100,
+    paddingBottom: 125,
+    flexBasis: 700,
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    }
+  },
+  title: {
+    marginTop: theme.spacing(3)
+  },
+  socialButtons: {
+    marginTop: theme.spacing(3)
+  },
+  socialIcon: {
+    marginRight: theme.spacing(1)
+  },
+  sugestion: {
+    marginTop: theme.spacing(2)
+  },
+  textField: {
+    marginTop: theme.spacing(2)
+  },
+  signInButton: {
+    margin: theme.spacing(2, 0)
+  }
+}));
 
-      if (users.success === false) {
-        alert(users.msg);
-      } else {       
-        localStorage.setItem("session", JSON.stringify(users.data))
-          history.push({ pathname: '/' })
-    
+const SignIn = props => {
+  const { history } = props;
+
+  const classes = useStyles();
+
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {},
+    touched: {},
+    errors: {}
+  });
+
+  useEffect(() => {
+    const errors = validate(formState.values, schema);
+
+    setFormState(formState => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
+    }));
+  }, [formState.values]);
+
+  const handleBack = () => {
+    history.goBack();
+  };
+
+  const handleChange = event => {
+    event.persist();
+
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === 'checkbox'
+            ? event.target.checked
+            : event.target.value
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true
       }
-
-    }
-  }
-
-  onChange = (e) => {
-    var target = e.target;
-    var name = target.name;
-    var value = target.value;
-    this.setState({
-      [name]: value
-    });
-
-  }
-
-  onSave = (e) => {
-    e.preventDefault();
-    var { txtName, txtPass } = this.state;
-    let user = {
-      username: txtName,
-      password: txtPass
+    }));
+  };
+  const dispatch = useDispatch();
+  const handleSignIn = event => {
+    event.preventDefault();
+    dispatch(signIn(formState.values))
+  };
+  
+  const firstUpdate = useRef(true);
+  const store = useSelector(state => state);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
     }
     
-    const { dispatch } = this.props
-    dispatch(checkLogin(user))
-  }
+    if (store.adminInfo.token.success === true) {
+      localStorage.setItem("sessionadmin", JSON.stringify(store.adminInfo));
+      history.push('/admin');
+    } else {
+      NotificationManager.error('Error', store.adminInfo.token.msg, 3000);
+    }
+    
+    
+  }, [store, history]);
 
-  render() {
-    var { txtName, txtPass } = this.state;
-    return (
-      <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 
 
-        <form onSubmit={this.onSave}>
-          <div className="form-group">
-            <label>Tên Đăng Nhập: </label>
-            <input type="text" className="form-control" name="txtName"
-              value={txtName}
-              onChange={this.onChange}
-            />
+  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false;
+
+  return (
+    <div className={classes.root}>
+      <NotificationContainer/>
+      <Grid
+        className={classes.grid}
+        container
+      >
+        <Grid
+          className={classes.quoteContainer}
+          item
+          lg={5}
+        >
+          <div className={classes.quote}>
+            <div className={classes.quoteInner}>
+              <Typography
+                className={classes.quoteText}
+                variant="h1"
+              >
+                Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
+                they sold out High Life.
+              </Typography>
+              <div className={classes.person}>
+                <Typography
+                  className={classes.name}
+                  variant="body1"
+                >
+                  Takamaru Ayako
+                </Typography>
+                <Typography
+                  className={classes.bio}
+                  variant="body2"
+                >
+                  Manager at inVision
+                </Typography>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label>Mật Khẩu: </label>
-            <input type="password" className="form-control" name="txtPass"
-              value={txtPass}
-              onChange={this.onChange}
-            />
-
-
+        </Grid>
+        <Grid
+          className={classes.content}
+          item
+          lg={7}
+          xs={12}
+        >
+          <div className={classes.content}>
+            <div className={classes.contentHeader}>
+              <IconButton onClick={handleBack}>
+                <ArrowBackIcon />
+              </IconButton>
+            </div>
+            <div className={classes.contentBody}>
+              <form
+                className={classes.form}
+                onSubmit={handleSignIn}
+              >
+                <Typography
+                  className={classes.title}
+                  variant="h2"
+                >
+                  Đăng nhập
+                </Typography>
+                <TextField
+                  className={classes.textField}
+                  error={hasError('email')}
+                  fullWidth
+                  helperText={
+                    hasError('email') ? formState.errors.email[0] : null
+                  }
+                  label="Email"
+                  name="email"
+                  onChange={handleChange}
+                  type="text"
+                  value={formState.values.email || ''}
+                  variant="outlined"
+                />
+                <TextField
+                  className={classes.textField}
+                  error={hasError('password')}
+                  fullWidth
+                  helperText={
+                    hasError('password') ? formState.errors.password[0] : null
+                  }
+                  label="Mật khẩu"
+                  name="password"
+                  onChange={handleChange}
+                  type="password"
+                  value={formState.values.password || ''}
+                  variant="outlined"
+                />
+                <Button
+                  className={classes.signInButton}
+                  color="primary"
+                  disabled={!formState.isValid}
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                >
+                  Đăng nhập
+                </Button>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  Bạn chưa có tài khoản ?{' '}
+                  <Link
+                    to="/partner/sign-up"
+                    variant="h6"
+                  >
+                    Đăng ký ngay
+                  </Link>
+                </Typography>
+              </form>
+            </div>
           </div>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
 
+SignIn.propTypes = {
+  history: PropTypes.object
+};
 
-
-          <button type="submit" className="btn btn-primary">Submit</button>
-        </form>
-
-      </div>
-
-    );
-  }
-}
-
-
-function mapStateToProps(state) {
-
-  return {
-    state
-  }
-}
-
-
-export default withRouter(connect(mapStateToProps)(LoginPage));
+export default withRouter(SignIn);

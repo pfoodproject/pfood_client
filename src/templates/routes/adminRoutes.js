@@ -21,23 +21,19 @@ const routes = {
         path: '/admin',
         exact: true,
         component: HomePage,
-        private: true
+        layout: 'MainLayout'
     },
     ProductPage: {
       path: '/admin/product',
       exact: true,
       component: ProductPage,
-      private: true
+      layout: 'MainLayout'
   },
     LoginPage: {
         path: '/admin/login',
+        component: LoginPage,
         exact: true,
-        component: 
-            (localStorage.getItem("session") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0) 
-                ? HomePage 
-                : LoginPage
-        ),
-        private: false
+        layout: 'Minimal'
     }
 };
 
