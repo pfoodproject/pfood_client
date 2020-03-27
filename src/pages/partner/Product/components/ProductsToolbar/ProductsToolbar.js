@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
-import {addProduct} from '../../actions';
+import {addProduct, importProduct} from '../../actions';
+import {Link} from 'react-router-dom';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -70,6 +71,11 @@ const UsersToolbar = props => {
     dispatch(addProduct(values));
     setOpen(false);
   };
+
+  const handleChangeFileImport = file => {
+    dispatch(importProduct({PartnerID:store.token.user.PartnerID, file:file.target.files[0]}))
+    
+  };
   
   return (
     <div
@@ -78,8 +84,28 @@ const UsersToolbar = props => {
     >
       <div className={classes.row}>
         <span className={classes.spacer} />
-        <Button className={classes.importButton}>Import</Button>
-        {/* <Button className={classes.exportButton}>Export</Button> */}
+        <Link
+          to={'/write.xlsx'}
+          download
+          target="_blank"
+          className={`MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-importButton-221`}
+        >
+          Tải mẫu import
+        </Link>
+        <input
+          accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+          className={classes.input}
+          style={{ display: 'none' }}
+          id="raised-button-file"
+           onChange={handleChangeFileImport}
+          type="file"
+     
+        />
+        <label htmlFor="raised-button-file">
+          <Button variant="contained" component="span" className={classes.importButton}  >
+            Import
+          </Button>
+        </label>
         <Button
           color="primary"
           variant="contained"

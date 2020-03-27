@@ -5,7 +5,7 @@ import Loadable from "react-loadable";
 import MyLoadingComponent from "../../components/LoadingComponent";
 const AdminTemp = (props) => {
     const LoginPage = Loadable({
-        loader: () => import("../../pages/partner/SignIn"),
+        loader: () => import("../../pages/admin/Login"),
         loading: MyLoadingComponent
     });
 
@@ -18,7 +18,7 @@ const AdminTemp = (props) => {
     }
     const lay = (layout) => {
 
-        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0))) {
+        if ((localStorage.getItem("sessionadmin") && ((new Date(JSON.parse(localStorage.getItem("sessionadmin")).token.expires) - new Date()) >= 0))) {
             return layout
         }
         return 'Minimal'
@@ -27,7 +27,8 @@ const AdminTemp = (props) => {
     let Component = comp(props.component, props.path);
     let route = props.route;
     let layout = lay(props.layout);
-
+    console.log(layout);
+    
     return (
         <div> {layout === 'Minimal' ? (
             <Minimal>

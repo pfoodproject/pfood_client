@@ -42,3 +42,18 @@ export function imagesUpload(img) {
     console.log(err.response);
   });
 }
+
+export function importProduct(endpoint, method = 'GET', obj) {
+  let formData = new FormData();  
+  formData.append('file', obj.file);
+  formData.append('PartnerID', obj.PartnerID);
+  console.log(formData);
+  
+  return axios({
+    method: method,
+    url: `${Config.API_URL}/${endpoint}`,
+    data: formData
+  }).catch(err => {
+    console.log(err.response);
+  });
+}

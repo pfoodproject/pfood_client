@@ -60,7 +60,6 @@ const ItemsTable = () => {
     msg: state.sourceOfItems.msg,
     type: state.sourceOfItems.type
   }));
-  console.log(msg);
   
   useEffect(() => {
     if (firstUpdate.current) {

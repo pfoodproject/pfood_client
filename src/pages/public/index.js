@@ -77,7 +77,7 @@ const Homepage = () => {
 
                                         <ul className="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                                             <li><Link to="#home-section" className="nav-link">Home</Link></li>
-                                            <li><a href="#work-section" className="nav-link">Work</a></li>
+                                            <li><a href='#section1' className="nav-link">Work</a></li>
                                             <li>
                                                 <Link to="#services-section" className="nav-link">Services</Link>
                                             </li>
@@ -172,7 +172,7 @@ const Homepage = () => {
                     </div>
                 </section >
 
-                <ScrollableAnchor className="site-section" id={'work-section'}>
+                <ScrollableAnchor className="site-section" id={'section1'}>
                     <React.Fragment>
                         <div className="container">
                             <div className="row mb-5 justify-content-center">

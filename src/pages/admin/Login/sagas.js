@@ -4,6 +4,7 @@ import * as actions from './actions'
 import * as Types from './constants'
 
 export function checkLoginApi(user) {
+    
     return callApiUnAuth(`admin/signin`, 'POST', { user })
         .then(res => res)
         .catch(error => error.response.data);

@@ -72,6 +72,7 @@ const UsersTable = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const firstUpdate = useRef(true);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
@@ -103,6 +104,8 @@ const UsersTable = () => {
 
       NotificationManager.error(type, msg, 3000);
     }
+    setIsUpdate(false)
+    setOpen(false);
   }, [msg, type]);
 
   useEffect(() => {
@@ -168,6 +171,7 @@ const UsersTable = () => {
   };
   const handleAccept = () => {
     dispatch(updateProduct(values));
+    setIsUpdate(true);
   };
 
   const tableIcons = {
@@ -283,7 +287,6 @@ const UsersTable = () => {
                       showPreviewsInDropzone={false}
                       initialFiles={[]}
                     />
-                    <img src={values.ItemImage} alt={values.ItemName} style={{ width: 40, borderRadius: '50%' }} />
                   </Grid>
 
                 </Grid>
@@ -292,7 +295,7 @@ const UsersTable = () => {
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus>
+                <Button onClick={handleAccept} color="primary" autoFocus disabled={isUpdate}>
                   Xác nhận
           </Button>
               </DialogActions>
