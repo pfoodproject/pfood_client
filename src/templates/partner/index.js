@@ -44,7 +44,7 @@ const PartnerTemp = (props) => {
         console.log(props.component);
         
         return (
-            <div> {layout==='Minimal' ? (
+            <React.Fragment> {layout==='Minimal' ? (
                 <Minimal>
                     <Component route={route} />
                 </Minimal>
@@ -53,7 +53,7 @@ const PartnerTemp = (props) => {
                     <Component route={route} />
                 </Partner>
               )}
-            </div>
+            </React.Fragment>
         );
     
 }

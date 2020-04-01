@@ -16,7 +16,6 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
-  Add
 } from '@material-ui/icons';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';

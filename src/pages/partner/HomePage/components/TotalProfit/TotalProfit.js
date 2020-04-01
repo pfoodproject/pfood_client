@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
-
+var CurrencyFormat = require('react-currency-format');
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%',
@@ -31,14 +31,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TotalProfit = props => {
-  const { className, ...rest } = props;
+  const { rsTotal } = props;
 
   const classes = useStyles();
 
   return (
     <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root)}
     >
       <CardContent>
         <Grid
@@ -52,13 +51,13 @@ const TotalProfit = props => {
               gutterBottom
               variant="body2"
             >
-              TOTAL PROFIT
+              DOANH THU TẠM TÍNH
             </Typography>
             <Typography
               color="inherit"
               variant="h3"
             >
-              $23,200
+             <CurrencyFormat value={rsTotal} displayType={'text'} thousandSeparator={true} suffix={' VND'} renderText={value =>  value } />
             </Typography>
           </Grid>
           <Grid item>

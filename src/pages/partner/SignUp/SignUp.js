@@ -122,8 +122,6 @@ const useStyles = makeStyles(theme => ({
   form: {
     paddingLeft: 100,
     paddingRight: 100,
-    paddingBottom: 125,
-    flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2)
@@ -284,15 +282,14 @@ const SignUp = props => {
                     className={classes.quoteText}
                     variant="h1"
                   >
-                    Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                    they sold out High Life.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
               </Typography>
                   <div className={classes.person}>
                     <Typography
                       className={classes.name}
                       variant="body1"
                     >
-                      Takamaru Ayako
+                      QWERTY
                 </Typography>
                     <Typography
                       className={classes.bio}
@@ -320,7 +317,7 @@ const SignUp = props => {
                       className={classes.title}
                       variant="h2"
                     >
-                      Đăng ký
+                      Đăng ký đối tác
                 </Typography>
                     <TextField
                       className={classes.textField}

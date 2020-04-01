@@ -7,10 +7,6 @@ import PartnerLayout from './partner';
 import adminRoutes from './routes/adminRoutes';
 import partnerRoutes from './routes/partnerRoutes';
 import publicRoutes from './routes/publicRoutes';
-import Loadable from "react-loadable";
-import MyLoadingComponent from "../components/LoadingComponent";
-import { useStore, useDispatch } from 'react-redux';
-import {mlts} from '../pages/partner/Account/actions'
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../theme';
 const Template = () => {

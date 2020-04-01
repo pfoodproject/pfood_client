@@ -8,7 +8,7 @@ import $ from 'jquery';
 import AOS from 'aos';
 import { Link } from 'react-router-dom';
 import Typed from 'react-typed';
-import ScrollableAnchor from 'react-scrollable-anchor'
+import Scrollchor from 'react-scrollchor';
 const Homepage = () => {
     AOS.init({
         duration: 800,
@@ -47,8 +47,8 @@ const Homepage = () => {
                         <div className="row">
                             <div className="col-md-6">
                                 <p className="mb-0">
-                                    <span className="mr-3"><strong className="text-white">Phone:</strong> <Link to="tel://#">+1 234 5678 9101</Link></span>
-                                    <span><strong className="text-white">Email:</strong> <Link to="#">info@yourdomain.com</Link></span>
+                                    <span className="mr-3"><strong className="text-white">Phone:</strong> <Link to="#">+1 234 5678 9101</Link></span>
+                                    <span><strong className="text-white">Email:</strong> <Link to="#">abc@domain.com</Link></span>
                                 </p>
                             </div>
                             <div className="col-md-6">
@@ -70,26 +70,27 @@ const Homepage = () => {
                             <div className="row align-items-center">
 
                                 <div className="col-11 col-xl-2">
-                                    <h1 className="mb-0 site-logo"><Link to="index.html" className="text-black h2 mb-0">Create<span className="text-primary">.</span> </Link></h1>
+                                    <h1 className="mb-0 site-logo"><Link to="/" className="text-black h2 mb-0">Pfood<span className="text-primary">.</span> </Link></h1>
                                 </div>
                                 <div className="col-12 col-md-10 d-none d-xl-block">
                                     <nav className="site-navigation position-relative text-right" role="navigation">
 
                                         <ul className="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
-                                            <li><Link to="#home-section" className="nav-link">Home</Link></li>
-                                            <li><a href='#section1' className="nav-link">Work</a></li>
+                                            <li><Scrollchor to="#home-section" className="nav-link">Trang chủ</Scrollchor></li>
+                                            <li><Scrollchor to='#section1' className="nav-link">Sản phẩm</Scrollchor></li>
                                             <li>
-                                                <Link to="#services-section" className="nav-link">Services</Link>
+                                                <Scrollchor to="#services-section" className="nav-link">Dịch vụ</Scrollchor>
                                             </li>
                                             <li className="has-children">
-                                                <Link to="#about-section" className="nav-link">About</Link>
+                                                <Scrollchor to="#about-section" className="nav-link">Về</Scrollchor>
                                                 <ul className="dropdown">
-                                                    <li><Link to="#about-section">Specialties</Link></li>
-                                                    <li><Link to="#team-section">Our Team</Link></li>
+                                                    <li><Scrollchor to="#about-section">Chúng tôi</Scrollchor></li>
+                                                    <li><Scrollchor to="#team-section">Đội ngũ phát triển</Scrollchor></li>
                                                 </ul>
                                             </li>
-                                            <li><Link to="#blog-section" className="nav-link">Blog</Link></li>
-                                            <li><Link to="#contact-section" className="nav-link">Contact</Link></li>
+                                            <li>
+                                                <Link to="/partner/sign-up" className="nav-link">Đối tác</Link>
+                                            </li>
                                         </ul>
                                     </nav>
                                 </div>
@@ -102,7 +103,7 @@ const Homepage = () => {
                     </header>
                 </div>
 
-                <div className="site-blocks-cover overlay" style={{ backgroundImage: `url(/images/hero_1.jpg)` }} data-aos="fade" data-stellar-background-ratio="0.5">
+                <div className="site-blocks-cover overlay" style={{ backgroundImage: `url(/images/homepage.jpg)` }} data-aos="fade" data-stellar-background-ratio="0.5">
                     <div className="container">
                         <div className="row align-items-center justify-content-center text-center">
 
@@ -117,8 +118,8 @@ const Homepage = () => {
                                             backDelay={1000}
                                             smartBackspace
                                         /></h1>
-                                        <p className="lead mb-5">Free Web Template by <Link to="#" target="_blank">Colorlib</Link></p>
-                                        <div><a data-fancybox data-ratio="2" href="https://vimeo.com/317571768" className="btn btn-primary btn-md">Watch Video</a></div>
+                                        <p className="lead mb-5">Hello <Link to="#" target="_blank">World</Link></p>
+                                        <div><Link data-fancybox data-ratio="2" to="#" className="btn btn-primary btn-md">Xem Video</Link></div>
                                     </div>
                                 </div>
 
@@ -172,12 +173,11 @@ const Homepage = () => {
                     </div>
                 </section >
 
-                <ScrollableAnchor className="site-section" id={'section1'}>
-                    <React.Fragment>
+                <section className="site-section" id={"section1"}>
                         <div className="container">
                             <div className="row mb-5 justify-content-center">
                                 <div className="col-md-8 text-center">
-                                    <h2 className="text-black h1 site-section-heading text-center">Our Works</h2>
+                                    <h2 className="text-black h1 site-section-heading text-center">Sản phẩm</h2>
                                     <p className="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolores, itaque neque, delectus odio iure explicabo.</p>
                                 </div>
                             </div>
@@ -185,72 +185,71 @@ const Homepage = () => {
                         <div className="container-fluid">
                             <div className="row">
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_1.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_1.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_1.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Bonzai Tree</h2>
                                             <span className="category">Web Application</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_2.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_2.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_2.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Simple Woman</h2>
                                             <span className="category">Branding</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_3.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_3.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_3.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Fruits</h2>
                                             <span className="category">Website</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
 
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_4.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_4.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_4.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Design Material</h2>
                                             <span className="category">Web Application</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_5.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_5.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_5.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Handy Food</h2>
                                             <span className="category">Branding</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div className="col-md-6 col-lg-4">
-                                    <a href="images/img_6.jpg" className="media-1" data-fancybox="gallery">
-                                        <img src="images/img_6.jpg" alt="Image" className="img-fluid" />
+                                    <Link to="#" className="media-1" data-fancybox="gallery">
+                                        <img src="images/img_6.jpg" alt="img" className="img-fluid" />
                                         <div className="media-1-content">
                                             <h2>Cat With Cup</h2>
                                             <span className="category">Website</span>
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
 
 
                             </div>
                         </div>
-                    </React.Fragment>
-                </ScrollableAnchor >
+                </section >
 
                 <section className="site-section border-bottom" id="services-section">
                     <div className="container">
                         <div className="row justify-content-center mb-5">
                             <div className="col-md-8 text-center" data-aos="fade-up">
-                                <h2 className="text-black h1 site-section-heading text-center">Our Services</h2>
+                                <h2 className="text-black h1 site-section-heading text-center">Dịch vụ</h2>
                             </div>
                         </div>
                         <div className="row align-items-stretch">
@@ -260,7 +259,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>Web Design</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +269,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>eCommerce</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -280,7 +279,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>Web Applications</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -292,7 +291,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>Branding</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -302,7 +301,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>Copy Writing</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -312,7 +311,7 @@ const Homepage = () => {
                                     <div>
                                         <h3>Mobile Applications</h3>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis molestiae vitae eligendi at.</p>
-                                        <p><a href="#">Learn More</a></p>
+                                        <p><Link to="#">Learn More</Link></p>
                                     </div>
                                 </div>
                             </div>
@@ -326,7 +325,7 @@ const Homepage = () => {
                         <div className="row mb-5">
 
                             <div className="col-md-5 ml-auto mb-5 order-md-2" data-aos="fade">
-                                <img src="images/about_1.jpg" alt="Image" className="img-fluid rounded" />
+                                <img src="images/about_1.jpg" alt="img" className="img-fluid rounded" />
                             </div>
                             <div className="col-md-6 order-md-1" data-aos="fade">
 
@@ -334,7 +333,7 @@ const Homepage = () => {
 
                                     <div className="col-12">
                                         <div className="text-left pb-1">
-                                            <h2 className="text-black h1 site-section-heading">About Us</h2>
+                                            <h2 className="text-black h1 site-section-heading">Về chúng tôi</h2>
                                         </div>
                                     </div>
                                     <div className="col-12 mb-4">
@@ -346,7 +345,7 @@ const Homepage = () => {
                                             <div>
                                                 <h3>Web &amp; Mobile Specialties</h3>
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis consect.</p>
-                                                <p className="mb-0"><a href="#">Learn More</a></p>
+                                                <p className="mb-0"><Link to="#">Learn More</Link></p>
                                             </div>
                                         </div>
                                     </div>
@@ -356,7 +355,7 @@ const Homepage = () => {
                                             <div>
                                                 <h3>Intuitive Thinkers</h3>
                                                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis quis.</p>
-                                                <p className="mb-0"><a href="#">Learn More</a></p>
+                                                <p className="mb-0"><Link to="#">Learn More</Link></p>
                                             </div>
                                         </div>
                                     </div>
@@ -372,62 +371,62 @@ const Homepage = () => {
                     <div className="container">
                         <div className="row justify-content-center mb-5">
                             <div className="col-md-7 text-center">
-                                <h2 className="text-black h1 site-section-heading">Our Team</h2>
+                                <h2 className="text-black h1 site-section-heading">Đội ngũ phát triển</h2>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="100">
                                 <div className="person text-center">
-                                    <img src="images/person_2.jpg" alt="Image" className="img-fluid rounded-circle w-50 mb-5" />
+                                    <img src="images/person_2.jpg" alt="img" className="img-fluid rounded-circle w-50 mb-5" />
                                     <h3>John Rooster</h3>
                                     <p className="position text-muted">Co-Founder, President</p>
                                     <p className="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi at consequatur unde molestiae quidem provident voluptatum deleniti quo iste error eos est praesentium distinctio cupiditate tempore suscipit inventore deserunt tenetur.</p>
                                     <ul className="ul-social-circle">
-                                        <li><a href="#"><span className="icon-facebook"></span></a></li>
-                                        <li><a href="#"><span className="icon-twitter"></span></a></li>
-                                        <li><a href="#"><span className="icon-linkedin"></span></a></li>
-                                        <li><a href="#"><span className="icon-instagram"></span></a></li>
+                                        <li><Link to="#"><span className="icon-facebook"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-twitter"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-linkedin"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-instagram"></span></Link></li>
                                     </ul>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="200">
                                 <div className="person text-center">
-                                    <img src="images/person_3.jpg" alt="Image" className="img-fluid rounded-circle w-50 mb-5" />
+                                    <img src="images/person_3.jpg" alt="img" className="img-fluid rounded-circle w-50 mb-5" />
                                     <h3>Tom Sharp</h3>
                                     <p className="position text-muted">Co-Founder, COO</p>
                                     <p className="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi at consequatur unde molestiae quidem provident voluptatum deleniti quo iste error eos est praesentium distinctio cupiditate tempore suscipit inventore deserunt tenetur.</p>
                                     <ul className="ul-social-circle">
-                                        <li><a href="#"><span className="icon-facebook"></span></a></li>
-                                        <li><a href="#"><span className="icon-twitter"></span></a></li>
-                                        <li><a href="#"><span className="icon-linkedin"></span></a></li>
-                                        <li><a href="#"><span className="icon-instagram"></span></a></li>
+                                        <li><Link to="#"><span className="icon-facebook"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-twitter"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-linkedin"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-instagram"></span></Link></li>
                                     </ul>
                                 </div>
                             </div>
                             <div className="col-md-6 col-lg-4 mb-5 mb-lg-0" data-aos="fade" data-aos-delay="300">
                                 <div className="person text-center">
-                                    <img src="images/person_4.jpg" alt="Image" className="img-fluid rounded-circle w-50 mb-5" />
+                                    <img src="images/person_4.jpg" alt="img" className="img-fluid rounded-circle w-50 mb-5" />
                                     <h3>Winston Hodson</h3>
                                     <p className="position text-muted">Marketing</p>
                                     <p className="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi at consequatur unde molestiae quidem provident voluptatum deleniti quo iste error eos est praesentium distinctio cupiditate tempore suscipit inventore deserunt tenetur.</p>
                                     <ul className="ul-social-circle">
-                                        <li><a href="#"><span className="icon-facebook"></span></a></li>
-                                        <li><a href="#"><span className="icon-twitter"></span></a></li>
-                                        <li><a href="#"><span className="icon-linkedin"></span></a></li>
-                                        <li><a href="#"><span className="icon-instagram"></span></a></li>
+                                        <li><Link to="#"><span className="icon-facebook"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-twitter"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-linkedin"></span></Link></li>
+                                        <li><Link to="#"><span className="icon-instagram"></span></Link></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <a href="#" className="bg-primary py-5 d-block">
+                <Link to="/partner/sign-up" className="bg-primary py-5 d-block">
                     <div className="container">
                         <div className="row justify-content-center">
-                            <div className="col-md10"><h2 className="text-white">Let's Get Started</h2></div>
+                            <div className="col-md10"><h2 className="text-white">Trở thành đối tác ngay !</h2></div>
                         </div>
                     </div>
-                </a>
+                </Link>
 
                 <footer className="site-footer">
                     <div className="container">
@@ -435,32 +434,31 @@ const Homepage = () => {
                             <div className="col-md-9">
                                 <div className="row">
                                     <div className="col-md-5">
-                                        <h2 className="footer-heading mb-4">About Us</h2>
+                                        <h2 className="footer-heading mb-4">Về chúng tôi</h2>
                                         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque facere laudantium magnam voluptatum autem. Amet aliquid nesciunt veritatis aliquam.</p>
                                     </div>
                                     <div className="col-md-3 ml-auto">
                                         <h2 className="footer-heading mb-4">Features</h2>
                                         <ul className="list-unstyled">
-                                            <li><a href="#">About Us</a></li>
-                                            <li><a href="#">Services</a></li>
-                                            <li><a href="#">Testimonials</a></li>
-                                            <li><a href="#">Contact Us</a></li>
+                                            <li><Link to="#">Về chúng tôi</Link></li>
+                                            <li><Link to="#">Sản phẩm</Link></li>
+                                            <li><Link to="#">Dịch vụ</Link></li>
                                         </ul>
                                     </div>
                                     <div className="col-md-3">
                                         <h2 className="footer-heading mb-4">Follow Us</h2>
-                                        <a href="#" className="pl-0 pr-3"><span className="icon-facebook"></span></a>
-                                        <a href="#" className="pl-3 pr-3"><span className="icon-twitter"></span></a>
-                                        <a href="#" className="pl-3 pr-3"><span className="icon-instagram"></span></a>
-                                        <a href="#" className="pl-3 pr-3"><span className="icon-linkedin"></span></a>
+                                        <Link to="#" className="pl-0 pr-3"><span className="icon-facebook"></span></Link>
+                                        <Link to="#" className="pl-3 pr-3"><span className="icon-twitter"></span></Link>
+                                        <Link to="#" className="pl-3 pr-3"><span className="icon-instagram"></span></Link>
+                                        <Link to="#" className="pl-3 pr-3"><span className="icon-linkedin"></span></Link>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-md-3">
-                                <h2 className="footer-heading mb-4">Subscribe Newsletter</h2>
+                                <h2 className="footer-heading mb-4">Đăng ký nhận thông tin</h2>
                                 <form action="#" method="post">
                                     <div className="input-group mb-3">
-                                        <input type="text" className="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2" />
+                                        <input type="text" className="form-control border-secondary text-white bg-transparent" placeholder="Email" aria-label="Enter Email" aria-describedby="button-addon2" />
                                         <div className="input-group-append">
                                             <button className="btn btn-primary text-white" type="button" id="button-addon2">Send</button>
                                         </div>
@@ -473,7 +471,7 @@ const Homepage = () => {
                                 <div className="border-top pt-5">
                                     <p>
 
-                                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i className="icon-heart text-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
+                                        Copyright &copy; All rights reserved | This app is made with <i className="icon-heart text-danger" aria-hidden="true"></i> by <Link to="#" target="_blank" >Ffood</Link>
 
                                     </p>
                                 </div>

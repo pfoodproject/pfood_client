@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MainLayout from '../../layouts/Main';
 import Minimal from '../../layouts/Minimal';
 import Loadable from "react-loadable";
