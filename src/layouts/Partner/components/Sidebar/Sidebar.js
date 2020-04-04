@@ -39,16 +39,16 @@ const Sidebar = props => {
 
   const pages = [
     {
-      title: 'Dashboard',
+      title: 'Thống kê',
       href: '/partner',
       icon: <DashboardIcon />
     },
     {
-      title: 'Account',
+      title: 'Tài khoản của tôi',
       href: '/partner/account',
       icon: <PeopleIcon />
     },{
-      title: 'Products',
+      title: 'Quản lý sản phẩm',
       href: '/partner/product',
       icon: <Fastfood />
     }  

@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
 const UsersTable = () => {
   const classes = useStyles();
   const columns = [
-    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height:40, borderRadius: '50%' }} /> },
+    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height:40, borderRadius: '50%' }} /> , filtering: false},
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Mô tả', field: 'description' },
     { title: 'Trạng thái', field: 'StatusName' },
@@ -64,7 +64,7 @@ const UsersTable = () => {
         if ( rowData.StatusID === 1) {
           return (<Button variant="outlined" color="primary" disabled={isAdding} onClick={() => handleAdd(rowData)}>Đăng bán</Button>)
         }
-      }
+      } , filtering: false
     },
   ];
   
@@ -219,7 +219,8 @@ const UsersTable = () => {
               ]}
               options={{
                 actionsColumnIndex: -1,
-                exportButton: true
+                exportButton: true,
+                filtering: true
               }}
             />
 

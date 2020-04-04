@@ -112,7 +112,7 @@ const Homepage = () => {
                                 <div className="row justify-content-center mb-4">
                                     <div className="col-md-8 text-center">
                                         <h1><Typed
-                                            strings={["Here you can find hardware", "Here you can find software", "Here you can find net tools"]}
+                                            strings={["Here you can find food", "Here you can find drink", "Here you can find snacks"]}
                                             typeSpeed={80}
                                             backSpeed={80}
                                             backDelay={1000}
