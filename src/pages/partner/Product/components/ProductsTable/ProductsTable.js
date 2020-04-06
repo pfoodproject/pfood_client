@@ -25,6 +25,9 @@ import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
 import ProductAdd from '../ProductAdd';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -122,7 +125,20 @@ const UsersTable = () => {
   }, [msgSourceOfItems, typeSourceOfItems]);
 
   const handleDelete = (rowData) => {
-     dispatch(deleteProduct(rowData.ItemID));
+    confirmAlert({
+      title: 'Xác nhận !',
+      message: 'Bạn có chắc muốn xóa ?',
+      buttons: [
+        {
+          label: 'Có',
+          onClick: () => dispatch(deleteProduct(rowData.ItemID))
+        },
+        {
+          label: 'Không',
+        }
+      ]
+    });
+    //  
   }
   const [values, setValues] = useState({
     ItemID: '',
