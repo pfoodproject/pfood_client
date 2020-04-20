@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MainLayout from '../../layouts/Main';
+import Notication from '../../pages/admin/Notication'
 
 class index extends Component {
     render() {
@@ -8,6 +9,7 @@ class index extends Component {
         
         return (
             <div>
+                <Notication></Notication>
                 <MainLayout>
                     <Component route={route} />
                 </MainLayout>

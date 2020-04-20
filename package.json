@@ -24,6 +24,7 @@
     "react-scripts": "3.3.0",
     "react-table": "^6.11.4",
     "react-toast-notifications": "^2.4.0",
+    "react-toastify": "^5.5.0",
     "react-toggle": "^4.1.1",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3"

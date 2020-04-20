@@ -15,13 +15,14 @@ class Manager extends Component {
       ListPartner: [],
       page: 1,
       limit: 15,
-      orderBy: [{ column: "PartnerID", value: "desc" }],
+      orderBy: [{ column: "p.PartnerID", value: "desc" }],
       PartnerNameFillter: "",
       PartnerAddressFillter: "",
       PartnerEmailFillter: "",
       PartnerPhoneFillter: "",
       PartnerDescriptionFillter: "",
       PartnerTypeIDFillter: "",
+      StatusNameFillter:"",
       pageCount:0
     }
   }
@@ -30,18 +31,19 @@ class Manager extends Component {
   }
 
   getParam = () => {
-    const { page, limit, orderBy, PartnerNameFillter, PartnerAddressFillter, PartnerEmailFillter, PartnerPhoneFillter, PartnerDescriptionFillter, PartnerTypeIDFillter } = this.state
+    const { StatusNameFillter, page, limit, orderBy, PartnerNameFillter, PartnerAddressFillter, PartnerEmailFillter, PartnerPhoneFillter, PartnerDescriptionFillter, PartnerTypeIDFillter } = this.state
     return {
       orderBy: orderBy,
       limit: limit,
       offset: (page - 1) * limit,
       like: [
-        { column: "PartnerName", value: PartnerNameFillter },
-        { column: "PartnerAddress", value: PartnerAddressFillter },
-        { column: "PartnerEmail", value: PartnerEmailFillter },
-        { column: "PartnerPhone", value: PartnerPhoneFillter },
-        { column: "PartnerDescription", value: PartnerDescriptionFillter },
-        { column: "PartnerTypeID", value: PartnerTypeIDFillter },
+        { column: "p.PartnerName", value: PartnerNameFillter },
+        { column: "p.PartnerAddress", value: PartnerAddressFillter },
+        { column: "p.PartnerEmail", value: PartnerEmailFillter },
+        { column: "p.PartnerPhone", value: PartnerPhoneFillter },
+        { column: "p.PartnerDescription", value: PartnerDescriptionFillter },
+        { column: "p.PartnerTypeID", value: PartnerTypeIDFillter },
+        { column: "s.StatusName", value: StatusNameFillter },
       ]
     }
   }
@@ -67,12 +69,14 @@ class Manager extends Component {
     this.props.getData(this.getParam(), this.after);
   }
 
-  handleEnable = (e, row) => {
+  handleEnable = async (e, row) => {
+    const  status_old =  row.original.StatusID
+    console.log(status_old)
     var status = 2
     if (e.target.checked) {
       status = 1
     }
-    this.props.changeStatus({ "StatusID": status, "PartnerID": row.original.PartnerID }, this.afterChange)
+    this.props.changeStatus({ "StatusID": status, "PartnerID": row.original.PartnerID, "status_old": status_old }, this.afterChange)
 
   }
 
@@ -120,9 +124,13 @@ class Manager extends Component {
               accessor: "PartnerDescription",
             },
             {
-              Header: <div><div>Kiểu</div><input style={{ width: "99%" }} className="formControl" type="text" name="PartnerTypeIDFillter" value={this.state.PartnerTypeIDFillter} onChange={this.onChangeFillter} /></div>,
-              accessor: "PartnerTypeID",
+              Header: <div><div>Trạng thái</div><input style={{ width: "99%" }} className="formControl" type="text" name="StatusNameFillter" value={this.state.StatusNameFillter} onChange={this.onChangeFillter} /></div>,
+              accessor: "StatusName",
             },
+            // {
+            //   Header: <div><div>Kiểu</div><input style={{ width: "99%" }} className="formControl" type="text" name="PartnerTypeIDFillter" value={this.state.PartnerTypeIDFillter} onChange={this.onChangeFillter} /></div>,
+            //   accessor: "PartnerTypeID",
+            // },
             {
               Header: <div><div></div></div>,
               accessor: "StatusID",

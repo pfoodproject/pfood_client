@@ -6,6 +6,11 @@ import MyLoadingComponent from "../../components/LoadingComponent";
     loading: MyLoadingComponent
   });
 
+  const ParamPage = Loadable({
+    loader: () => import("../../pages/admin/ParamController"),
+    loading: MyLoadingComponent
+  });
+
   const UserPage = Loadable({
     loader: () => import("../../pages/admin/UserController"),
     loading: MyLoadingComponent
@@ -33,6 +38,14 @@ const routes = {
         component: HomePage,
         private: true
     },
+
+    ParamPage: {
+      path: '/paramcontroller',
+      exact: true,
+      component: ParamPage,
+      private: true
+  },
+
     UserPage: {
       path: '/usercontroller',
       exact: true,

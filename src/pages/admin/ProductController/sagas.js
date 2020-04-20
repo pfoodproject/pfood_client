@@ -6,32 +6,23 @@ import callApiUnauthWithBody from "../../../utils/apis/apiUnAuth"
 
 function* wathProductAction(){
     yield takeLatest (Types.GET_DATA, getDataSaga)
+    yield takeLatest (Types.GET_COUNT, getCountSaga)
     yield takeLatest (Types.CHANGE_STATUS, changeStatus)
 }
 
 function*  getDataSaga({payload}){
     var resp = yield call(callApiUnauthWithBody,"admin/getProduct","POST",payload.value);
-    console.log(resp)
-    if(resp.statusText == "OK") {
-        var resp1 = yield call(callApiUnauthWithBody,"admin/countProduct","GET",{});
-        yield call(payload.after,resp.data,resp1.data)
-        yield put(actions.getDataSuccess(resp.data))
-    }
-    else{
-        yield put(actions.getDataFalse(resp))
-    }
+    yield call(payload.after,resp.data)
+}
+
+function*  getCountSaga({payload}){
+    var resp = yield call(callApiUnauthWithBody,"admin/countProduct","GET",{});
+    yield call(payload.after,resp.data)
 }
 
 function*  changeStatus({payload}){
     var resp = yield call(callApiUnauthWithBody,"admin/ProductController","POST",payload.value);
-    
-    if(resp.statusText == "OK") {
-        
-        yield call(payload.after)
-    }
-    else{
-        yield put(actions.getDataFalse(resp))
-    }
+    yield call(payload.after,resp.data)
 }
 
 export default wathProductAction;
