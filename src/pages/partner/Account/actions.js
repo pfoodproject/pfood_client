@@ -73,3 +73,10 @@ export const mlts = (partner) => {
     }
 }
 
+///////// signout
+export const signout = () => {
+    return {
+        type : Types.SIGN_OUT
+    }
+}
+

@@ -36,6 +36,10 @@ const users = (state = initialState, action) => {
     //
     case Types.MLTS:
       return action.partner
+
+    case Types.SIGN_OUT:
+      return null
+      
     default:
       return state
   }

@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/styles';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/styles';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
-import { addProduct, importProduct } from '../../actions';
-import { Link } from 'react-router-dom';
+import { importProduct } from '../../actions';
 import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
-
+import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { addProduct } from '../../actions' 
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -32,23 +34,55 @@ const useStyles = makeStyles(theme => ({
   dialogContent: {
     overflowX: 'hidden',
     overflowY: 'hidden'
-  }
+  },paper: {
+    display: 'flex',
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: 'wrap',
+  },
+  divider: {
+    alignSelf: 'stretch',
+    height: 'auto',
+    margin: theme.spacing(1, 0.5),
+  },
 }));
+const StyledToggleButtonGroup = withStyles((theme) => ({
+  grouped: {
+    margin: theme.spacing(0.5),
+    border: 'none',
+    padding: theme.spacing(0, 1),
+    '&:not(:first-child)': {
+      borderRadius: theme.shape.borderRadius,
+    },
+    '&:first-child': {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+}))(ToggleButtonGroup);
 
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   // const firstUpdate = useRef(true);
-
+  const [schedulerDay, setSchedulerDay] = React.useState(() => []);
+  const handleSchedulerDay = (event, newSchedule) => {
+    console.log(newSchedule);
+    
+    setSchedulerDay(newSchedule);
+    setValues({
+      ...values,
+      'scheduleDay': newSchedule
+    });
+  };
   const [open, setOpen] = React.useState(false);
   const [category, setCategory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSschedule, setIsSschedule] = useState(false);
   const store = useStore().getState().partnerInfo;
   const [values, setValues] = useState({
     PartnerID: store.token.user.PartnerID,
     ItemName: '',
     description: '',
-    category:''
+    category: ''
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -65,19 +99,25 @@ const UsersToolbar = props => {
   }, [category]);
 
   const handleClickOpen = () => {
+    setSchedulerDay([]);
     setValues({
       PartnerID: store.token.user.PartnerID,
       ItemName: '',
       description: '',
-      category:''
+      category: '',
+      scheduleDay: [],
+      scheduleTimeFrom: "12:00",
+      scheduleTimeTo: "12:00",
+      schedulePrice: null
     })
+    setIsSschedule(false)
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  
+
 
   const handleChange = event => {
     setValues({
@@ -93,7 +133,9 @@ const UsersToolbar = props => {
     })
   };
   const handleAccept = () => {
-    dispatch(addProduct(values));
+    console.log(values);
+
+     dispatch(addProduct(values));
     setOpen(false);
   };
 
@@ -101,6 +143,20 @@ const UsersToolbar = props => {
     dispatch(importProduct({ PartnerID: store.token.user.PartnerID, file: file.target.files[0] }))
 
   };
+
+  const changeSchedule = () => {
+    setIsSschedule(!isSschedule)
+    if (isSschedule === true) {
+      setSchedulerDay([]);
+      setValues({
+        ...values,
+        'scheduleDay': [],
+        'scheduleTimeFrom': "12:00",
+        'scheduleTimeTo': "12:00",
+        'schedulePrice': null
+      });
+    }
+  }
 
   return (
     <div
@@ -212,12 +268,131 @@ const UsersToolbar = props => {
                       {category.map(option => (
                         <option
                           key={option.CategoryID}
-                          value={option.CategoryName}
+                          value={option.CategoryID}
                         >
                           {option.CategoryName}
                         </option>
                       ))}
                     </TextField>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlank fontSize="small" />}
+                          checkedIcon={<CheckBox fontSize="small" />}
+                          name="schedule"
+                          checked={isSschedule}
+                          onChange={changeSchedule}
+                        />
+                      }
+                      label="Đặt lịch"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    container
+                  >
+                    <Grid md={3} xs={3} item>
+                      <TextField
+                        id="time"
+                        label="Thời gian từ"
+                        type="time"
+                        defaultValue="00:00"
+                        className={classes.textField}
+                        name="scheduleTimeFrom"
+                        value={values.scheduleTimeFrom}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                        onChange={handleChange}
+                        disabled={!isSschedule}
+                      /></Grid>
+
+                    <Grid md={6} xs={6} item>
+           
+                      <Paper elevation={0} className={classes.paper}>
+                        <StyledToggleButtonGroup
+                          size="small"
+                          value={schedulerDay} onChange={handleSchedulerDay} aria-label="text formatting"
+                        >
+                          <ToggleButton value="1" aria-label="Thứ 2" disabled={!isSschedule}>
+                          T2
+                        </ToggleButton>
+                        <ToggleButton value="2" aria-label="Thứ 3" disabled={!isSschedule}>
+                          T3
+                        </ToggleButton>
+                        <ToggleButton value="3" aria-label="Thứ 4" disabled={!isSschedule}>
+                          T4
+                        </ToggleButton>
+                        <ToggleButton value="4" aria-label="Thứ 5" disabled={!isSschedule}>
+                          T5
+                        </ToggleButton>
+                        <ToggleButton value="5" aria-label="Thứ 6" disabled={!isSschedule}>
+                          T6
+                        </ToggleButton>
+                        <ToggleButton value="6" aria-label="Thứ 7" disabled={!isSschedule}>
+                          T7
+                        </ToggleButton>
+                        <ToggleButton value="0" aria-label="Chủ nhật" disabled={!isSschedule}>
+                          CN
+                        </ToggleButton>
+                        </StyledToggleButtonGroup>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    container
+                  >
+                    <Grid md={3} xs={3} item>
+                      <TextField
+                        id="time"
+                        label="Thời gian đến"
+                        type="time"
+                        defaultValue="00:00"
+                        className={classes.textField}
+                        name="scheduleTimeTo"
+                        value={values.scheduleTimeTo}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                        onChange={handleChange}
+                        disabled={!isSschedule}
+                      /></Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Giá sản phẩm"
+                      margin="dense"
+                      name="schedulePrice"
+                      onChange={handleChange}
+                      disabled={!isSschedule}
+                      required
+                      type="number"
+                      value={values.schedulePrice}
+                      variant="outlined"
+                    />
                   </Grid>
                   <Grid
                     item

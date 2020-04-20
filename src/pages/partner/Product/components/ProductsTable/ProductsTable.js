@@ -16,17 +16,21 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
+  CheckBoxOutlineBlank,
+  CheckBox
 } from '@material-ui/icons';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/styles';
 import { DropzoneArea } from 'material-ui-dropzone'
 import { useSelector, useDispatch, useStore } from 'react-redux';
-import { fetchProduct, deleteProduct, updateProduct } from '../../actions';
+import { fetchProduct, updateProduct } from '../../actions';
 import ProductAdd from '../ProductAdd';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
-import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -54,44 +58,72 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const StyledToggleButtonGroup = withStyles((theme) => ({
+  grouped: {
+    margin: theme.spacing(0.5),
+    border: 'none',
+    padding: theme.spacing(0, 1),
+    '&:not(:first-child)': {
+      borderRadius: theme.shape.borderRadius,
+    },
+    '&:first-child': {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+}))(ToggleButtonGroup);
+
+
 const UsersTable = () => {
   const classes = useStyles();
   const columns = [
-    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height:40, borderRadius: '50%' }} /> , filtering: false},
+    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height: 40, borderRadius: '50%' }} />, filtering: false },
     { title: 'Tên sản phẩm', field: 'ItemName' },
-    { title: 'Mô tả', field: 'description' },
+    { title: 'Loại', field: 'categoryName' },
     { title: 'Trạng thái', field: 'StatusName' },
     {
       title: 'Đăng bán', field: 'StatusID', render: rowData => {
 
-        if ( rowData.StatusID === 1) {
+        if (rowData.StatusID === 1) {
           return (<Button variant="outlined" color="primary" disabled={isAdding} onClick={() => handleAdd(rowData)}>Đăng bán</Button>)
         }
-      } , filtering: false
+      }, filtering: false
     },
   ];
-  
+
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [category, setCategory] = useState([]);
   const firstUpdate = useRef(true);
+
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
     dispatch(fetchProduct(store));
   }, [dispatch, store]);
-  const {data, msg, type, msgSourceOfItems, typeSourceOfItems} = useSelector(state => ({
+
+  const { data, msg, type, msgSourceOfItems, typeSourceOfItems, count } = useSelector(state => ({
     data: state.product.lst,
     msg: state.product.msg,
     type: state.product.type,
-    msgSourceOfItems:state.sourceOfItems.msg,
+    count: state.product.count,
+    msgSourceOfItems: state.sourceOfItems.msg,
     typeSourceOfItems: state.sourceOfItems.type
   }));
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await callApiUnauthWithHeader(`category`, 'GET', {})
+      setCategory(result.data);
+    };
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
-    }    
+    }
     setIsLoading(false);
   }, [data]);
 
@@ -99,60 +131,102 @@ const UsersTable = () => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
-    }        
-    if (type === 'success' && type !==null) {
+    }
+    if (type === 'success' && type !== null) {
       NotificationManager.success(type, msg, 3000);
-    }else if (type !== 'success' && type !=='') {
+    } else if (type !== 'success' && type !== '') {
 
       NotificationManager.error(type, msg, 3000);
     }
     setIsUpdate(false)
     setOpen(false);
-  }, [msg, type]);
-
+  }, [msg, type, count]);
+  
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
       return;
-    }        
-    if (typeSourceOfItems === 'success' && typeSourceOfItems !==null) {
+    }
+    if (typeSourceOfItems === 'success' && typeSourceOfItems !== null) {
       NotificationManager.success(typeSourceOfItems, msgSourceOfItems, 3000);
-    }else if (typeSourceOfItems !== 'success' && typeSourceOfItems !=='') {
+    } else if (typeSourceOfItems !== 'success' && typeSourceOfItems !== '') {
 
       NotificationManager.error(typeSourceOfItems, msgSourceOfItems, 3000);
     }
     setIsAdding(false)
   }, [msgSourceOfItems, typeSourceOfItems]);
 
-  const handleDelete = (rowData) => {
-    confirmAlert({
-      title: 'Xác nhận !',
-      message: 'Bạn có chắc muốn xóa ?',
-      buttons: [
-        {
-          label: 'Có',
-          onClick: () => dispatch(deleteProduct(rowData.ItemID))
-        },
-        {
-          label: 'Không',
-        }
-      ]
-    });
-    //  
-  }
+  // const handleDelete = (rowData) => {
+  //   confirmAlert({
+  //     title: 'Xác nhận !',
+  //     message: 'Bạn có chắc muốn xóa ?',
+  //     buttons: [
+  //       {
+  //         label: 'Có',
+  //         onClick: () => dispatch(deleteProduct(rowData.ItemID))
+  //       },
+  //       {
+  //         label: 'Không',
+  //       }
+  //     ]
+  //   });
+  //   //  
+  // }
   const [values, setValues] = useState({
     ItemID: '',
     ItemName: '',
     description: '',
-    ItemImage: '',
-    StatusID:''
+    categoryID: '',
+    scheduleDay: null,
+    scheduleTimeFrom:null,
+    scheduleTimeTo:null,
+    schedulePrice: null
   });
+
+  const changeSchedule = () => {
+    setIsSschedule(!isSschedule)
+    if (isSschedule === true) {
+      setSchedulerDay([]);
+      setValues({
+        ...values,
+        'scheduleDay': null,
+        'scheduleTimeFrom': null,
+        'scheduleTimeTo': null,
+        'schedulePrice': null
+      });
+    }
+  }
+
+  const [schedulerDay, setSchedulerDay] = React.useState(() => []);
+  const handleSchedulerDay = (event, newSchedule) => {
+    setSchedulerDay(newSchedule);
+    setValues({
+      ...values,
+      'scheduleDay': newSchedule
+    });
+  };
+  const [isSschedule, setIsSschedule] = useState(false);
 
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [addData, setAddData] = useState({});
   const handleEdit = (rowData) => {
+    console.log(rowData);
+    
     setValues(rowData)
+    if(rowData.scheduleDay != null){
+      setIsSschedule(true);
+        rowData.scheduleDay = rowData.scheduleDay.toString();
+       setSchedulerDay(rowData.scheduleDay.split(','));
+      // handleSchedulerDay(null,rowData.scheduleDay.split(','))
+      setValues({
+        ...rowData,
+        'scheduleDay': rowData.scheduleDay.split(',')
+      });
+    } else {
+      setIsSschedule(false);
+      setSchedulerDay([]);
+    }
     setOpen(true);
   }
 
@@ -162,12 +236,24 @@ const UsersTable = () => {
   }
 
   const handleAdd = (rowData) => {
-    setOpenAdd(true);    
+    setOpenAdd(true);
     setAddData(rowData)
     setIsAdding(true);
   }
 
   const handleClose = () => {
+    setIsSschedule(false);
+    setSchedulerDay([]);
+    setValues({
+      ItemID: '',
+      ItemName: '',
+      description: '',
+      categoryID: '',
+      scheduleDay: null,
+      scheduleTimeFrom: null,
+      scheduleTimeTo: null,
+      schedulePrice: null
+    })
     setOpen(false);
   };
 
@@ -184,7 +270,7 @@ const UsersTable = () => {
       ItemImage: file
     })
   };
-  const handleAccept = () => {
+  const handleAccept = () => {    
     dispatch(updateProduct(values));
     setIsUpdate(true);
   };
@@ -211,7 +297,7 @@ const UsersTable = () => {
 
   return (
     <div>
-      <NotificationContainer/>
+      <NotificationContainer />
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
@@ -227,15 +313,15 @@ const UsersTable = () => {
                   tooltip: 'Sửa',
                   onClick: (event, rowData) => handleEdit(rowData)
                 },
-                {
-                  icon: DeleteOutline,
-                  tooltip: 'Xóa',
-                  onClick: (event, rowData) => handleDelete(rowData)
-                }
+                // {
+                //   icon: DeleteOutline,
+                //   tooltip: 'Xóa',
+                //   onClick: (event, rowData) => handleDelete(rowData)
+                // }
               ]}
               options={{
                 actionsColumnIndex: -1,
-                exportButton: true,
+                // exportButton: true,
                 filtering: true
               }}
             />
@@ -294,6 +380,159 @@ const UsersTable = () => {
                     md={12}
                     xs={12}
                   >
+                    <TextField
+                      className={classes.textField}
+                      fullWidth
+                      label="Loại"
+                      margin="dense"
+                      name="categoryID"
+                      onChange={handleChange}
+                      required
+                      select
+                      // eslint-disable-next-line react/jsx-sort-props
+                      SelectProps={{ native: true }}
+                      value={values.categoryID || ''}
+                      variant="outlined"
+                    >
+                      {category.map(option => (
+                        <option
+                          key={option.CategoryID}
+                          value={option.CategoryID}
+                        >
+                          {option.CategoryName}
+                        </option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          icon={<CheckBoxOutlineBlank fontSize="small" />}
+                          checkedIcon={<CheckBox fontSize="small" />}
+                          name="schedule"
+                          checked={isSschedule}
+                          onChange={changeSchedule}
+                        />
+                      }
+                      label="Đặt lịch"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    container
+                  >
+                    <Grid md={3} xs={3} item>
+                      <TextField
+                        id="time"
+                        label="Thời gian từ"
+                        type="time"
+                        defaultValue="00:00"
+                        className={classes.textField}
+                        name="scheduleTimeFrom"
+                        value={values.scheduleTimeFrom}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                        onChange={handleChange}
+                        disabled={!isSschedule}
+                      /></Grid>
+
+                    <Grid md={6} xs={6} item>
+
+                      <Paper elevation={0} className={classes.paper}>
+                        <StyledToggleButtonGroup
+                          size="small"
+                          value={schedulerDay} onChange={handleSchedulerDay} aria-label="text formatting"
+                        >
+                          <ToggleButton value="1" aria-label="Thứ 2" disabled={!isSschedule}>
+                            T2
+                        </ToggleButton>
+                          <ToggleButton value="2" aria-label="Thứ 3" disabled={!isSschedule}>
+                            T3
+                        </ToggleButton>
+                          <ToggleButton value="3" aria-label="Thứ 4" disabled={!isSschedule}>
+                            T4
+                        </ToggleButton>
+                          <ToggleButton value="4" aria-label="Thứ 5" disabled={!isSschedule}>
+                            T5
+                        </ToggleButton>
+                          <ToggleButton value="5" aria-label="Thứ 6" disabled={!isSschedule}>
+                            T6
+                        </ToggleButton>
+                          <ToggleButton value="6" aria-label="Thứ 7" disabled={!isSschedule}>
+                            T7
+                        </ToggleButton>
+                          <ToggleButton value="0" aria-label="Chủ nhật" disabled={!isSschedule}>
+                            CN
+                        </ToggleButton>
+                        </StyledToggleButtonGroup>
+                      </Paper>
+                    </Grid>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    container
+                  >
+                    <Grid md={3} xs={3} item>
+                      <TextField
+                        id="time"
+                        label="Thời gian đến"
+                        type="time"
+                        defaultValue="00:00"
+                        className={classes.textField}
+                        name="scheduleTimeTo"
+                        value={values.scheduleTimeTo}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        inputProps={{
+                          step: 300, // 5 min
+                        }}
+                        onChange={handleChange}
+                        disabled={!isSschedule}
+                      /></Grid>
+                    </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Giá sản phẩm"
+                      margin="dense"
+                      name="schedulePrice"
+                      onChange={handleChange}
+                      disabled={!isSschedule}
+                      required
+                      type="number"
+                      value={values.schedulePrice}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  ></Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
                     <DropzoneArea
                       onChange={handleChangeFile}
                       acceptedFiles={['image/*']}
@@ -316,8 +555,8 @@ const UsersTable = () => {
           </Button>
               </DialogActions>
             </Dialog>
-             {/* Dialog add */}
-              <ProductAdd open={openAdd} updateParent={closeAdd} data={addData}/>
+            {/* Dialog add */}
+            <ProductAdd open={openAdd} updateParent={closeAdd} data={addData} />
           </div>
 
         )}

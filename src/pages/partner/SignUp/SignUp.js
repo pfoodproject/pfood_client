@@ -24,14 +24,6 @@ const schema = {
       maximum: 64
     }
   },
-  password: {
-    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
-    length: {
-      minimum: 5,
-      maximum: 20,
-      message: 'Độ dài mật khẩu từ 5-20 !'
-    }
-  },
   name: {
     presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
     length: {
@@ -333,7 +325,7 @@ const SignUp = props => {
                       value={formState.values.username || ''}
                       variant="outlined"
                     />
-                    <TextField
+                    {/* <TextField
                       className={classes.textField}
                       error={hasError('password')}
                       fullWidth
@@ -346,7 +338,7 @@ const SignUp = props => {
                       type="password"
                       value={formState.values.password || ''}
                       variant="outlined"
-                    />
+                    /> */}
                     <TextField
                       className={classes.textField}
                       error={hasError('name')}

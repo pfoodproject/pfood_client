@@ -88,8 +88,12 @@ const Homepage = () => {
                                                     <li><Scrollchor to="#team-section">Đội ngũ phát triển</Scrollchor></li>
                                                 </ul>
                                             </li>
-                                            <li>
-                                                <Link to="/partner/sign-up" className="nav-link">Đối tác</Link>
+                                            <li className="has-children">
+                                                <Link to="#" className="nav-link">Đối tác</Link>
+                                                <ul className="dropdown">
+                                                    <li><Link to="/partner/login" className="nav-link">Đăng nhập</Link></li>
+                                                    <li><Link to="/partner/sign-up" className="nav-link">Đăng ký</Link></li>
+                                                </ul>
                                             </li>
                                         </ul>
                                     </nav>

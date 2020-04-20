@@ -15,11 +15,12 @@ import 'react-notifications/lib/notifications.css';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import { Link } from 'react-router-dom'
 const schema = {
-  username: {
-    presence: { allowEmpty: false, message: 'Tên đăng nhập không được để trống !' },
+  email: {
+    presence: { allowEmpty: false, message: 'Email không được để trống !' },
     length: {
       maximum: 64
-    }
+    },
+    email: true
   },
   password: {
     presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
@@ -179,8 +180,10 @@ const SignIn = props => {
       firstUpdate.current = false;
       return;
     }
-    
+    console.log(store);
     if (store.partnerInfo.token.success === true) {
+      
+      
       localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
       history.push('/partner');
     } else {
@@ -252,16 +255,16 @@ const SignIn = props => {
                 </Typography>
                 <TextField
                   className={classes.textField}
-                  error={hasError('username')}
+                  error={hasError('email')}
                   fullWidth
                   helperText={
-                    hasError('username') ? formState.errors.username[0] : null
+                    hasError('email') ? formState.errors.email[0] : null
                   }
-                  label="Tên đăng nhập"
-                  name="username"
+                  label="Email"
+                  name="email"
                   onChange={handleChange}
                   type="text"
-                  value={formState.values.username || ''}
+                  value={formState.values.email || ''}
                   variant="outlined"
                 />
                 <TextField

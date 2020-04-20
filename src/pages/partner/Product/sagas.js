@@ -48,6 +48,8 @@ function* fetchProduct(action) {
     try {
         const { partnerId } = action
         let product = yield call(fetchProductApi, partnerId)   
+        console.log(product);
+        
         // if (msg.success === true) {            
         yield put(actions.fetchProductSuccess(product.data));
         // } else {
@@ -88,9 +90,11 @@ function* updateProduct(action) {
         if(typeof product.ItemImage === 'object'){
             let rs = yield call(uploadImagesApi, product.ItemImage[0])
             product.ItemImage = rs.data.data.link
+            console.log(rs.data.data.link);
         }
         
-        let rsEdit= yield call(updateProductApi, product)
+        let rsEdit=  yield call(updateProductApi, product)
+        console.log(rsEdit);
         
         if (rsEdit.data.type === 'success') {     
             rsEdit.data.product = product;                   

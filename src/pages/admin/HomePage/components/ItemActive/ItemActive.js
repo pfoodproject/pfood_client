@@ -1,11 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-// import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-// import ListAltIcon from '@material-ui/icons/ListAlt';
-import StoreIcon from '@material-ui/icons/Store';
+// import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -18,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.success.main,
+    backgroundColor: theme.palette.error.main,
     height: 56,
     width: 56
   },
@@ -32,17 +30,16 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center'
   },
   differenceIcon: {
-    color: theme.palette.success.dark
+    color: theme.palette.error.dark
   },
   differenceValue: {
-    color: theme.palette.success.dark,
+    color: theme.palette.error.dark,
     marginRight: theme.spacing(1)
   }
 }));
 
-const TotalUsers = props => {
-  const { rsSourceOfItemsActive, rsSourceOfItemsOfYear } = props;
-
+const ItemActive = props => {
+  const { activeItem } = props;
   const classes = useStyles();
 
   return (
@@ -61,38 +58,34 @@ const TotalUsers = props => {
               gutterBottom
               variant="body2"
             >
-              ĐANG BÁN
+              Sản phẩm
             </Typography>
-            <Typography variant="h3">{rsSourceOfItemsActive}</Typography>
+            <Typography variant="h3">{activeItem}</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <StoreIcon className={classes.icon} />
+              <FastfoodIcon className={classes.icon} />
             </Avatar>
           </Grid>
         </Grid>
-        <div className={classes.difference}>
-          {/* <ArrowUpwardIcon className={classes.differenceIcon} /> */}
+        {/* <div className={classes.difference}>
+          <ArrowDownwardIcon className={classes.differenceIcon} />
           <Typography
             className={classes.differenceValue}
             variant="body2"
           >
-            {rsSourceOfItemsOfYear}
+            12%
           </Typography>
           <Typography
             className={classes.caption}
             variant="caption"
           >
-            lần mở bán trong năm
+            Since last month
           </Typography>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
 };
 
-TotalUsers.propTypes = {
-  className: PropTypes.string
-};
-
-export default TotalUsers;
+export default ItemActive;

@@ -15,6 +15,11 @@ const ProductPage = Loadable({
   loading: MyLoadingComponent
 });
 
+const OrderPage = Loadable({
+  loader: () => import("../../pages/partner/Order"),
+  loading: MyLoadingComponent
+});
+
 const LoginPage = Loadable({
   loader: () => import("../../pages/partner/SignIn"),
   loading: MyLoadingComponent
@@ -38,6 +43,13 @@ const routes = {
     path: '/partner/product',
     exact: true,
     component: ProductPage,
+    private: true,
+    layout: 'Partner'
+  },
+  OrderPage: {
+    path: '/partner/order',
+    exact: true,
+    component: OrderPage,
     private: true,
     layout: 'Partner'
   },
