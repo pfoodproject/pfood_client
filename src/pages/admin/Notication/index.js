@@ -20,7 +20,7 @@ class Manager extends Component {
     try {
       setInterval(async () => {
         this.props.getData(this.after);
-      }, 3000);
+      }, 10000);
     } catch(e) {
       console.log(e);
     }
