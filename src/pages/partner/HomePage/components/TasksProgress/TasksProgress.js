@@ -2,16 +2,9 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import {
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  Avatar,
-  LinearProgress
-} from '@material-ui/core';
-import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
-
+import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
+// import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -24,8 +17,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 700
   },
   avatar: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.success.main,
     height: 56,
     width: 56
   },
@@ -33,20 +25,28 @@ const useStyles = makeStyles(theme => ({
     height: 32,
     width: 32
   },
-  progress: {
-    marginTop: theme.spacing(3)
+  difference: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center'
+  },
+  differenceIcon: {
+    color: theme.palette.success.dark
+  },
+  differenceValue: {
+    color: theme.palette.success.dark,
+    marginRight: theme.spacing(1)
   }
 }));
 
-const TasksProgress = props => {
-  const { className, ...rest } = props;
+const TotalUsers = props => {
+  const { rsOrderActive, rsOrderOfYear } = props;
 
   const classes = useStyles();
 
   return (
     <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root)}
     >
       <CardContent>
         <Grid
@@ -60,28 +60,38 @@ const TasksProgress = props => {
               gutterBottom
               variant="body2"
             >
-              TASKS PROGRESS
+              Đơn hàng hiện có
             </Typography>
-            <Typography variant="h3">75.5%</Typography>
+            <Typography variant="h3">{rsOrderActive}</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <InsertChartIcon className={classes.icon} />
+              <ListAltIcon className={classes.icon} />
             </Avatar>
           </Grid>
         </Grid>
-        <LinearProgress
-          className={classes.progress}
-          value={75.5}
-          variant="determinate"
-        />
+        <div className={classes.difference}>
+          {/* <ArrowUpwardIcon className={classes.differenceIcon} /> */}
+          <Typography
+            className={classes.differenceValue}
+            variant="body2"
+          >
+            {rsOrderOfYear}
+          </Typography>
+          <Typography
+            className={classes.caption}
+            variant="caption"
+          >
+            đơn hàng trong năm
+          </Typography>
+        </div>
       </CardContent>
     </Card>
   );
 };
 
-TasksProgress.propTypes = {
+TotalUsers.propTypes = {
   className: PropTypes.string
 };
 
-export default TasksProgress;
+export default TotalUsers;

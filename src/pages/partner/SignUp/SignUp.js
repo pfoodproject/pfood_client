@@ -24,14 +24,6 @@ const schema = {
       maximum: 64
     }
   },
-  password: {
-    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
-    length: {
-      minimum: 5,
-      maximum: 20,
-      message: 'Độ dài mật khẩu từ 5-20 !'
-    }
-  },
   name: {
     presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
     length: {
@@ -122,8 +114,6 @@ const useStyles = makeStyles(theme => ({
   form: {
     paddingLeft: 100,
     paddingRight: 100,
-    paddingBottom: 125,
-    flexBasis: 700,
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2)
@@ -284,15 +274,14 @@ const SignUp = props => {
                     className={classes.quoteText}
                     variant="h1"
                   >
-                    Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                    they sold out High Life.
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
               </Typography>
                   <div className={classes.person}>
                     <Typography
                       className={classes.name}
                       variant="body1"
                     >
-                      Takamaru Ayako
+                      QWERTY
                 </Typography>
                     <Typography
                       className={classes.bio}
@@ -320,7 +309,7 @@ const SignUp = props => {
                       className={classes.title}
                       variant="h2"
                     >
-                      Đăng ký
+                      Đăng ký đối tác
                 </Typography>
                     <TextField
                       className={classes.textField}
@@ -336,7 +325,7 @@ const SignUp = props => {
                       value={formState.values.username || ''}
                       variant="outlined"
                     />
-                    <TextField
+                    {/* <TextField
                       className={classes.textField}
                       error={hasError('password')}
                       fullWidth
@@ -349,7 +338,7 @@ const SignUp = props => {
                       type="password"
                       value={formState.values.password || ''}
                       variant="outlined"
-                    />
+                    /> */}
                     <TextField
                       className={classes.textField}
                       error={hasError('name')}

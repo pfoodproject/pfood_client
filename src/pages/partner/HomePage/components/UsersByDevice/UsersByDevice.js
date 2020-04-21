@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const UsersByDevice = props => {
-  const { className, ...rest } = props;
+  const { rsPercentByCategory } = props;
 
   const classes = useStyles();
   const theme = useTheme();
@@ -47,7 +47,7 @@ const UsersByDevice = props => {
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: rsPercentByCategory.map( e => e.percent),
         backgroundColor: [
           theme.palette.primary.main,
           theme.palette.error.main,
@@ -58,7 +58,7 @@ const UsersByDevice = props => {
         hoverBorderColor: theme.palette.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: rsPercentByCategory.map( e => e.name)
   };
 
   const options = {
@@ -83,39 +83,24 @@ const UsersByDevice = props => {
     }
   };
 
-  const devices = [
-    {
-      title: 'Desktop',
-      value: '63',
-      icon: <LaptopMacIcon />,
-      color: theme.palette.primary.main
-    },
-    {
-      title: 'Tablet',
-      value: '15',
-      icon: <TabletMacIcon />,
-      color: theme.palette.error.main
-    },
-    {
-      title: 'Mobile',
-      value: '23',
-      icon: <PhoneIphoneIcon />,
-      color: theme.palette.warning.main
+  const devices = rsPercentByCategory.map( e => {
+    return {
+      title: e.name,
+      value: e.percent
     }
-  ];
+  });
 
   return (
     <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root)}
     >
       <CardHeader
-        action={
-          <IconButton size="small">
-            <RefreshIcon />
-          </IconButton>
-        }
-        title="Users By Device"
+        // action={
+        //   <IconButton size="small">
+        //     <RefreshIcon />
+        //   </IconButton>
+        // }
+        title="Đơn hàng theo loại"
       />
       <Divider />
       <CardContent>

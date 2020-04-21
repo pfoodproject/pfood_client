@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Avatar, Typography } from '@material-ui/core';
-import { useStore, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -26,30 +26,10 @@ const Profile = props => {
 
   const classes = useStyles();
 
-  const [user, setUser] = useState({
-    PartnerName: 'Anonymous',
-    CityName: 'Locate',
-    PartnerImage: '/images/avatars/avatar_11.png',
-  });
-  const store = useStore().getState().partnerInfo;
-  useEffect(() => {    
-    setUser({
-      PartnerName: store.token.user.PartnerName,
-      CityName: store.token.user.CityName,
-      PartnerImage: store.token.user.PartnerImage,
-    })
-  }, [store]);
+  const { user } = useSelector(state => ({
+    user: state.partnerInfo.token.user
+  }));
 
-  const store2 = useSelector(state => state).partnerInfo.token.user.PartnerName;
-  useEffect(() => {    
-    // setUser({
-    //   PartnerName: store2.token.user.PartnerName,
-    //   CityName: store2.token.user.CityName,
-    //   PartnerImage: store2.token.user.PartnerImage,
-    // })
-    console.log(store2);
-    
-  }, [store2]);
   return (
     <div
       {...rest}

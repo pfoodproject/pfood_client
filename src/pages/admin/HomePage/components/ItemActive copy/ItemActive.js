@@ -1,11 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Grid, Typography, Avatar } from '@material-ui/core';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import MoneyIcon from '@material-ui/icons/Money';
-
+// import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100%'
@@ -40,15 +38,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Budget = props => {
-  const { className, ...rest } = props;
-
+const ItemActive = props => {
+  const { activeItem } = props;
   const classes = useStyles();
 
   return (
     <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root)}
     >
       <CardContent>
         <Grid
@@ -62,17 +58,17 @@ const Budget = props => {
               gutterBottom
               variant="body2"
             >
-              BUDGET
+              Sản phẩm
             </Typography>
-            <Typography variant="h3">$24,000</Typography>
+            <Typography variant="h3">{activeItem}</Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <MoneyIcon className={classes.icon} />
+              <FastfoodIcon className={classes.icon} />
             </Avatar>
           </Grid>
         </Grid>
-        <div className={classes.difference}>
+        {/* <div className={classes.difference}>
           <ArrowDownwardIcon className={classes.differenceIcon} />
           <Typography
             className={classes.differenceValue}
@@ -86,14 +82,10 @@ const Budget = props => {
           >
             Since last month
           </Typography>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
 };
 
-Budget.propTypes = {
-  className: PropTypes.string
-};
-
-export default Budget;
+export default ItemActive;

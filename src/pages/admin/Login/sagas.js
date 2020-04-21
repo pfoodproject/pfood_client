@@ -3,8 +3,9 @@ import callApiUnAuth from '../../../utils/apis/apiUnAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
-export function checkLoginApi(username, password) {
-    return callApiUnAuth(`signin`, 'POST', { username: username, password: password })
+export function checkLoginApi(user) {
+    
+    return callApiUnAuth(`admin/signin`, 'POST', { user })
         .then(res => res)
         .catch(error => error.response.data);
 }
@@ -12,21 +13,17 @@ export function checkLoginApi(username, password) {
 export function* login( action ) {
     try {        
         const { user } = action
-        const msg = yield call(checkLoginApi,user.username, user.password)        
-        if (msg.success === true) {            
-            yield put(actions.loginSuccess(msg));
-        } else {
-            yield put(actions.loginFail(msg));
-        }
+        const token = yield call(checkLoginApi,user)        
+        yield put(actions.signInSuccess({ token: token.data }));
 
     } catch (error) {
-        yield put(actions.loginFail(error));
+        yield put(actions.signInFail(error));
     }
 
 }
 
 function* watchCheckLogin() {
-    yield takeLatest(Types.CHECK_LOGIN, login)
+    yield takeLatest(Types.ADMIN_SIGNIN, login)
   }
 
 export default watchCheckLogin;

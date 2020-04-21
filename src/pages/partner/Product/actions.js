@@ -30,17 +30,17 @@ export const addProduct = (product) => {
     }
 }
 
-export const addProductSuccess = (product) => {
+export const addProductSuccess = (response) => {
     return {
         type : Types.ADD_PRODUCT_SUCCESS,
-        product
+        response
     }
 }
 
-export const addProductFail = (msg) => {
+export const addProductFail = (response) => {
     return {
         type : Types.ADD_PRODUCT_FAIL,
-        msg
+        response
     }
 }
 
@@ -52,17 +52,17 @@ export const deleteProduct = (productId) => {
     }
 }
 
-export const deleteProductSuccess = (msg) => {
+export const deleteProductSuccess = (response) => {
     return {
-        type : Types.ADD_PRODUCT_SUCCESS,
-        msg
+        type : Types.DELETE_PRODUCT_SUCCESS,
+        response
     }
 }
 
-export const deleteProductFail = (msg) => {
+export const deleteProductFail = (response) => {
     return {
         type : Types.ADD_PRODUCT_FAIL,
-        msg
+        response
     }
 }
 
@@ -74,16 +74,38 @@ export const updateProduct = (product) => {
     }
 }
 
-export const updateProductSuccess = (msg) => {
+export const updateProductSuccess = (response) => {
     return {
         type : Types.UPDATE_PRODUCT_SUCCESS,
-        msg
+        response
     }
 }
 
-export const updateProductFail = (msg) => {
+export const updateProductFail = (response) => {
     return {
         type : Types.UPDATE_PRODUCT_FAIL,
-        msg
+        response
+    }
+}
+
+// Import Product
+export const importProduct = (obj) => {
+    return {
+        type : Types.IMPORT_PRODUCT,
+        obj
+    }
+}
+
+export const importProductSuccess = (response) => {
+    return {
+        type : Types.IMPORT_PRODUCT_SUCCESS,
+        response
+    }
+}
+
+export const importProductFail = (response) => {
+    return {
+        type : Types.IMPORT_PRODUCT_FAIL,
+        response
     }
 }

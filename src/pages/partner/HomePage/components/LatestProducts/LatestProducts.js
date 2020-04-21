@@ -6,8 +6,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
-  Button,
   Divider,
   List,
   ListItem,
@@ -15,11 +13,8 @@ import {
   ListItemText,
   IconButton
 } from '@material-ui/core';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import moment from 'moment';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-
-import mockData from './data';
-
 const useStyles = makeStyles(() => ({
   root: {
     height: '100%'
@@ -37,20 +32,19 @@ const useStyles = makeStyles(() => ({
 }));
 
 const LatestProducts = props => {
-  const { className, ...rest } = props;
+  const { rsLatestSourceOfItem } = props;
 
   const classes = useStyles();
 
-  const [products] = useState(mockData);
+  const [products] = useState(rsLatestSourceOfItem);
 
   return (
     <Card
-      {...rest}
-      className={clsx(classes.root, className)}
+      className={clsx(classes.root)}
     >
       <CardHeader
         subtitle={`${products.length} in total`}
-        title="Latest products"
+        title="Lần mở bán gần nhất"
       />
       <Divider />
       <CardContent className={classes.content}>
@@ -58,18 +52,18 @@ const LatestProducts = props => {
           {products.map((product, i) => (
             <ListItem
               divider={i < products.length - 1}
-              key={product.id}
+              key={product.SourceOfItemsID}
             >
               <ListItemAvatar>
                 <img
                   alt="Product"
                   className={classes.image}
-                  src={product.imageUrl}
+                  src={product.ItemImage}
                 />
               </ListItemAvatar>
               <ListItemText
-                primary={product.name}
-                secondary={`Updated ${product.updatedAt.fromNow()}`}
+                primary={product.ItemName}
+                secondary={`Thời gian mở bán ${moment(product.StartTime).format('HH:MM:SS DD-MM-YYYY')}`}
               />
               <IconButton
                 edge="end"
@@ -82,7 +76,7 @@ const LatestProducts = props => {
         </List>
       </CardContent>
       <Divider />
-      <CardActions className={classes.actions}>
+      {/* <CardActions className={classes.actions}>
         <Button
           color="primary"
           size="small"
@@ -90,7 +84,7 @@ const LatestProducts = props => {
         >
           View all <ArrowRightIcon />
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

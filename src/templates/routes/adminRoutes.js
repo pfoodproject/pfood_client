@@ -31,7 +31,7 @@ const routes = {
         path: '/admin',
         exact: true,
         component: HomePage,
-        private: true
+        layout: 'MainLayout'
     },
     UserPage: {
       path: '/usercontroller',
@@ -43,7 +43,7 @@ const routes = {
       path: '/productcontroller',
       exact: true,
       component: ProductPage,
-      private: true
+      layout: 'MainLayout'
   },
   PartnerPage: {
     path: '/partnercontroller',
@@ -53,13 +53,9 @@ const routes = {
 },
     LoginPage: {
         path: '/admin/login',
+        component: LoginPage,
         exact: true,
-        component: 
-            (localStorage.getItem("session") && ((new Date(JSON.parse(localStorage.getItem("session")).expires) - new Date()) >= 0) 
-                ? HomePage 
-                : LoginPage
-        ),
-        private: false
+        layout: 'Minimal'
     }
 };
 

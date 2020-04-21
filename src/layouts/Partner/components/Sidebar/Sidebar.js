@@ -6,7 +6,8 @@ import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import Fastfood from '@material-ui/icons/Fastfood';
-
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import CodeIcon from '@material-ui/icons/Code';
 import { Profile, SidebarNav } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -39,19 +40,27 @@ const Sidebar = props => {
 
   const pages = [
     {
-      title: 'Dashboard',
+      title: 'Thống kê',
       href: '/partner',
       icon: <DashboardIcon />
     },
     {
-      title: 'Account',
+      title: 'Tài khoản của tôi',
       href: '/partner/account',
       icon: <PeopleIcon />
     },{
-      title: 'Products',
+      title: 'Quản lý đơn hàng',
+      href: '/partner/order',
+      icon: <ListAltIcon />
+    },{
+      title: 'Quản lý sản phẩm',
       href: '/partner/product',
       icon: <Fastfood />
-    }  
+    },{
+      title: 'Khuyến mại',
+      href: '/partner/promotion',
+      icon: <CodeIcon />
+    }    
   ];
 
   return (

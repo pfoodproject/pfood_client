@@ -24,11 +24,14 @@ const Topbar = props => {
       position="fixed"
     >
       <Toolbar>
-        <RouterLink to="/partner">
+      <RouterLink to="/partner">
           <img
             alt="Logo"
-            src="/images/logos/logo--white.svg"
+            src="/images/fork.png" style={{height:'36px', display:'flex'}}
           />
+        </RouterLink>
+        <RouterLink to="/partner" style={{textDecoration:'none'}}>
+          <p style={{marginLeft:'10px', color:'white',fontWeight: 500, fontFamily: 'cursive'}}>Pfood</p>
         </RouterLink>
       </Toolbar>
     </AppBar>

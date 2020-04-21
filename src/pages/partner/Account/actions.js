@@ -43,11 +43,40 @@ export const signInFail = (msg) => {
     }
 }
 
+//////// update image
+export const updateImage = (partner) => {
+    return {
+        type : Types.PARTNER_CHANGE_IMAGE,
+        partner
+    }
+}
+
+export const updateImageSuccess = (link) => {
+    return {
+        type : Types.PARTNER_CHANGE_IMAGE_SUCCESS,
+        link
+    }
+}
+
+export const updateImageFail = (msg) => {
+    return {
+        type : Types.PARTNER_CHANGE_IMAGE_FAIL,
+        msg
+    }
+}
+
 ///////// map localstorage to store
 export const mlts = (partner) => {
     return {
         type : Types.MLTS,
         partner
+    }
+}
+
+///////// signout
+export const signout = () => {
+    return {
+        type : Types.SIGN_OUT
     }
 }
 

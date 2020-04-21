@@ -1,3 +1,5 @@
-export const CHECK_LOGIN = 'CHECK_LOGIN';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const ADMIN_SIGNIN = 'ADMIN_SIGNIN';
+export const ADMIN_SIGNIN_SUCCESS = 'ADMIN_SIGNIN_SUCCESS';
+export const ADMIN_SIGNIN_FAIL = 'ADMIN_SIGNIN_FAIL';
+
+export const MLTS = 'MLTS';

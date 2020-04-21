@@ -6,54 +6,23 @@ import AdminLayout from './admin';
 import PartnerLayout from './partner';
 import adminRoutes from './routes/adminRoutes';
 import partnerRoutes from './routes/partnerRoutes';
-import Loadable from "react-loadable";
-import MyLoadingComponent from "../components/LoadingComponent";
-import { useStore, useDispatch } from 'react-redux';
-import {mlts} from '../pages/partner/Account/actions'
+import publicRoutes from './routes/publicRoutes';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from '../theme';
 
 const Template = () => {
-    const LoginPage = Loadable({
-        loader: () => import("../pages/partner/SignIn"),
-        loading: MyLoadingComponent
-      });
-      
-    const store = useStore();
-    const dispatch = useDispatch();
-    const comp = (privateComponent, path) => {
-        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo && path!=='/partner/sign-up') {
-           return privateComponent
-        }
-        if((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) && store.getState().partnerInfo === null && path!=='/partner/sign-up'){            
-            dispatch(mlts(JSON.parse(localStorage.getItem("sessionpartner"))))
-            return privateComponent
-        }
-        if(path==='/partner/sign-up'){
-            localStorage.removeItem("sessionpartner");
-            return privateComponent
-        }
-        localStorage.removeItem("sessionpartner")
-        return LoginPage
-    }
-    const lay = (layout) => {
-        
-        if ((localStorage.getItem("sessionpartner") && ((new Date(JSON.parse(localStorage.getItem("sessionpartner")).token.expires) - new Date()) >= 0)) ) {
-           return layout
-        }        
-        return 'Minimal'
-    }
+   
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Switch>
 
                     {_.map(adminRoutes, (route, key) => {
-                        const { component, path, exact } = route;
+                        const { component, path, exact, layout } = route;
                         return (
                             <Route
                                 key={key}
-                                render={(route) => <AdminLayout component={component} route={route} />}
+                                render={(route) => <AdminLayout component={component} path={path} route={route} layout={layout} />}
                                 path={path}
                                 exact={exact}
                             />
@@ -65,7 +34,20 @@ const Template = () => {
                         return (
                             <Route
                                 key={key}
-                                render={(route) => <PartnerLayout component={comp(component, path)} route={route} layout={lay(layout)} />}
+                                render={(route) => <PartnerLayout component={component} path={path} route={route} layout={layout} />}
+                                path={path}
+                                exact={exact}
+                            />
+                        )
+                    })}
+
+                    {_.map(publicRoutes, (route, key) => {
+                        const { component, path, exact } = route;
+                        let Component = component;
+                        return (
+                            <Route
+                                key={key}
+                                render={(route) => <Component  route={route}  />}
                                 path={path}
                                 exact={exact}
                             />
