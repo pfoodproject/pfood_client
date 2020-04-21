@@ -7,6 +7,7 @@ import sourceOfItems from '../pages/partner/Product/components/SourceOfItems/red
 import PartnerManager from '../pages/admin/PartnerController/reducers';
 import ProductManager from '../pages/admin/ProductController/reducers';
 import UserManager from '../pages/admin/UserController/reducers';
+import ParamManager from '../pages/admin/ParamController/reducers';
 
 const appReducers = combineReducers({
     PartnerManager,
@@ -16,8 +17,8 @@ const appReducers = combineReducers({
     partnerInfo,
     product,
     order,
-    sourceOfItems
-
+    sourceOfItems,
+    ParamManager
 });
 
 export default appReducers;

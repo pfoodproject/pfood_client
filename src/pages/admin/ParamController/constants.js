@@ -1,0 +1,3 @@
+export const GET_DATA_PARAM = 'GET_DATA_PARAM';
+export const UPDATE_DATA_PARAM = 'UPDATE_DATA_PARAM';
+

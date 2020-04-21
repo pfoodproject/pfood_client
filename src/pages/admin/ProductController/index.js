@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { getData, changeStatus } from './actions';
+import { getData, changeStatus, getCount } from './actions';
 import ReactPaginate from 'react-paginate';
 import "../../../theme/css/paginationAndTogle.css";
 import Toggle from 'react-toggle'
@@ -15,7 +15,8 @@ class Manager extends Component {
       ListProduct: [],
       page: 1,
       limit: 15,
-      orderBy: [{ column: "ItemID", value: "desc" }],
+      orderBy: [{ column: "i.ItemID", value: "desc" }],
+      PartnerNameFillter:"",
       ItemNameFillter: "",
       descriptionFillter: "",
       pageCount:0
@@ -26,28 +27,34 @@ class Manager extends Component {
   }
 
   getParam = () => {
-    const { page, limit, orderBy, ItemNameFillter, descriptionFillter } = this.state
+    const { page, limit, orderBy, ItemNameFillter, descriptionFillter, PartnerNameFillter } = this.state
     return {
       orderBy: orderBy,
       limit: limit,
       offset: (page - 1) * limit,
       like: [
-        { column: "ItemName", value: ItemNameFillter },
-        { column: "description", value: descriptionFillter }
+        { column: "i.ItemName", value: ItemNameFillter },
+        { column: "i.description", value: descriptionFillter },
+        { column: "p.PartnerName", value: PartnerNameFillter }
       ]
     }
   }
 
-  after = (resp,resp1) => {
-    const {limit} = this.state
+  after = (resp) => { 
     this.setState({
       ListProduct: resp,
-      pageCount: resp1[0].count/limit
     })
-
+    this.props.getCount(this.getParam(), this.afterCount)
   }
 
-  afterChange = () => {
+  afterCount = (resp) => {
+    const {limit} = this.state
+    this.setState({
+      pageCount: resp/limit
+    })
+  }
+
+  afterChange = (resp) => {
     this.props.getData(this.getParam(), this.after);
   }
 
@@ -91,8 +98,18 @@ class Manager extends Component {
           pageSize={this.state.limit}
           columns={[
             {
+              Header: <div><div>Tên Cửa hàng</div><input style={{ width: "99%" }} className="formControl" type="text" name="PartnerNameFillter" value={this.state.PartnerNameFillter} onChange={this.onChangeFillter} /></div>,
+              accessor: "PartnerName",
+
+            },
+            {
               Header: <div><div>Tên</div><input style={{ width: "99%" }} className="formControl" type="text" name="ItemNameFillter" value={this.state.ItemNameFillter} onChange={this.onChangeFillter} /></div>,
               accessor: "ItemName",
+
+            },
+            {
+              Header: <div><div>Giá sản phẩm</div></div>,
+              accessor: "Price",
 
             },
             {
@@ -155,7 +172,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getData: (value, after) => { dispatch(getData(value, after)) },
-    changeStatus: (value, after) => { dispatch(changeStatus(value, after)) }
+    changeStatus: (value, after) => { dispatch(changeStatus(value, after)) },
+    getCount: (value, after) => { dispatch(getCount(value, after)) },
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Manager);

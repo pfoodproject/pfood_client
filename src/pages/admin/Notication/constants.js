@@ -1,0 +1,2 @@
+export const GET_DATA_PROCESS = 'GET_DATA_PROCESS';
+

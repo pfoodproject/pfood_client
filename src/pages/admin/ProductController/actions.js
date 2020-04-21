@@ -14,6 +14,13 @@ export const getData = (value,after) => {
     }
 }
 
+export const getCount = (value,after) => {
+    return {
+        type : Types.GET_COUNT,
+        payload: {value,after}
+    }
+}
+
 export const getDataSuccess = (data) => {
     return {
         type : Types.GET_DATA_SUCCESS,
