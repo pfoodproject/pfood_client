@@ -108,7 +108,8 @@ const UsersToolbar = props => {
       scheduleDay: [],
       scheduleTimeFrom: "12:00",
       scheduleTimeTo: "12:00",
-      schedulePrice: null
+      schedulePrice: null,
+      scheduleAmount: null
     })
     setIsSschedule(false)
     setOpen(true);
@@ -153,7 +154,8 @@ const UsersToolbar = props => {
         'scheduleDay': [],
         'scheduleTimeFrom': "12:00",
         'scheduleTimeTo': "12:00",
-        'schedulePrice': null
+        'schedulePrice': null,
+        'scheduleAmount': null
       });
     }
   }
@@ -391,6 +393,25 @@ const UsersToolbar = props => {
                       required
                       type="number"
                       value={values.schedulePrice}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Số lượng"
+                      margin="dense"
+                      name="scheduleAmount"
+                      onChange={handleChange}
+                      disabled={!isSschedule}
+                      required
+                      type="number"
+                      value={values.scheduleAmount}
                       variant="outlined"
                     />
                   </Grid>

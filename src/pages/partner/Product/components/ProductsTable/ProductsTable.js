@@ -180,7 +180,8 @@ const UsersTable = () => {
     scheduleDay: null,
     scheduleTimeFrom:null,
     scheduleTimeTo:null,
-    schedulePrice: null
+    schedulePrice: null,
+    scheduleAmount: null
   });
 
   const changeSchedule = () => {
