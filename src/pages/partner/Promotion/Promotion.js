@@ -41,7 +41,7 @@ function TabPanel(props) {
   );
 }
 
-const Order = () => {
+const Promotion = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -53,7 +53,7 @@ const Order = () => {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Đơn hàng" {...a11yProps(0)} />
+          <Tab label="Khuyến mãi" {...a11yProps(0)} />
           {/* <Tab label="Sản phẩm đang bán" {...a11yProps(1)} /> */}
         </Tabs>
       </AppBar>
@@ -71,4 +71,4 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default Promotion;
