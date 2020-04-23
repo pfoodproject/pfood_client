@@ -193,7 +193,8 @@ const UsersTable = () => {
         'scheduleDay': null,
         'scheduleTimeFrom': null,
         'scheduleTimeTo': null,
-        'schedulePrice': null
+        'schedulePrice': null,
+        'scheduleAmount': null
       });
     }
   }
@@ -253,7 +254,8 @@ const UsersTable = () => {
       scheduleDay: null,
       scheduleTimeFrom: null,
       scheduleTimeTo: null,
-      schedulePrice: null
+      schedulePrice: null,
+      scheduleAmount: null
     })
     setOpen(false);
   };
@@ -521,6 +523,25 @@ const UsersTable = () => {
                       required
                       type="number"
                       value={values.schedulePrice}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Số lượng"
+                      margin="dense"
+                      name="scheduleAmount"
+                      onChange={handleChange}
+                      disabled={!isSschedule}
+                      required
+                      type="number"
+                      value={values.scheduleAmount}
                       variant="outlined"
                     />
                   </Grid>

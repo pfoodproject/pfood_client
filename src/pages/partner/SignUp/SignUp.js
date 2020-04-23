@@ -18,12 +18,12 @@ import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import callApiUnAuth from '../../../utils/apis/apiUnAuth';
 const schema = {
-  username: {
-    presence: { allowEmpty: false, message: 'Tên tài khoản không được để trống !' },
-    length: {
-      maximum: 64
-    }
-  },
+  // username: {
+  //   presence: { allowEmpty: false, message: 'Tên tài khoản không được để trống !' },
+  //   length: {
+  //     maximum: 64
+  //   }
+  // },
   name: {
     presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
     length: {
@@ -311,7 +311,7 @@ const SignUp = props => {
                     >
                       Đăng ký đối tác
                 </Typography>
-                    <TextField
+                    {/* <TextField
                       className={classes.textField}
                       error={hasError('username')}
                       fullWidth
@@ -324,7 +324,7 @@ const SignUp = props => {
                       type="text"
                       value={formState.values.username || ''}
                       variant="outlined"
-                    />
+                    /> */}
                     {/* <TextField
                       className={classes.textField}
                       error={hasError('password')}

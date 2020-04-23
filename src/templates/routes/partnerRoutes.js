@@ -20,6 +20,11 @@ const OrderPage = Loadable({
   loading: MyLoadingComponent
 });
 
+const PromotionPage = Loadable({
+  loader: () => import("../../pages/partner/Promotion"),
+  loading: MyLoadingComponent
+});
+
 const LoginPage = Loadable({
   loader: () => import("../../pages/partner/SignIn"),
   loading: MyLoadingComponent
@@ -50,6 +55,13 @@ const routes = {
     path: '/partner/order',
     exact: true,
     component: OrderPage,
+    private: true,
+    layout: 'Partner'
+  },
+  PromotionPage: {
+    path: '/partner/promotion',
+    exact: true,
+    component: PromotionPage,
     private: true,
     layout: 'Partner'
   },

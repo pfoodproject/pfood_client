@@ -1,8 +1,6 @@
 import partnerSaga from '../pages/partner/Account/sagas';
 import productSaga from '../pages/partner/Product/sagas';
 import AdminSaga from '../pages/admin/Login/sagas';
-import PartnerSagas from '../pages/partner/Account/sagas';
-import ProductSagas from '../pages/partner/Product/sagas';
 import OrderSaga from '../pages/partner/Order/sagas';
 import sourceOfItemsSaga from '../pages/partner/Product/components/SourceOfItems/sagas';
 import PartnerSaga from '../pages/admin/PartnerController/sagas';
@@ -15,8 +13,6 @@ import { fork } from 'redux-saga/effects'
 
 export default function* IndexSaga () {  
   yield fork(AdminSaga);
-  yield fork(PartnerSagas);
-  yield fork(ProductSagas);
   yield fork(PartnerSaga);
   yield fork(ProductSaga);
   yield fork(OrderSaga);
