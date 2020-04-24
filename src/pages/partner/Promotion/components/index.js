@@ -1,2 +1,2 @@
-export { default as OrdersTable } from './OrdersTable';
-export { default as SourceOfItems } from './SourceOfItems';
+export { default as PromotionsTable } from './PromotionsTable';
+export { default as CreatePromotion } from './CreatePromotion';

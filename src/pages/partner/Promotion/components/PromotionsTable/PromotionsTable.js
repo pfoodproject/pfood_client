@@ -75,7 +75,7 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 }))(ToggleButtonGroup);
 
 
-const OrdersTable = () => {
+const PromotionsTable = () => {
   const classes = useStyles();
   const columns = [
     { title: 'Mã đơn hàng', field: 'orderid', filtering: false },
@@ -403,4 +403,4 @@ const OrdersTable = () => {
   );
 };
 
-export default OrdersTable;
+export default PromotionsTable;

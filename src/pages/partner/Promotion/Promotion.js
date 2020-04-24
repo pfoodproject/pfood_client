@@ -5,7 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { OrdersTable, ProductsToolbar,SourceOfItems } from './components';
+import { PromotionsTable, CreatePromotion } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -54,16 +54,17 @@ const Promotion = () => {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Khuyến mãi" {...a11yProps(0)} />
-          {/* <Tab label="Sản phẩm đang bán" {...a11yProps(1)} /> */}
+          <Tab label="Tạo khuyến mãi" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
       <div className={classes.content}>
-        <OrdersTable />
+      <CreatePromotion />
+        {/* <PromotionsTable /> */}
       </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <SourceOfItems />
+        <CreatePromotion />
       </TabPanel>
 
       
