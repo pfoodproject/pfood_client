@@ -28,7 +28,7 @@ import * as moment from 'moment';
 
 const PromotionsTable = () => {
   const columns = [
-    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height: 40, borderRadius: '50%' }} /> },
+    { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height: 40, borderRadius: '50%' }} />, filtering: false },
     { title: 'Tên sản phẩm', field: 'ItemName' },
     { title: 'Loại khuyến mãi', field: 'promotiontypename' },
     { title: 'Điều kiện khuyến mãi', field: 'conditionname' },
