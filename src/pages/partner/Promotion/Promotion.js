@@ -59,8 +59,7 @@ const Promotion = () => {
       </AppBar>
       <TabPanel value={value} index={0}>
       <div className={classes.content}>
-      <CreatePromotion />
-        {/* <PromotionsTable /> */}
+        <PromotionsTable />
       </div>
       </TabPanel>
       <TabPanel value={value} index={1}>

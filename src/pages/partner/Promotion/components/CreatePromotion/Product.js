@@ -22,6 +22,7 @@ import { useStore } from 'react-redux';
 import { Grid, TextField, Button } from '@material-ui/core';
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
 import moment from 'moment';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 
 const ItemsTable = () => {
   const columns = [
@@ -47,6 +48,7 @@ const ItemsTable = () => {
   const [item, setItem] = useState([]);
   const [type, setType] = useState([]);
   const [condition, setCondition] = useState([]);
+  const [isCreating, setIsCreating] = useState(false);
   const [data, setData] = useState({
     item: [],
     type: null,
@@ -70,9 +72,18 @@ const ItemsTable = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log(data);
+  const handleSubmit = async () => {
+    setIsCreating(true);
+    const rs = await callApiUnAuth(`partner/promotion`, 'POST', data);
+    if(rs.data.type=='success'){
+      const resultItem = await callApiUnAuth(`partner/promotionproductadd/${store}`, 'GET', [])
+      setItem(resultItem.data);
+      NotificationManager.success(rs.data.type, rs.data.msg, 3000);
+    } else {
+      NotificationManager.success('fail', 'Ko thành công', 3000);
+    }
     
+    setIsCreating(false);
   }
 
   const itemchecked = (rows) => {
@@ -104,6 +115,7 @@ const ItemsTable = () => {
 
   return (
     <div>
+       <NotificationContainer />
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
@@ -237,7 +249,7 @@ const ItemsTable = () => {
                   justify="center"
                   alignItems="center"
                 >
-                  <Button onClick={handleSubmit} variant="contained" color="primary" autoFocus >
+                  <Button onClick={handleSubmit} variant="contained" color="primary" autoFocus disabled={isCreating}>
                    Tạo khuyến mãi
                   </Button>
                 </Grid>
