@@ -82,7 +82,7 @@ const UsersToolbar = props => {
     PartnerID: store.token.user.PartnerID,
     ItemName: '',
     description: '',
-    category: ''
+    category: 'category000000000001'
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -104,7 +104,7 @@ const UsersToolbar = props => {
       PartnerID: store.token.user.PartnerID,
       ItemName: '',
       description: '',
-      category: '',
+      category: 'category000000000001',
       scheduleDay: [],
       scheduleTimeFrom: "12:00",
       scheduleTimeTo: "12:00",
