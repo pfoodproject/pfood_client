@@ -12,7 +12,7 @@ function* wathUserAction(){
 function*  getDataSaga({payload}){
     var resp = yield call(callApiUnauthWithBody,"admin/getUser","POST",payload.value);
     console.log(resp)
-    if(resp.statusText == "OK") {
+    if(resp.statusText === "OK") {
         var resp1 = yield call(callApiUnauthWithBody,"admin/countUser","GET",{});
         yield call(payload.after,resp.data,resp1.data)
         yield put(actions.getDataSuccess(resp.data))
@@ -25,7 +25,7 @@ function*  getDataSaga({payload}){
 function*  changeStatus({payload}){
     var resp = yield call(callApiUnauthWithBody,"admin/UserController","POST",payload.value);
     
-    if(resp.statusText == "OK") {
+    if(resp.statusText === "OK") {
         
         yield call(payload.after)
     }

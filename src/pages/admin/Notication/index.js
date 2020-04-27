@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Grid, Typography, Divider } from "@material-ui/core/";
-import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { getData } from './actions';
 import "../../../theme/css/paginationAndTogle.css";
@@ -28,6 +26,7 @@ class Manager extends Component {
   }
 
   after = (resp) => {
+    // eslint-disable-next-line
     resp.map(r=>{
       toast('có 1 sản phẩm mới được đăng ký với mã là ' + r.ItemID + ' của cửa hàng có mã là ' + r.PartnerID)
     })

@@ -1,6 +1,5 @@
-import { put, call, takeLatest } from 'redux-saga/effects'
+import { call, takeLatest } from 'redux-saga/effects'
 
-import * as actions from './actions'
 import * as Types from './constants'
 import callApiUnauthWithBody from "../../../utils/apis/apiUnAuth"
 

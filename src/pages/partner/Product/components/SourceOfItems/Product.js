@@ -55,10 +55,8 @@ const ItemsTable = () => {
   //   setIsLoading(false);
   // }, [count]);
 
-  const {data, msg, type} = useSelector(state => ({
+  const {data } = useSelector(state => ({
     data: state.sourceOfItems.lst,
-    msg: state.sourceOfItems.msg,
-    type: state.sourceOfItems.type
   }));
   
   useEffect(() => {

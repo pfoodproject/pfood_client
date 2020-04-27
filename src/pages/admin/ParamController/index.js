@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Grid, Typography, Divider } from "@material-ui/core/";
+import { Button } from "@material-ui/core/";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { getData, changeStatus } from './actions';
@@ -39,8 +39,9 @@ class Manager extends Component {
   onChangeInput = (e) => {
     console.log(e.target.name)
     const ListParam = [...this.state.ListParam]
+    // eslint-disable-next-line
     ListParam.map (p => {
-      if(p.ParamName == e.target.name){
+      if(p.ParamName === e.target.name){
         p.ParamValue = e.target.value
       }
     })

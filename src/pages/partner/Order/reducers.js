@@ -26,6 +26,7 @@ const order = (state = initialState, action) => {
         state.count++;
         state.msg = action.response.msg
         state.type = action.response.type
+        // eslint-disable-next-line
         state.lst.find((e, i) => {          
           if (e.orderid === action.response.order[0].orderid) {            
             state.lst[i] = action.response.order[0]

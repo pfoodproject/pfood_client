@@ -75,14 +75,14 @@ const ItemsTable = () => {
   const handleSubmit = async () => {
     setIsCreating(true);
     const rs = await callApiUnAuth(`partner/promotion`, 'POST', data);
-    if(rs.data.type=='success'){
+    if (rs.data.type === 'success') {
       const resultItem = await callApiUnAuth(`partner/promotionproductadd/${store}`, 'GET', [])
       setItem(resultItem.data);
       NotificationManager.success(rs.data.type, rs.data.msg, 3000);
     } else {
       NotificationManager.success('fail', 'Ko thành công', 3000);
     }
-    
+
     setIsCreating(false);
   }
 
@@ -91,7 +91,7 @@ const ItemsTable = () => {
       ...oldData,
       item: rows.map(e => e.ItemID)
     }));
-    
+
   }
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -115,7 +115,7 @@ const ItemsTable = () => {
 
   return (
     <div>
-       <NotificationContainer />
+      <NotificationContainer />
       {isLoading ? (
         <div>Loading ...</div>
       ) : (
@@ -135,7 +135,7 @@ const ItemsTable = () => {
                 options={{
                   selection: true
                 }}
-                onSelectionChange={(rows) =>itemchecked(rows)}
+                onSelectionChange={(rows) => itemchecked(rows)}
               />
             </Grid>
             <Grid
@@ -250,7 +250,7 @@ const ItemsTable = () => {
                   alignItems="center"
                 >
                   <Button onClick={handleSubmit} variant="contained" color="primary" autoFocus disabled={isCreating}>
-                   Tạo khuyến mãi
+                    Tạo khuyến mãi
                   </Button>
                 </Grid>
               </Grid>

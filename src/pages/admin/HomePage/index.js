@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './main.css';
 
 import { makeStyles } from '@material-ui/styles';
-import { Grid, TextField } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -18,7 +18,7 @@ import {
     LatestOrders
 } from './components';
 import { callApiUnauthWithHeader } from '../../../utils/apis/apiUnAuth';
-import { useStore } from 'react-redux';
+// import { useStore } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     root: {
