@@ -130,7 +130,7 @@ class Manager extends Component {
                 return (
                   <div style={{ textAlign: "center" }}>
                     <Toggle
-                      checked={props.row.StatusID == 1}
+                      checked={props.row.StatusID === 1}
                       icons={false}
                       onChange={e => this.handleEnable(e, props)}
                     />

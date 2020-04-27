@@ -215,7 +215,7 @@ const SignUp = props => {
         }))
       });
     } else {
-      NotificationManager.success('Success', 'Đăng ký thành công !', 3000);
+      NotificationManager.success('Success', 'Thông tin đăng ký của bạn đã được ghi nhận! Vui lòng truy cập gmail để xác nhận thông tin!', 3000);
       setFormState({
         isValid: false,
         values: {

@@ -136,7 +136,7 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Mô tả"
+                label="Địa chỉ"
                 margin="dense"
                 name="PartnerAddress"
                 onChange={handleChange}
@@ -218,7 +218,6 @@ const AccountDetails = props => {
                 margin="dense"
                 name="PartnerDescription"
                 onChange={handleChange}
-                required
                 value={values.PartnerDescription}
                 variant="outlined"
                 multiline={true}

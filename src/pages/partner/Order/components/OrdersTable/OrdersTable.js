@@ -16,23 +16,18 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
-  CheckBoxOutlineBlank,
-  CheckBox,
   Done,
   HighlightOff,
   Details
 } from '@material-ui/icons';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper, Tooltip } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/styles';
-import { DropzoneArea } from 'material-ui-dropzone'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Tooltip } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { fetchOrder, updateOrder } from '../../actions';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import callApiUnauthWithBody, { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
+import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 import * as moment from 'moment';
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -60,19 +55,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const StyledToggleButtonGroup = withStyles((theme) => ({
-  grouped: {
-    margin: theme.spacing(0.5),
-    border: 'none',
-    padding: theme.spacing(0, 1),
-    '&:not(:first-child)': {
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:first-child': {
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-}))(ToggleButtonGroup);
 
 
 const OrdersTable = () => {
@@ -90,7 +72,7 @@ const OrdersTable = () => {
           <Tooltip title="Chi tiết">
             <Button variant="outlined" onClick={() => handleDetail(rowData)} style={{ marginLeft: '10px', color: '#4caf50', border: '#4caf50 1px solid' }}><Details /></Button>
           </Tooltip>
-          {rowData.statusid == 1 ? (
+          {rowData.statusid === 1 ? (
             <React.Fragment>
               <Tooltip title="Hoàn thành">
                 <Button variant="outlined" color="primary" onClick={() => handleAccept(rowData)} style={{ marginLeft: '10px' }}><Done /></Button>
@@ -169,9 +151,9 @@ const OrdersTable = () => {
   }
   const handleDetail = (rowData) => {
     const fetchData = async (orderid) => {
+      setIsLoadingDetail(true);
       const result = await callApiUnauthWithHeader(`partner/detailorderbyid`, 'GET', { orderid: orderid })
       setDetailData(result.data);
-      setIsLoadingDetail(true);
       setOpen(true);
     };
     fetchData(rowData.orderid);
@@ -248,7 +230,7 @@ const OrdersTable = () => {
               <DialogTitle id="responsive-dialog-title">{"Thông tin đơn hàng"}</DialogTitle>
               <DialogContent className={classes.dialogContent}>
 
-                {isLoading ? (
+                {isLoadingDetail ? (
                   <div>Loading ...</div>
                 ) : (
                     <Grid

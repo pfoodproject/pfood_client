@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
-import { importProduct } from '../../actions';
+// import { importProduct } from '../../actions';
 import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
 import ToggleButton from '@material-ui/lab/ToggleButton';
@@ -63,6 +63,30 @@ const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
   // const firstUpdate = useRef(true);
+  // const schema = {
+  //   name: {
+  //     presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
+  //     length: {
+  //       maximum: 64
+  //     }
+  //   },
+  //   email: {
+  //     presence: { allowEmpty: false, message: 'Email không được để trống !' },
+  //     email: true
+  //   },
+  //   phone: {
+  //     presence: { allowEmpty: false, message: 'Số điện thoại không được để trống !' },
+  //     length: {
+  //       minimum: 10,
+  //       maximum: 11,
+  //       message: 'Số dt không hợp lệ!'
+  //     }
+  //   },
+  //   address: {
+  //     presence: { allowEmpty: false, message: 'Địa chỉ không được để trống !' },
+  //   },
+  // };
+
   const [schedulerDay, setSchedulerDay] = React.useState(() => []);
   const handleSchedulerDay = (event, newSchedule) => {
     console.log(newSchedule);
@@ -140,10 +164,10 @@ const UsersToolbar = props => {
     setOpen(false);
   };
 
-  const handleChangeFileImport = file => {
-    dispatch(importProduct({ PartnerID: store.token.user.PartnerID, file: file.target.files[0] }))
+  // const handleChangeFileImport = file => {
+  //   dispatch(importProduct({ PartnerID: store.token.user.PartnerID, file: file.target.files[0] }))
 
-  };
+  // };
 
   const changeSchedule = () => {
     setIsSschedule(!isSschedule)
