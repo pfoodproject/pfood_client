@@ -13,6 +13,8 @@ const product = (state = initialState, action) => {
       return state
     case Types.FETCH_PRODUCT_SUCCESS:
       {
+        state.msg = ''
+        state.type = ''
         state.lst = action.listProduct
         return state
       }

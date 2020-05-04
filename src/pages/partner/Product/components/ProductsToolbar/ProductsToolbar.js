@@ -10,7 +10,9 @@ import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { addProduct } from '../../actions' 
+import { addProduct } from '../../actions'
+import validate from 'validate.js';
+
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   dialogContent: {
     overflowX: 'hidden',
     overflowY: 'hidden'
-  },paper: {
+  }, paper: {
     display: 'flex',
     border: `1px solid ${theme.palette.divider}`,
     flexWrap: 'wrap',
@@ -59,55 +61,57 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
   },
 }))(ToggleButtonGroup);
 
+let schema = {
+  ItemName: {
+    presence: { allowEmpty: false, message: 'Tên sản phẩm không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  }
+};
+let errors =[]
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
-  // const firstUpdate = useRef(true);
-  // const schema = {
-  //   name: {
-  //     presence: { allowEmpty: false, message: 'Tên đối tác không được để trống !' },
-  //     length: {
-  //       maximum: 64
-  //     }
-  //   },
-  //   email: {
-  //     presence: { allowEmpty: false, message: 'Email không được để trống !' },
-  //     email: true
-  //   },
-  //   phone: {
-  //     presence: { allowEmpty: false, message: 'Số điện thoại không được để trống !' },
-  //     length: {
-  //       minimum: 10,
-  //       maximum: 11,
-  //       message: 'Số dt không hợp lệ!'
-  //     }
-  //   },
-  //   address: {
-  //     presence: { allowEmpty: false, message: 'Địa chỉ không được để trống !' },
-  //   },
-  // };
-
   const [schedulerDay, setSchedulerDay] = React.useState(() => []);
   const handleSchedulerDay = (event, newSchedule) => {
-    console.log(newSchedule);
-    
     setSchedulerDay(newSchedule);
-    setValues({
-      ...values,
-      'scheduleDay': newSchedule
-    });
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        'scheduleDay': newSchedule
+      },
+    }));
   };
   const [open, setOpen] = React.useState(false);
   const [category, setCategory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSschedule, setIsSschedule] = useState(false);
   const store = useStore().getState().partnerInfo;
-  const [values, setValues] = useState({
-    PartnerID: store.token.user.PartnerID,
-    ItemName: '',
-    description: '',
-    category: 'category000000000001'
+
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {
+      PartnerID: store.token.user.PartnerID,
+      ItemName: '',
+      description: '',
+      category: 'category000000000001'
+    },
+    touched: {},
+    errors: {}
   });
+errors = validate(formState.values, schema, { fullMessages: false });
+
+
+  useEffect(() => {
+    setFormState(formState => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
+    }));
+  }, [formState.values]);
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await callApiUnauthWithHeader(`category`, 'GET', {})
@@ -124,17 +128,22 @@ const UsersToolbar = props => {
 
   const handleClickOpen = () => {
     setSchedulerDay([]);
-    setValues({
-      PartnerID: store.token.user.PartnerID,
-      ItemName: '',
-      description: '',
-      category: 'category000000000001',
-      scheduleDay: [],
-      scheduleTimeFrom: "12:00",
-      scheduleTimeTo: "12:00",
-      schedulePrice: null,
-      scheduleAmount: null
-    })
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        PartnerID: store.token.user.PartnerID,
+        ItemName: '',
+        description: '',
+        category: 'category000000000001',
+        scheduleDay: [],
+        scheduleTimeFrom: "12:00",
+        scheduleTimeTo: "12:00",
+        schedulePrice: null,
+        scheduleAmount: null
+      },
+      touched:{}
+    }));
+
     setIsSschedule(false)
     setOpen(true);
   };
@@ -145,22 +154,37 @@ const UsersToolbar = props => {
 
 
   const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+    event.persist();
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === 'checkbox'
+            ? (event.target.checked ? 1 : 0)
+            : event.target.value
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true
+      }
+    }));
   };
   const dispatch = useDispatch();
   const handleChangeFile = file => {
-    setValues({
-      ...values,
-      img: file
-    })
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        img: file
+      },
+      touched: {
+        ...formState.touched
+      }
+    }));
   };
   const handleAccept = () => {
-    console.log(values);
-
-     dispatch(addProduct(values));
+    dispatch(addProduct(formState.values));
     setOpen(false);
   };
 
@@ -171,18 +195,66 @@ const UsersToolbar = props => {
 
   const changeSchedule = () => {
     setIsSschedule(!isSschedule)
+  }
+
+  useEffect(() => {    
     if (isSschedule === true) {
       setSchedulerDay([]);
-      setValues({
-        ...values,
-        'scheduleDay': [],
-        'scheduleTimeFrom': "12:00",
-        'scheduleTimeTo': "12:00",
-        'schedulePrice': null,
-        'scheduleAmount': null
-      });
+      schema.scheduleTimeFrom = {
+        presence: { allowEmpty: false, message: 'Thời gian bắt đầu không được để trống !' },
+      }
+      schema.scheduleTimeTo = {
+        presence: { allowEmpty: false, message: 'Thời gian kết thúc không được để trống !' },
+      }
+      schema.schedulePrice = {
+        presence: { allowEmpty: false, message: 'Giá sản phẩm không được để trống !' },
+      }
+      schema.scheduleAmount = {
+        presence: { allowEmpty: false, message: 'Số lượng không được để trống !' },
+      }
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          'scheduleDay': [],
+          'scheduleTimeFrom': "12:00",
+          'scheduleTimeTo': "12:00",
+          'schedulePrice': "",
+          'scheduleAmount': ""
+        },
+        touched: {
+          ...formState.touched,
+          'schedulePrice': false,
+          'scheduleAmount': false
+        }
+      }));
+    } else {
+      delete schema.scheduleTimeFrom;
+      delete schema.scheduleTimeTo;
+      delete schema.schedulePrice;
+      delete schema.scheduleAmount;
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          'scheduleDay': [],
+          'scheduleTimeFrom': "11:00",
+          'scheduleTimeTo': "12:00",
+          'schedulePrice': "",
+          'scheduleAmount': ""
+        },
+        touched: {
+          ...formState.touched,
+          'schedulePrice': false,
+          'scheduleAmount': false
+        }
+      }));
     }
-  }
+
+  }, [isSschedule])
+
+  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false;
 
   return (
     <div
@@ -244,13 +316,16 @@ const UsersToolbar = props => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Tên sản phẩm"
+                      error={hasError('ItemName')}
+                      helperText={
+                        hasError('ItemName') ? formState.errors.ItemName[0] : null
+                      }
                       margin="dense"
                       name="ItemName"
                       onChange={handleChange}
                       required
-                      value={values.ItemName}
+                      value={formState.values.ItemName}
                       variant="outlined"
                     />
                   </Grid>
@@ -267,8 +342,7 @@ const UsersToolbar = props => {
                       margin="dense"
                       name="description"
                       onChange={handleChange}
-                      required
-                      value={values.description}
+                      value={formState.values.description}
                       variant="outlined"
                     />
                   </Grid>
@@ -288,7 +362,7 @@ const UsersToolbar = props => {
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}
-                      value={values.category || ''}
+                      value={formState.values.category || ''}
                       variant="outlined"
                     >
                       {category.map(option => (
@@ -331,9 +405,14 @@ const UsersToolbar = props => {
                         label="Thời gian từ"
                         type="time"
                         defaultValue="00:00"
+                        required
                         className={classes.textField}
                         name="scheduleTimeFrom"
-                        value={values.scheduleTimeFrom}
+                        error={hasError('scheduleTimeFrom')}
+                        helperText={
+                          hasError('scheduleTimeFrom') ? formState.errors.scheduleTimeFrom[0] : null
+                        }
+                        value={formState.values.scheduleTimeFrom}
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -345,32 +424,32 @@ const UsersToolbar = props => {
                       /></Grid>
 
                     <Grid md={6} xs={6} item>
-           
+
                       <Paper elevation={0} className={classes.paper}>
                         <StyledToggleButtonGroup
                           size="small"
                           value={schedulerDay} onChange={handleSchedulerDay} aria-label="text formatting"
                         >
                           <ToggleButton value="1" aria-label="Thứ 2" disabled={!isSschedule}>
-                          T2
+                            T2
                         </ToggleButton>
-                        <ToggleButton value="2" aria-label="Thứ 3" disabled={!isSschedule}>
-                          T3
+                          <ToggleButton value="2" aria-label="Thứ 3" disabled={!isSschedule}>
+                            T3
                         </ToggleButton>
-                        <ToggleButton value="3" aria-label="Thứ 4" disabled={!isSschedule}>
-                          T4
+                          <ToggleButton value="3" aria-label="Thứ 4" disabled={!isSschedule}>
+                            T4
                         </ToggleButton>
-                        <ToggleButton value="4" aria-label="Thứ 5" disabled={!isSschedule}>
-                          T5
+                          <ToggleButton value="4" aria-label="Thứ 5" disabled={!isSschedule}>
+                            T5
                         </ToggleButton>
-                        <ToggleButton value="5" aria-label="Thứ 6" disabled={!isSschedule}>
-                          T6
+                          <ToggleButton value="5" aria-label="Thứ 6" disabled={!isSschedule}>
+                            T6
                         </ToggleButton>
-                        <ToggleButton value="6" aria-label="Thứ 7" disabled={!isSschedule}>
-                          T7
+                          <ToggleButton value="6" aria-label="Thứ 7" disabled={!isSschedule}>
+                            T7
                         </ToggleButton>
-                        <ToggleButton value="0" aria-label="Chủ nhật" disabled={!isSschedule}>
-                          CN
+                          <ToggleButton value="0" aria-label="Chủ nhật" disabled={!isSschedule}>
+                            CN
                         </ToggleButton>
                         </StyledToggleButtonGroup>
                       </Paper>
@@ -389,8 +468,13 @@ const UsersToolbar = props => {
                         type="time"
                         defaultValue="00:00"
                         className={classes.textField}
+                        required
+                        error={hasError('scheduleTimeTo')}
+                        helperText={
+                          hasError('scheduleTimeTo') ? formState.errors.scheduleTimeTo[0] : null
+                        }
                         name="scheduleTimeTo"
-                        value={values.scheduleTimeTo}
+                        value={formState.values.scheduleTimeTo}
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -408,15 +492,18 @@ const UsersToolbar = props => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Giá sản phẩm"
                       margin="dense"
                       name="schedulePrice"
+                      error={hasError('schedulePrice')}
+                      helperText={
+                        hasError('schedulePrice') ? formState.errors.schedulePrice[0] : null
+                      }
                       onChange={handleChange}
                       disabled={!isSschedule}
                       required
                       type="number"
-                      value={values.schedulePrice}
+                      value={formState.values.schedulePrice}
                       variant="outlined"
                     />
                   </Grid>
@@ -427,15 +514,18 @@ const UsersToolbar = props => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Số lượng"
                       margin="dense"
                       name="scheduleAmount"
+                      error={hasError('scheduleAmount')}
+                      helperText={
+                        hasError('scheduleAmount') ? formState.errors.scheduleAmount[0] : null
+                      }
                       onChange={handleChange}
                       disabled={!isSschedule}
                       required
                       type="number"
-                      value={values.scheduleAmount}
+                      value={formState.values.scheduleAmount}
                       variant="outlined"
                     />
                   </Grid>
@@ -461,7 +551,7 @@ const UsersToolbar = props => {
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus>
+                <Button onClick={handleAccept} color="primary" autoFocus disabled={!formState.isValid}>
                   Xác nhận
           </Button>
               </DialogActions>

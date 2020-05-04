@@ -20,6 +20,7 @@ import {
   HighlightOff,
   Details
 } from '@material-ui/icons';
+import TimerIcon from '@material-ui/icons/Timer';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Tooltip } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { useSelector, useDispatch, useStore } from 'react-redux';
@@ -74,8 +75,8 @@ const OrdersTable = () => {
           </Tooltip>
           {rowData.statusid === 1 ? (
             <React.Fragment>
-              <Tooltip title="Hoàn thành">
-                <Button variant="outlined" color="primary" onClick={() => handleAccept(rowData)} style={{ marginLeft: '10px' }}><Done /></Button>
+              <Tooltip title="Chờ lấy hàng">
+                <Button variant="outlined" color="primary" onClick={() => handleWait(rowData)} style={{ marginLeft: '10px' }}><TimerIcon /></Button>
               </Tooltip>
               <Tooltip title="Hủy">
                 <Button variant="outlined" onClick={() => handleReject(rowData)} style={{ marginLeft: '10px', color: '#f44336', border: '#f44336 1px solid' }}><HighlightOff /></Button>
@@ -83,6 +84,19 @@ const OrdersTable = () => {
             </React.Fragment>
           ) : (
               <React.Fragment>
+                {rowData.statusid === 6 ? (
+                  <React.Fragment>
+                    <Tooltip title="Hoàn thành">
+                      <Button variant="outlined" color="primary" onClick={() => handleAccept(rowData)} style={{ marginLeft: '10px' }}><Done /></Button>
+                    </Tooltip>
+                    <Tooltip title="Hủy">
+                      <Button variant="outlined" onClick={() => handleReject(rowData)} style={{ marginLeft: '10px', color: '#f44336', border: '#f44336 1px solid' }}><HighlightOff /></Button>
+                    </Tooltip>
+                  </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                    </React.Fragment>
+                  )}
               </React.Fragment>
             )}
         </React.Fragment>)
@@ -145,7 +159,10 @@ const OrdersTable = () => {
   const handleAccept = (rowData) => {
     dispatch(updateOrder(rowData.orderid, 4))
   }
-
+  
+  const handleWait = (rowData) => {
+    dispatch(updateOrder(rowData.orderid, 6))
+  }
   const handleReject = (rowData) => {
     dispatch(updateOrder(rowData.orderid, 3))
   }
@@ -239,7 +256,7 @@ const OrdersTable = () => {
                     >
 
                       <Grid
-                      item
+                        item
                         md={12}
                         xs={12}>
                         <TextField
@@ -253,7 +270,7 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={6}
                         xs={6}>
                         <TextField
@@ -267,7 +284,7 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={6}
                         xs={6}>
                         <TextField
@@ -281,7 +298,7 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={12}
                         xs={12}>
                         <TextField
@@ -295,7 +312,7 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={12}
                         xs={12}>
                         <TextField
@@ -309,7 +326,7 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={6}
                         xs={6}>
                         <TextField
@@ -323,24 +340,24 @@ const OrdersTable = () => {
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={6}
                         xs={6}>
                         <TextField
                           fullWidth
                           helperText=""
-                          label={(detailData.order) ? (detailData.order.rejectdate ? 'Ngày hủy' : (detailData.order.approvedate ? 'Ngày hoàn thành' : '') ) : 'null'}
+                          label={(detailData.order) ? (detailData.order.rejectdate ? 'Ngày hủy' : (detailData.order.approvedate ? 'Ngày hoàn thành' : '')) : 'null'}
                           margin="dense"
-                          value={(detailData.order) ? (detailData.order.rejectdate ? moment(detailData.order.rejectdate).format('hh:mm:ss DD/MM/YYYY') : (detailData.order.approvedate ? moment(detailData.order.approvedate).format('hh:mm:ss DD/MM/YYYY') : '') ) : 'null'}
+                          value={(detailData.order) ? (detailData.order.rejectdate ? moment(detailData.order.rejectdate).format('hh:mm:ss DD/MM/YYYY') : (detailData.order.approvedate ? moment(detailData.order.approvedate).format('hh:mm:ss DD/MM/YYYY') : '')) : 'null'}
                           variant="outlined"
                           disabled
                         />
                       </Grid>
                       <Grid
-                      item
+                        item
                         md={12}
                         xs={12}>
-                          <TextField
+                        <TextField
                           fullWidth
                           helperText=""
                           label="Trạng thái"
@@ -349,10 +366,10 @@ const OrdersTable = () => {
                           variant="outlined"
                           disabled
                         />
-                        </Grid>
+                      </Grid>
 
                       <Grid
-                      item
+                        item
                         md={12}
                         xs={12}
                         style={{ borderTop: '1px solid #ddd', marginTop: '20px' }}>

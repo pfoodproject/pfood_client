@@ -31,6 +31,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
+import validate from 'validate.js';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -72,6 +73,15 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
   },
 }))(ToggleButtonGroup);
 
+let schema = {
+  ItemName: {
+    presence: { allowEmpty: false, message: 'Tên sản phẩm không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  }
+};
+let errors = []
 
 const UsersTable = () => {
   const classes = useStyles();
@@ -96,7 +106,7 @@ const UsersTable = () => {
   const [isUpdate, setIsUpdate] = useState(false);
   const [category, setCategory] = useState([]);
   const firstUpdate = useRef(true);
-
+  const [isSschedule, setIsSschedule] = useState(false);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
     dispatch(fetchProduct(store));
@@ -141,7 +151,7 @@ const UsersTable = () => {
     setIsUpdate(false)
     setOpen(false);
   }, [msg, type, count]);
-  
+
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -172,61 +182,129 @@ const UsersTable = () => {
   //   });
   //   //  
   // }
-  const [values, setValues] = useState({
-    ItemID: '',
-    ItemName: '',
-    description: '',
-    categoryID: '',
-    scheduleDay: null,
-    scheduleTimeFrom:null,
-    scheduleTimeTo:null,
-    schedulePrice: null,
-    scheduleAmount: null
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {
+      ItemName: '',
+      description: '',
+    },
+    touched: {},
+    errors: {}
   });
+  errors = validate(formState.values, schema, { fullMessages: false });
 
-  const changeSchedule = () => {
+  useEffect(() => {
+    setFormState(formState => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
+    }));
+  }, [formState.values]);
+
+  const changeSchedule = () => {    
     setIsSschedule(!isSschedule)
-    if (isSschedule === true) {
-      setSchedulerDay([]);
-      setValues({
-        ...values,
-        'scheduleDay': null,
-        'scheduleTimeFrom': null,
-        'scheduleTimeTo': null,
-        'schedulePrice': null,
-        'scheduleAmount': null
-      });
-    }
   }
+
+  useEffect(() => {
+    if (isSschedule === true) {
+      schema.scheduleTimeFrom = {
+        presence: { allowEmpty: false, message: 'Thời gian bắt đầu không được để trống !' },
+      }
+      schema.scheduleTimeTo = {
+        presence: { allowEmpty: false, message: 'Thời gian kết thúc không được để trống !' },
+      }
+      schema.schedulePrice = {
+        presence: { allowEmpty: false, message: 'Giá sản phẩm không được để trống !' },
+      }
+      schema.scheduleAmount = {
+        presence: { allowEmpty: false, message: 'Số lượng không được để trống !' },
+      }
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values
+        },
+        touched: {
+          ...formState.touched,
+          'schedulePrice': false,
+          'scheduleAmount': false
+        }
+      }));
+    } else {
+      delete schema.scheduleTimeFrom;
+      delete schema.scheduleTimeTo;
+      delete schema.schedulePrice;
+      delete schema.scheduleAmount;
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          'scheduleDay': [],
+          'scheduleTimeFrom': "11:00",
+          'scheduleTimeTo': "12:00",
+          'schedulePrice': "",
+          'scheduleAmount': ""
+        },
+        touched: {
+          ...formState.touched,
+          'schedulePrice': false,
+          'scheduleAmount': false
+        }
+      }));
+    }
+
+  }, [isSschedule])
 
   const [schedulerDay, setSchedulerDay] = React.useState(() => []);
   const handleSchedulerDay = (event, newSchedule) => {
     setSchedulerDay(newSchedule);
-    setValues({
-      ...values,
-      'scheduleDay': newSchedule
-    });
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        'scheduleDay': newSchedule
+      },
+    }));
   };
-  const [isSschedule, setIsSschedule] = useState(false);
+
 
   const [open, setOpen] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const [addData, setAddData] = useState({});
   const handleEdit = (rowData) => {
-    console.log(rowData);
-    
-    setValues(rowData)
-    if(rowData.scheduleDay != null){
-      setIsSschedule(true);
-        rowData.scheduleDay = rowData.scheduleDay.toString();
-       setSchedulerDay(rowData.scheduleDay.split(','));
-      // handleSchedulerDay(null,rowData.scheduleDay.split(','))
-      setValues({
+    setIsSschedule(false);
+    // setValues(rowData)
+    setFormState(formState => ({
+      ...formState,
+      values: {
         ...rowData,
-        'scheduleDay': rowData.scheduleDay.split(',')
-      });
+        scheduleTimeFrom: "12:00",
+        scheduleTimeTo: "12:00",
+      },
+    }));
+    console.log(rowData);
+    if (rowData.scheduleDay !== null && rowData.scheduleDay !== "") {
+
+      rowData.scheduleDay = rowData.scheduleDay.toString();
+      console.log(rowData);
+
+      setSchedulerDay(rowData.scheduleDay.split(','));
+      // setValues({
+      //   ...rowData,
+      //   'scheduleDay': rowData.scheduleDay.split(',')
+      // });
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...rowData,
+          'scheduleDay': rowData.scheduleDay.split(','),
+          scheduleTimeFrom: rowData.scheduleTimeFrom,
+          scheduleTimeTo: rowData.scheduleTimeTo,
+        },
+      }));
+      setIsSschedule(true);
     } else {
-      setIsSschedule(false);
+      // setIsSschedule(false);
       setSchedulerDay([]);
     }
     setOpen(true);
@@ -246,37 +324,59 @@ const UsersTable = () => {
   const handleClose = () => {
     setIsSschedule(false);
     setSchedulerDay([]);
-    setValues({
-      ItemID: '',
-      ItemName: '',
-      description: '',
-      categoryID: '',
-      scheduleDay: null,
-      scheduleTimeFrom: null,
-      scheduleTimeTo: null,
-      schedulePrice: null,
-      scheduleAmount: null
-    })
+    setFormState(formState => ({
+      isValid: false,
+      values: {
+        ItemName: '',
+        description: '',
+      },
+      touched: {},
+      errors: {}
+    }));
     setOpen(false);
+    console.log(isSschedule);
+    
   };
 
   const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+    event.persist();
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === 'checkbox'
+            ? (event.target.checked ? 1 : 0)
+            : event.target.value
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true
+      }
+    }));
   };
 
   const handleChangeFile = file => {
-    setValues({
-      ...values,
-      ItemImage: file
-    })
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        img: file
+      },
+      touched: {
+        ...formState.touched
+      }
+    }));
   };
-  const handleAccept = () => {    
-    dispatch(updateProduct(values));
+  const handleAccept = () => {
+    console.log(formState.values);
+
+    dispatch(updateProduct(formState.values));
     setIsUpdate(true);
   };
+
+  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false;
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -350,13 +450,16 @@ const UsersTable = () => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Tên sản phẩm"
                       margin="dense"
                       name="ItemName"
+                      error={hasError('ItemName')}
+                      helperText={
+                        hasError('ItemName') ? formState.errors.ItemName[0] : null
+                      }
                       onChange={handleChange}
                       required
-                      value={values.ItemName}
+                      value={formState.values.ItemName}
                       variant="outlined"
                     />
                   </Grid>
@@ -373,8 +476,7 @@ const UsersTable = () => {
                       margin="dense"
                       name="description"
                       onChange={handleChange}
-                      required
-                      value={values.description}
+                      value={formState.values.description}
                       variant="outlined"
                     />
                   </Grid>
@@ -394,7 +496,7 @@ const UsersTable = () => {
                       select
                       // eslint-disable-next-line react/jsx-sort-props
                       SelectProps={{ native: true }}
-                      value={values.categoryID || ''}
+                      value={formState.values.categoryID || ''}
                       variant="outlined"
                     >
                       {category.map(option => (
@@ -438,8 +540,12 @@ const UsersTable = () => {
                         type="time"
                         defaultValue="00:00"
                         className={classes.textField}
+                        error={hasError('scheduleTimeFrom')}
+                        helperText={
+                          hasError('scheduleTimeFrom') ? formState.errors.scheduleTimeFrom[0] : null
+                        }
                         name="scheduleTimeFrom"
-                        value={values.scheduleTimeFrom}
+                        value={formState.values.scheduleTimeFrom}
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -496,7 +602,11 @@ const UsersTable = () => {
                         defaultValue="00:00"
                         className={classes.textField}
                         name="scheduleTimeTo"
-                        value={values.scheduleTimeTo}
+                        error={hasError('scheduleTimeTo')}
+                        helperText={
+                          hasError('scheduleTimeTo') ? formState.errors.scheduleTimeTo[0] : null
+                        }
+                        value={formState.values.scheduleTimeTo}
                         InputLabelProps={{
                           shrink: true,
                         }}
@@ -506,7 +616,7 @@ const UsersTable = () => {
                         onChange={handleChange}
                         disabled={!isSschedule}
                       /></Grid>
-                    </Grid>
+                  </Grid>
                   <Grid
                     item
                     md={12}
@@ -514,15 +624,18 @@ const UsersTable = () => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Giá sản phẩm"
                       margin="dense"
                       name="schedulePrice"
+                      error={hasError('schedulePrice')}
+                      helperText={
+                        hasError('schedulePrice') ? formState.errors.schedulePrice[0] : null
+                      }
                       onChange={handleChange}
                       disabled={!isSschedule}
                       required
                       type="number"
-                      value={values.schedulePrice}
+                      value={formState.values.schedulePrice}
                       variant="outlined"
                     />
                   </Grid>
@@ -533,15 +646,18 @@ const UsersTable = () => {
                   >
                     <TextField
                       fullWidth
-                      helperText=""
                       label="Số lượng"
                       margin="dense"
                       name="scheduleAmount"
+                      error={hasError('scheduleAmount')}
+                      helperText={
+                        hasError('scheduleAmount') ? formState.errors.scheduleAmount[0] : null
+                      }
                       onChange={handleChange}
                       disabled={!isSschedule}
                       required
                       type="number"
-                      value={values.scheduleAmount}
+                      value={formState.values.scheduleAmount}
                       variant="outlined"
                     />
                   </Grid>
@@ -572,7 +688,7 @@ const UsersTable = () => {
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus disabled={isUpdate}>
+                <Button onClick={handleAccept} color="primary" autoFocus disabled={isUpdate || !formState.isValid} >
                   Xác nhận
           </Button>
               </DialogActions>

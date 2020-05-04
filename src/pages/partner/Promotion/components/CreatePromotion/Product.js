@@ -23,6 +23,33 @@ import { Grid, TextField, Button } from '@material-ui/core';
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
 import moment from 'moment';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
+import validate from 'validate.js';
+
+const schema = {
+  condition: {
+    presence: { allowEmpty: false, message: 'Số lượng không được để trống !' }
+  },
+  type: {
+    presence: { allowEmpty: false, message: 'Giá không được để trống !' }
+  },
+  StartTime: {
+    presence: { allowEmpty: false, message: 'Thời gian bắt đầu không được để trống !' },
+    datetime: {
+      earliest: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+      message: "Thời gian bắt đầu phải lớn hơn hiện tại !"
+    }
+  },
+  EndTime: {
+    presence: { allowEmpty: false, message: 'Thời gian kết thúc không được để trống !' },
+      equality: {
+        attribute: "StartTime",
+        message: "Thời gian kết thúc phải lớn hơn thời gian bắt đầu !",
+        comparator: function(v1, v2) {
+          return (v1 > v2)
+        }
+      },    
+  }
+};
 
 const ItemsTable = () => {
   const columns = [
@@ -49,13 +76,49 @@ const ItemsTable = () => {
   const [type, setType] = useState([]);
   const [condition, setCondition] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
-  const [data, setData] = useState({
-    item: [],
-    type: null,
-    condition: null,
-    StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-    EndTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+
+  validate.extend(validate.validators.datetime, {
+    parse: function (value, options) {
+      return +moment.utc(value);
+    },
+
+    format: function (value, options) {
+      var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DDTHH:mm";
+      return moment.utc(value).format(format);
+    }
   });
+
+  const [formState, setFormState] = useState({
+    isValid: false,
+    values: {
+        item: [],
+        type: null,
+        condition: null,
+        StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+        EndTime: moment(new Date().setTime(new Date().getTime() + (60*60*1000))).format('YYYY-MM-DDTHH:mm'),
+    },
+    touched: {},
+    errors: {}
+  });
+
+  useEffect(() => {
+    const errors = validate(formState.values, schema, { fullMessages: false });
+    setFormState(formState => ({
+      ...formState,
+      isValid: errors ? false : true,
+      errors: errors || {}
+    }));
+  }, [formState.values]);
+
+  // const [data, setData] = useState({
+  //   item: [],
+  //   type: null,
+  //   condition: null,
+  //   StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+  //   EndTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+  // });
+
+
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
@@ -65,34 +128,60 @@ const ItemsTable = () => {
   }, [item]);
 
   const handleChange = event => {
-
-    setData(oldData => ({
-      ...oldData,
-      [event.target.name]: event.target.value
+    event.persist();    
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        [event.target.name]:
+          event.target.type === 'checkbox'
+            ? (event.target.checked ? 1 : 0)
+            : event.target.value
+      },
+      touched: {
+        ...formState.touched,
+        [event.target.name]: true
+      }
     }));
   };
 
   const handleSubmit = async () => {
     setIsCreating(true);
-    const rs = await callApiUnAuth(`partner/promotion`, 'POST', data);
+    const rs = await callApiUnAuth(`partner/promotion`, 'POST', formState.values);
     if (rs.data.type === 'success') {
       const resultItem = await callApiUnAuth(`partner/promotionproductadd/${store}`, 'GET', [])
       setItem(resultItem.data);
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          item: []
+        }
+      }))
       NotificationManager.success(rs.data.type, rs.data.msg, 3000);
     } else {
       NotificationManager.success('fail', 'Ko thành công', 3000);
     }
-
+   
     setIsCreating(false);
   }
 
   const itemchecked = (rows) => {
-    setData(oldData => ({
-      ...oldData,
-      item: rows.map(e => e.ItemID)
-    }));
-
+    // setData(oldData => ({
+    //   ...oldData,
+    //   item: rows.map(e => e.ItemID)
+    // }));
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        ...formState.values,
+        item: rows.map(e => e.ItemID)
+      }
+    }))
   }
+
+  const hasError = field =>
+    formState.touched[field] && formState.errors[field] ? true : false;
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -158,7 +247,10 @@ const ItemsTable = () => {
                     onChange={handleChange}
                     required
                     select
-
+                    error={hasError('condition')}
+                    helperText={
+                      hasError('condition') ? formState.errors.condition[0] : null
+                    }
                     SelectProps={{ native: true }}
                     variant="outlined"
                   >
@@ -186,7 +278,10 @@ const ItemsTable = () => {
                     onChange={handleChange}
                     required
                     select
-
+                    error={hasError('type')}
+                    helperText={
+                      hasError('type') ? formState.errors.type[0] : null
+                    }
                     SelectProps={{ native: true }}
                     variant="outlined"
                   >
@@ -215,7 +310,11 @@ const ItemsTable = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    value={data.StartTime}
+                    error={hasError('StartTime')}
+                    helperText={
+                      hasError('StartTime') ? formState.errors.StartTime[0] : null
+                    }
+                    value={formState.values.StartTime}
                     onChange={handleChange}
                     required
                     variant="outlined"
@@ -235,7 +334,11 @@ const ItemsTable = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    value={data.EndTime}
+                    error={hasError('EndTime')}
+                    helperText={
+                      hasError('EndTime') ? formState.errors.EndTime[0] : null
+                    }
+                    value={formState.values.EndTime}
                     onChange={handleChange}
                     required
                     variant="outlined"
@@ -249,7 +352,7 @@ const ItemsTable = () => {
                   justify="center"
                   alignItems="center"
                 >
-                  <Button onClick={handleSubmit} variant="contained" color="primary" autoFocus disabled={isCreating}>
+                  <Button onClick={handleSubmit} variant="contained" color="primary" autoFocus disabled={isCreating || !formState.isValid || !formState.values.item.length}>
                     Tạo khuyến mãi
                   </Button>
                 </Grid>
