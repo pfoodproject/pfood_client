@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { addSourceOfItems } from '../SourceOfItems/actions';
-import { DropzoneArea } from 'material-ui-dropzone'
+// import { DropzoneArea } from 'material-ui-dropzone'
 import validate from 'validate.js';
 const schema = {
   Summary: {
@@ -47,12 +47,6 @@ const schema = {
           return (v1 > v2)
         }
       },    
-  },
-  password: {
-    presence: { allowEmpty: false, message: 'Mật khẩu không được để trống !' },
-    length: {
-      maximum: 128
-    }
   }
 };
 
@@ -82,11 +76,12 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'hidden'
   }
 }));
+let errors = [];
 
 const ProductAdd = props => {
   const classes = useStyles();
   const [open, setOpen] = useState(props.open);
-  const [data, setData] = useState({});
+  // const [data, setData] = useState({});
   const [formState, setFormState] = useState({
     isValid: false,
     values: {},
@@ -99,32 +94,35 @@ const ProductAdd = props => {
       ...formState,
       values: {
         ItemID: props.data.ItemID,
-        Summary: 1,
-        Price: 1000,
+        Summary: '',
+        Price: '',
         StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-        EndTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+        EndTime: moment(new Date().setTime(new Date().getTime() + (60*60*1000))).format('YYYY-MM-DDTHH:mm'),
         Description: '',
         Image: ''
-      }
+      },
+      isValid: false,
+      touched: {},
+      errors: {}
     }))
     setOpen(props.open);
   }, [props]);
+  validate.extend(validate.validators.datetime, {
+    // The value is guaranteed not to be null or undefined but otherwise it
+    // could be anything.
+    parse: function (value, options) {
+      return +moment.utc(value);
+    },
+    // Input is a unix timestamp
+    format: function (value, options) {
+      var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DDTHH:mm";
+      return moment.utc(value).format(format);
+    }
+  });
 
+   errors = validate(formState.values, schema, { fullMessages: false });
   useEffect(() => {
-    validate.extend(validate.validators.datetime, {
-      // The value is guaranteed not to be null or undefined but otherwise it
-      // could be anything.
-      parse: function (value, options) {
-        return +moment.utc(value);
-      },
-      // Input is a unix timestamp
-      format: function (value, options) {
-        var format = options.dateOnly ? "YYYY-MM-DD" : "YYYY-MM-DDTHH:mm";
-        return moment.utc(value).format(format);
-      }
-    });
-
-    const errors = validate(formState.values, schema, { fullMessages: false });
+    
     setFormState(formState => ({
       ...formState,
       isValid: errors ? false : true,
@@ -156,15 +154,15 @@ const ProductAdd = props => {
   };
   const dispatch = useDispatch();
   const handleSubmit = () => {
-    dispatch(addSourceOfItems(data))
+    dispatch(addSourceOfItems(formState.values))
     props.updateParent()
   }
-  const handleChangeFile = file => {
-    setData({
-      ...data,
-      Image: file
-    })
-  };
+  // const handleChangeFile = file => {
+  //   setData({
+  //     ...data,
+  //     Image: file
+  //   })
+  // };
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -276,7 +274,7 @@ const ProductAdd = props => {
                 variant="outlined"
               />
             </Grid>
-            <Grid
+            {/* <Grid
               item
               md={12}
               xs={12}
@@ -307,7 +305,7 @@ const ProductAdd = props => {
                 showPreviewsInDropzone={false}
                 initialFiles={[]}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>

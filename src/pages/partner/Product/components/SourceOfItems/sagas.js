@@ -1,6 +1,6 @@
 import { put, call, takeLatest } from 'redux-saga/effects'
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
-import {imagesUpload} from '../../../../../utils/apis/apiAuth';
+// import {imagesUpload} from '../../../../../utils/apis/apiAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
@@ -16,11 +16,11 @@ function addSourceOfItemsApi(item) {
         .then(res => res)
         .catch(error => error.response.data);
 }
-function uploadImagesApi(img) {
-    return imagesUpload(img)
-        .then(res => res)
-        .catch(error => error.response.data);
-}
+// function uploadImagesApi(img) {
+//     return imagesUpload(img)
+//         .then(res => res)
+//         .catch(error => error.response.data);
+// }
 
 // function deleteProductApi(productId) {
 //     return callApiUnAuth(`partner/product/${productId}`, 'DELETE', [])
@@ -53,8 +53,8 @@ function* fetchPSourceOfItemsApi(action) {
 function* addSourceOfItems(action) {
     try {
         const { item } = action
-        let rs = yield call(uploadImagesApi, item.Image[0])
-        item.Image = rs.data.data.link
+        // let rs = yield call(uploadImagesApi, item.Image[0])
+        // item.Image = rs.data.data.link
         let rsItem = yield call(addSourceOfItemsApi, item)        
         if (rsItem.data.type === 'success') {            
         yield put(actions.addSourceOfItemsSuccess(rsItem.data));
