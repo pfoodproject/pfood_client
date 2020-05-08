@@ -16,8 +16,8 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
-  Done,
-  HighlightOff,
+    Done,
+    HighlightOff,
   Details
 } from '@material-ui/icons';
 import TimerIcon from '@material-ui/icons/Timer';
