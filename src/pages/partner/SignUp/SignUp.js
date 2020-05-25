@@ -145,27 +145,31 @@ const SignUp = props => {
   const classes = useStyles();
 
   const [city, setCity] = useState([]);
+  const [partnerType, setPartnerType] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       const result = await callApiUnAuth(`city`, 'GET', {})
       setCity(result.data);
+      const resultP = await callApiUnAuth(`partner/partnertype`, 'GET', {})
+      setPartnerType(resultP.data);
     };
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (city.length > 0) {
+    if (city.length > 0 && partnerType.length > 0) {
       setIsLoading(false);
     }
-  }, [city]);
+  }, [city, partnerType]);
 
   const [formState, setFormState] = useState({
     isValid: false,
     values: {
       ship:1,
       description:'',
-      city:1
+      city:1,
+      partnerType:1
     },
     touched: {},
     errors: {}
@@ -221,7 +225,8 @@ const SignUp = props => {
         values: {
           ship:1,
           description:'',
-          city:1
+          city:1,
+          partnerType:1
         },
         touched: {},
         errors: {}
@@ -415,6 +420,29 @@ const SignUp = props => {
                           value={option.CityID}
                         >
                           {option.CityName}
+                        </option>
+                      ))}
+                    </TextField>
+                    <TextField
+                      className={classes.textField}
+                      fullWidth
+                      label="Mặt hàng kinh doanh"
+                      margin="dense"
+                      name="partnerType"
+                      onChange={handleChange}
+                      required
+                      select
+                      // eslint-disable-next-line react/jsx-sort-props
+                      SelectProps={{ native: true }}
+                      value={formState.values.partnerType || ''}
+                      variant="outlined"
+                    >
+                      {partnerType.map(option => (
+                        <option
+                          key={option.partnertypeid}
+                          value={option.partnertypeid}
+                        >
+                          {option.partnertypename}
                         </option>
                       ))}
                     </TextField>
