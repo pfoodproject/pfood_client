@@ -181,7 +181,7 @@ const SignIn = props => {
       
       
       localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
-      history.push('/partner');
+      history.push('/');
     } else {
       NotificationManager.error('Error', store.partnerInfo.token.msg, 3000);
     }
