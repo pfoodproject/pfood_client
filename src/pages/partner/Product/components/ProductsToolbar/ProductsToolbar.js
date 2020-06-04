@@ -3,7 +3,7 @@ import { useDispatch, useStore } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, withStyles } from '@material-ui/styles';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper, Radio, RadioGroup } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
 // import { importProduct } from '../../actions';
 import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
@@ -34,8 +34,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   dialogContent: {
-    overflowX: 'hidden',
-    overflowY: 'hidden'
+    overflowX: 'hidden'
   }, paper: {
     display: 'flex',
     border: `1px solid ${theme.palette.divider}`,
@@ -69,7 +68,7 @@ let schema = {
     }
   }
 };
-let errors =[]
+let errors = []
 const UsersToolbar = props => {
   const { className, ...rest } = props;
   const classes = useStyles();
@@ -88,6 +87,8 @@ const UsersToolbar = props => {
   const [category, setCategory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSschedule, setIsSschedule] = useState(false);
+  const [productOldNew, setProductOldNew] = useState('old');
+  const [productByCate, setProductByCate] = useState({});
   const store = useStore().getState().partnerInfo;
 
   const [formState, setFormState] = useState({
@@ -101,7 +102,7 @@ const UsersToolbar = props => {
     touched: {},
     errors: {}
   });
-errors = validate(formState.values, schema, { fullMessages: false });
+  errors = validate(formState.values, schema, { fullMessages: false });
 
 
   useEffect(() => {
@@ -127,6 +128,26 @@ errors = validate(formState.values, schema, { fullMessages: false });
   }, [category]);
 
   const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await callApiUnauthWithHeader(`partner/itemsbycategory/${formState.values.category}`, 'GET', {})
+      setProductByCate(result.data);
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          ItemId: result.data[0].itemid,
+          ItemName: result.data[0].itemid
+        }
+      }));
+    };
+    fetchData();
+  }, [formState.values.category]);
+  
+  const handleClose = () => {
     setSchedulerDay([]);
     setFormState(formState => ({
       ...formState,
@@ -141,14 +162,11 @@ errors = validate(formState.values, schema, { fullMessages: false });
         schedulePrice: null,
         scheduleAmount: null
       },
-      touched:{}
+      touched: {}
     }));
-
+    
+    
     setIsSschedule(false)
-    setOpen(true);
-  };
-
-  const handleClose = () => {
     setOpen(false);
   };
 
@@ -170,6 +188,12 @@ errors = validate(formState.values, schema, { fullMessages: false });
       }
     }));
   };
+
+  const handleChangeOldNew = event => {
+    event.persist();
+    setProductOldNew(event.target.value)
+  };
+
   const dispatch = useDispatch();
   const handleChangeFile = file => {
     setFormState(formState => ({
@@ -184,8 +208,10 @@ errors = validate(formState.values, schema, { fullMessages: false });
     }));
   };
   const handleAccept = () => {
-    dispatch(addProduct(formState.values));
-    setOpen(false);
+    console.log(formState.values);
+    
+    // dispatch(addProduct(formState.values));
+    // setOpen(false);
   };
 
   // const handleChangeFileImport = file => {
@@ -197,7 +223,7 @@ errors = validate(formState.values, schema, { fullMessages: false });
     setIsSschedule(!isSschedule)
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     if (isSschedule === true) {
       setSchedulerDay([]);
       schema.scheduleTimeFrom = {
@@ -298,7 +324,7 @@ errors = validate(formState.values, schema, { fullMessages: false });
             <Dialog
               fullWidth={true}
               maxWidth={'sm'}
-              scroll={'body'}
+              scroll={'paper'}
               open={open}
               onClose={handleClose}
               aria-labelledby="responsive-dialog-title"
@@ -309,43 +335,6 @@ errors = validate(formState.values, schema, { fullMessages: false });
                   container
                   spacing={3}
                 >
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      label="Tên sản phẩm"
-                      error={hasError('ItemName')}
-                      helperText={
-                        hasError('ItemName') ? formState.errors.ItemName[0] : null
-                      }
-                      margin="dense"
-                      name="ItemName"
-                      onChange={handleChange}
-                      required
-                      value={formState.values.ItemName}
-                      variant="outlined"
-                    />
-                  </Grid>
-
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      helperText=""
-                      label="Mô tả"
-                      margin="dense"
-                      name="description"
-                      onChange={handleChange}
-                      value={formState.values.description}
-                      variant="outlined"
-                    />
-                  </Grid>
                   <Grid
                     item
                     md={12}
@@ -374,6 +363,79 @@ errors = validate(formState.values, schema, { fullMessages: false });
                         </option>
                       ))}
                     </TextField>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <RadioGroup row aria-label="position" name="changenametype" onChange={handleChangeOldNew} defaultValue="old">
+                      <FormControlLabel value="old" control={<Radio color="primary" />} label="Sản phẩm có sẵn" />
+                      <FormControlLabel value="new" control={<Radio color="primary" />} label="Sản phẩm mới" />
+                    </RadioGroup>
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    {productOldNew === 'old' && productByCate.length ? (
+                      <TextField
+                        className={classes.textField}
+                        fullWidth
+                        label="Sản phẩm"
+                        margin="dense"
+                        name="ItemId"
+                        onChange={handleChange}
+                        required
+                        select
+                        // eslint-disable-next-line react/jsx-sort-props
+                        SelectProps={{ native: true }}
+                        value={formState.values.ItemId || ''}
+                        variant="outlined"
+                      >
+                        {productByCate.map(option => (
+                          <option
+                            key={option.itemid}
+                            value={option.itemid}
+                          >
+                            {option.itemname}
+                          </option>
+                        ))}
+                      </TextField>
+                    ) : (
+                        <TextField
+                          fullWidth
+                          label="Tên sản phẩm"
+                          error={hasError('ItemName')}
+                          helperText={
+                            hasError('ItemName') ? formState.errors.ItemName[0] : null
+                          }
+                          margin="dense"
+                          name="ItemName"
+                          onChange={handleChange}
+                          required
+                          value={formState.values.ItemName}
+                          variant="outlined"
+                        />
+
+                      )}
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      helperText=""
+                      label="Mô tả"
+                      margin="dense"
+                      name="description"
+                      onChange={handleChange}
+                      value={formState.values.description}
+                      variant="outlined"
+                    />
                   </Grid>
                   <Grid
                     item
@@ -551,7 +613,9 @@ errors = validate(formState.values, schema, { fullMessages: false });
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus disabled={!formState.isValid}>
+                <Button onClick={handleAccept} color="primary" autoFocus 
+                // disabled={!formState.isValid}
+                >
                   Xác nhận
           </Button>
               </DialogActions>
