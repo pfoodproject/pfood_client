@@ -22,6 +22,12 @@ function fetchCityApi() {
         .catch(error => error.response.data);
 }
 
+function fetchPartnerTypeApi() {
+    return callApiUnAuth(`partner/partnertype`, 'GET', {})
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
 function signInApi(user) {
     return callApiUnAuth(`partner/signin`, 'POST', user)
         .then(res => res)
@@ -36,8 +42,9 @@ function* signIn(action) {
         let token = yield call(signInApi, user)
         
         const city = yield call(fetchCityApi)
+        const partnertype = yield call(fetchPartnerTypeApi)
         // if (msg.success === true) {            
-        yield put(actions.signInSuccess({ token: token.data, city: city }));
+        yield put(actions.signInSuccess({ token: token.data, city: city, partnertype: partnertype }));
         // } else {
         // yield put(actions.fetchPartnerFail(partner));
         // }

@@ -48,7 +48,7 @@ const product = (state = initialState, action) => {
         state.type = action.response.type
         // eslint-disable-next-line
         state.lst.find((e, i) => {
-          if (e.ItemID === action.response.productId) {
+          if (e.id === action.response.productId) {
             state.lst.splice(i, 1);
           }
         })
@@ -66,7 +66,7 @@ const product = (state = initialState, action) => {
         state.type = action.response.type
         // eslint-disable-next-line
         state.lst.find((e, i) => {
-          if (e.ItemID === action.response.product.ItemID) {
+          if (e.id === action.response.product.id) {
             state.lst[i] = action.response.product
           }
         })

@@ -66,6 +66,18 @@ let schema = {
     length: {
       maximum: 64
     }
+  },
+  defaultprice: {
+    presence: { allowEmpty: false, message: 'Giá mặc định không được để trống !' },
+    length: {
+      maximum: 64
+    }
+  },
+  img: {
+    presence: { allowEmpty: false, message: 'Giá mặc định không được để trống !' },
+    length: {
+      maximum: 64
+    }
   }
 };
 let errors = []
@@ -97,6 +109,7 @@ const UsersToolbar = props => {
       PartnerID: store.token.user.PartnerID,
       ItemName: '',
       description: '',
+      defaultprice: null,
       category: 'category000000000001'
     },
     touched: {},
@@ -139,8 +152,8 @@ const UsersToolbar = props => {
         ...formState,
         values: {
           ...formState.values,
-          ItemId: result.data[0].itemid,
-          ItemName: result.data[0].itemid
+          productId: result.data[0].itemid,
+          ItemName: result.data[0].itemname
         }
       }));
     };
@@ -153,7 +166,9 @@ const UsersToolbar = props => {
       ...formState,
       values: {
         PartnerID: store.token.user.PartnerID,
+        productId:'',
         ItemName: '',
+        defaultprice: null,
         description: '',
         category: 'category000000000001',
         scheduleDay: [],
@@ -192,6 +207,25 @@ const UsersToolbar = props => {
   const handleChangeOldNew = event => {
     event.persist();
     setProductOldNew(event.target.value)
+    if(event.target.value==='new'){
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          productId: '',
+          ItemName: ''
+        }
+      }));
+    }else{            
+      setFormState(formState => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          productId: productByCate[0].itemid,
+          ItemName: productByCate[0].itemname
+        }
+      }));
+    }
   };
 
   const dispatch = useDispatch();
@@ -208,10 +242,10 @@ const UsersToolbar = props => {
     }));
   };
   const handleAccept = () => {
-    console.log(formState.values);
+     console.log(formState);
     
-    // dispatch(addProduct(formState.values));
-    // setOpen(false);
+    dispatch(addProduct(formState.values));
+    setOpen(false);
   };
 
   // const handleChangeFileImport = file => {
@@ -385,13 +419,13 @@ const UsersToolbar = props => {
                         fullWidth
                         label="Sản phẩm"
                         margin="dense"
-                        name="ItemId"
+                        name="productId"
                         onChange={handleChange}
                         required
                         select
                         // eslint-disable-next-line react/jsx-sort-props
                         SelectProps={{ native: true }}
-                        value={formState.values.ItemId || ''}
+                        value={formState.values.productId || ''}
                         variant="outlined"
                       >
                         {productByCate.map(option => (
@@ -434,6 +468,27 @@ const UsersToolbar = props => {
                       name="description"
                       onChange={handleChange}
                       value={formState.values.description}
+                      variant="outlined"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                  >
+                    <TextField
+                      fullWidth
+                      label="Giá mặc định"
+                      margin="dense"
+                      name="defaultprice"
+                      error={hasError('defaultprice')}
+                      helperText={
+                        hasError('defaultprice') ? formState.errors.defaultprice[0] : null
+                      }
+                      onChange={handleChange}
+                      required
+                      type="number"
+                      value={formState.values.defaultprice}
                       variant="outlined"
                     />
                   </Grid>
@@ -614,7 +669,7 @@ const UsersToolbar = props => {
                   Huỷ
           </Button>
                 <Button onClick={handleAccept} color="primary" autoFocus 
-                // disabled={!formState.isValid}
+                 disabled={!formState.isValid}
                 >
                   Xác nhận
           </Button>

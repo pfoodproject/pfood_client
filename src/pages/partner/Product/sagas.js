@@ -64,6 +64,7 @@ function* fetchProduct(action) {
 function* addProduct(action) {
     try {
         const { product } = action
+        console.log(product);
         
         if(typeof product.img === 'object'){
             let rs = yield call(uploadImagesApi, product.img[0])

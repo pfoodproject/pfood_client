@@ -30,7 +30,7 @@ import 'react-notifications/lib/notifications.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
+// import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 import validate from 'validate.js';
 
 const useStyles = makeStyles(theme => ({
@@ -73,14 +73,7 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
   },
 }))(ToggleButtonGroup);
 
-let schema = {
-  ItemName: {
-    presence: { allowEmpty: false, message: 'Tên sản phẩm không được để trống !' },
-    length: {
-      maximum: 64
-    }
-  }
-};
+let schema = {};
 let errors = []
 
 const UsersTable = () => {
@@ -104,7 +97,7 @@ const UsersTable = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const [category, setCategory] = useState([]);
+  // const [category, setCategory] = useState([]);
   const firstUpdate = useRef(true);
   const [isSschedule, setIsSschedule] = useState(false);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
@@ -121,13 +114,13 @@ const UsersTable = () => {
     typeSourceOfItems: state.sourceOfItems.type
   }));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await callApiUnauthWithHeader(`category`, 'GET', {})
-      setCategory(result.data);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await callApiUnauthWithHeader(`category`, 'GET', {})
+  //     setCategory(result.data);
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (firstUpdate.current) {
@@ -361,7 +354,7 @@ const UsersTable = () => {
       ...formState,
       values: {
         ...formState.values,
-        img: file
+        ItemImage: file
       },
       touched: {
         ...formState.touched
@@ -443,26 +436,6 @@ const UsersTable = () => {
                   container
                   spacing={3}
                 >
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                  >
-                    <TextField
-                      fullWidth
-                      label="Tên sản phẩm"
-                      margin="dense"
-                      name="ItemName"
-                      error={hasError('ItemName')}
-                      helperText={
-                        hasError('ItemName') ? formState.errors.ItemName[0] : null
-                      }
-                      onChange={handleChange}
-                      required
-                      value={formState.values.ItemName}
-                      variant="outlined"
-                    />
-                  </Grid>
 
                   <Grid
                     item
@@ -479,35 +452,6 @@ const UsersTable = () => {
                       value={formState.values.description}
                       variant="outlined"
                     />
-                  </Grid>
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                  >
-                    <TextField
-                      className={classes.textField}
-                      fullWidth
-                      label="Loại"
-                      margin="dense"
-                      name="categoryID"
-                      onChange={handleChange}
-                      required
-                      select
-                      // eslint-disable-next-line react/jsx-sort-props
-                      SelectProps={{ native: true }}
-                      value={formState.values.categoryID || ''}
-                      variant="outlined"
-                    >
-                      {category.map(option => (
-                        <option
-                          key={option.CategoryID}
-                          value={option.CategoryID}
-                        >
-                          {option.CategoryName}
-                        </option>
-                      ))}
-                    </TextField>
                   </Grid>
                   <Grid
                     item

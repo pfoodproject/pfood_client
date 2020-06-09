@@ -19,7 +19,6 @@ import {
 import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
-
 const useStyles = makeStyles(() => ({
   root: {}
 }));
@@ -38,7 +37,7 @@ const AccountDetails = props => {
   });
 
   const [city, setCity] = useState([]);
-  
+  const [partnerType, setPartnerType] = useState([]);
   const store = useStore().getState().partnerInfo;
   useEffect(() => {
     setValues({
@@ -48,11 +47,13 @@ const AccountDetails = props => {
       PartnerEmail: store.token.user.PartnerEmail,
       PartnerPhone: store.token.user.PartnerPhone,
       PartnerDescription: store.token.user.PartnerDescription,
-      CityName: store.token.user.CityName,
+      CityID: store.token.user.CityID,
+      PartnerTypeID: store.token.user.PartnerTypeID,
       ship: store.token.user.ship
     })
     
-    setCity(store.city.data)    
+    setCity(store.city.data)   
+    setPartnerType(store.partnertype.data) 
   }, [store]);
   const handleChange = event => {
     setValues({
@@ -65,12 +66,6 @@ const AccountDetails = props => {
   };
   const dispatch = useDispatch();
   const handleChangeInfo = () => {
-    city.forEach(e => {
-      if (e.CityName === values.CityName) {
-        values.CityID = e.CityID;
-        delete values.CityName;
-      }
-    });
     dispatch(updatePartner(values));
     NotificationManager.success('Success', 'Done !', 3000);
   }
@@ -154,19 +149,19 @@ const AccountDetails = props => {
                 fullWidth
                 label="Thành Phố"
                 margin="dense"
-                name="CityName"
+                name="CityID"
                 onChange={handleChange}
                 required
                 select
                 // eslint-disable-next-line react/jsx-sort-props
                 SelectProps={{ native: true }}
-                value={values.CityName}
+                value={values.CityID}
                 variant="outlined"
               >
                 {city.map(option => (
                   <option
                     key={option.CityID}
-                    value={option.CityName}
+                    value={option.CityID}
                   >
                     {option.CityName}
                   </option>
@@ -189,6 +184,34 @@ const AccountDetails = props => {
                 value={values.PartnerPhone}
                 variant="outlined"
               />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Mặt hàng kinh doanh"
+                margin="dense"
+                name="PartnerTypeID"
+                onChange={handleChange}
+                required
+                select
+                // eslint-disable-next-line react/jsx-sort-props
+                SelectProps={{ native: true }}
+                value={values.PartnerTypeID}
+                variant="outlined"
+              >
+                {partnerType.map(option => (
+                  <option
+                    key={option.partnertypeid}
+                    value={option.partnertypeid}
+                  >
+                    {option.partnertypename}
+                  </option>
+                ))}
+              </TextField>
             </Grid>
             <Grid
               item
