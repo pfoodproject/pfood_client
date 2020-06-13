@@ -7,12 +7,14 @@ import {
   Grid,
   Button,
   TextField,
-  Typography
+  Typography,
+  Dialog, DialogActions, DialogContent, DialogTitle
 } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../Account/actions';
 import 'react-notifications/lib/notifications.css';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import { callApiUnauthWithHeader } from '../../../utils/apis/apiUnAuth';
 import { Link } from 'react-router-dom'
 const schema = {
   email: {
@@ -97,7 +99,7 @@ const useStyles = makeStyles(theme => ({
   form: {
     paddingLeft: 100,
     paddingRight: 100,
-    width:'100%',
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2)
@@ -125,7 +127,14 @@ const useStyles = makeStyles(theme => ({
 
 const SignIn = props => {
   const { history } = props;
-
+  const [open, setOpen] = React.useState(false);
+  const [recoverEmail, setRecoverEmail] = React.useState({});
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const classes = useStyles();
 
   const [formState, setFormState] = useState({
@@ -163,12 +172,28 @@ const SignIn = props => {
       }
     }));
   };
+
+  const handleChangeMail = event => {
+    event.persist();
+    setRecoverEmail(event.target.value);
+  };
+
   const dispatch = useDispatch();
-  const handleSignIn = event => {
+  const handleSignIn = event => {    
     event.preventDefault();
     dispatch(signIn(formState.values))
   };
-  
+
+  const handleAccept = async () => {
+    let rs = await callApiUnauthWithHeader(`partner/forgetpass/${recoverEmail}`,'GET', {});
+    if(rs.data.type === 'fail'){
+      NotificationManager.error('Error', rs.data.msg, 3000);
+    }else {
+      NotificationManager.success('Success', rs.data.msg, 3000);
+    }
+  };
+
+
   const firstUpdate = useRef(true);
   const store = useSelector(state => state);
   useEffect(() => {
@@ -176,17 +201,16 @@ const SignIn = props => {
       firstUpdate.current = false;
       return;
     }
-    console.log(store);
     if (store.partnerInfo.token.success === true) {
-      
-      
+
+
       localStorage.setItem("sessionpartner", JSON.stringify(store.partnerInfo));
       history.push('/partner');
     } else {
       NotificationManager.error('Error', store.partnerInfo.token.msg, 3000);
     }
-    
-    
+
+
   }, [store, history]);
 
 
@@ -196,7 +220,7 @@ const SignIn = props => {
 
   return (
     <div className={classes.root}>
-      <NotificationContainer/>
+      <NotificationContainer />
       <Grid
         className={classes.grid}
         container
@@ -277,7 +301,7 @@ const SignIn = props => {
                   value={formState.values.password || ''}
                   variant="outlined"
                 />
-                
+
                 <Button
                   className={classes.signInButton}
                   color="primary"
@@ -301,9 +325,58 @@ const SignIn = props => {
                     Đăng ký ngay
                   </Link>
                 </Typography>
+                <Button onClick={handleClickOpen}>
+                  Quên mật khẩu
+                </Button>
               </form>
+              <Dialog
+                fullWidth={true}
+                maxWidth={'sm'}
+                scroll={'paper'}
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="responsive-dialog-title"
+              >
+                <DialogTitle id="responsive-dialog-title">{"Mật khẩu sẽ được gửi vào email bên dưới !"}</DialogTitle>
+                <DialogContent className={classes.dialogContent}>
+                  <Grid
+                    container
+                    spacing={3}
+                  >
+
+                    <Grid
+                      item
+                      md={12}
+                      xs={12}
+                    >
+
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        margin="dense"
+                        name="recoverEmail"
+                        onChange={handleChangeMail}
+                        required
+                        variant="outlined"
+                      />
+                    </Grid>
+
+                  </Grid>
+                </DialogContent>
+                <DialogActions>
+                  <Button autoFocus onClick={handleClose} color="primary">
+                    Huỷ
+          </Button>
+                  <Button onClick={handleAccept} color="primary" autoFocus
+                  >
+                    Xác nhận
+          </Button>
+                </DialogActions>
+              </Dialog>
             </div>
+           
           </div>
+         
         </Grid>
       </Grid>
     </div>
