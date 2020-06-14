@@ -5,6 +5,8 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { getData, changeStatus } from './actions';
 import "../../../theme/css/paginationAndTogle.css";
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 class Manager extends Component {
   constructor(props) {
@@ -33,7 +35,7 @@ class Manager extends Component {
   }
 
   afterChange = (resp) => {
-    console.log(resp)
+    NotificationManager.success('Success', resp.message, 3000);
   }
 
   onChangeInput = (e) => {
@@ -53,6 +55,7 @@ class Manager extends Component {
   render() {
     return (
       <div >
+        <NotificationContainer />
         <div style={{ padding: "20px 10px 20px 10px", fontWeight: "bold" }}>
           Tham số hệ thống
         </div>

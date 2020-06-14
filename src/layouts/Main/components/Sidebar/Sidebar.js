@@ -6,7 +6,7 @@ import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-
+import SettingsIcon from '@material-ui/icons/Settings';
 import { Profile, SidebarNav } from './components';
 
 const useStyles = makeStyles(theme => ({
@@ -55,6 +55,10 @@ const Sidebar = props => {
       title: 'Products',
       href: '/productcontroller',
       icon: <ShoppingBasketIcon />
+    },{
+      title: 'config system parameters',
+      href: '/paramcontroller',
+      icon: <SettingsIcon />
     }
     
   ];

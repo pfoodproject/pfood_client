@@ -6,7 +6,8 @@ import "react-table/react-table.css";
 import { getData, changeStatus, getCount } from './actions';
 import ReactPaginate from 'react-paginate';
 import "../../../theme/css/paginationAndTogle.css";
-import Toggle from 'react-toggle'
+import Toggle from 'react-toggle';
+
 
 class Manager extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ class Manager extends Component {
     if (e.target.checked) {
       status = 1
     }
-    this.props.changeStatus({ "StatusID": status, "ItemID": row.original.ItemID }, this.afterChange)
+    this.props.changeStatus({ "StatusID": status, "ItemID": row.original.id }, this.afterChange)
 
   }
 
@@ -87,8 +88,9 @@ class Manager extends Component {
   render() {
     return (
       <div >
+         
         <div style={{ padding: "20px 10px 20px 10px", fontWeight: "bold" }}>
-          Kích hoạt sản phẩm đối tác đăng ký
+          Thay đổi tham số hệ thống 
         </div>
         <ReactTable
           style = {{width: "98%", margin:"10px"}}
