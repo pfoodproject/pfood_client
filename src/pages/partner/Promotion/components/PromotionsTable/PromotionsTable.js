@@ -22,6 +22,7 @@ import { useStore } from 'react-redux';
 import { Grid, TextField, Button } from '@material-ui/core';
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
 import moment from 'moment';
+import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import validate from 'validate.js';
 
@@ -163,7 +164,7 @@ const Promotion = () => {
       }))
       NotificationManager.success(rs.data.type, rs.data.msg, 3000);
     } else {
-      NotificationManager.success('fail', 'Ko thành công', 3000);
+      NotificationManager.error('Error', rs.data.msg, 3000);
     }
    
     setIsCreating(false);
