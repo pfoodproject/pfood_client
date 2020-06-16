@@ -93,7 +93,7 @@ const ProductAdd = props => {
     setFormState(formState => ({
       ...formState,
       values: {
-        ItemID: props.data.ItemID,
+        ItemID: props.data.id,
         Summary: '',
         Price: '',
         StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),

@@ -190,6 +190,7 @@ const SignIn = props => {
       NotificationManager.error('Error', rs.data.msg, 3000);
     }else {
       NotificationManager.success('Success', rs.data.msg, 3000);
+      setOpen(false);
     }
   };
 
