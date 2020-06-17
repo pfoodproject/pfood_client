@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch, useStore, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -12,7 +12,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { addProduct } from '../../actions'
 import validate from 'validate.js';
-
+import * as XLSX from 'xlsx';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -102,7 +102,9 @@ const UsersToolbar = props => {
   const [productOldNew, setProductOldNew] = useState('old');
   const [productByCate, setProductByCate] = useState({});
   const store = useStore().getState().partnerInfo;
-
+  const { data } = useSelector(state => ({
+    data: state.product.lst
+  }));
   const [formState, setFormState] = useState({
     isValid: false,
     values: {
@@ -159,14 +161,14 @@ const UsersToolbar = props => {
     };
     fetchData();
   }, [formState.values.category]);
-  
+
   const handleClose = () => {
     setSchedulerDay([]);
     setFormState(formState => ({
       ...formState,
       values: {
         PartnerID: store.token.user.PartnerID,
-        productId:'',
+        productId: '',
         ItemName: '',
         defaultprice: null,
         description: '',
@@ -179,8 +181,8 @@ const UsersToolbar = props => {
       },
       touched: {}
     }));
-    
-    
+
+
     setIsSschedule(false)
     setOpen(false);
   };
@@ -207,7 +209,7 @@ const UsersToolbar = props => {
   const handleChangeOldNew = event => {
     event.persist();
     setProductOldNew(event.target.value)
-    if(event.target.value==='new'){
+    if (event.target.value === 'new') {
       setFormState(formState => ({
         ...formState,
         values: {
@@ -216,7 +218,7 @@ const UsersToolbar = props => {
           ItemName: ''
         }
       }));
-    }else{            
+    } else {
       setFormState(formState => ({
         ...formState,
         values: {
@@ -242,8 +244,8 @@ const UsersToolbar = props => {
     }));
   };
   const handleAccept = () => {
-     console.log(formState);
-    
+    console.log(formState);
+
     dispatch(addProduct(formState.values));
     setOpen(false);
   };
@@ -257,6 +259,21 @@ const UsersToolbar = props => {
     setIsSschedule(!isSschedule)
   }
 
+  const handleExport = () => {
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    const merge = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } }, { s: { r: 0, c: 2 }, e: { r: 0, c: 3 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 1 } }, { s: { r: 1, c: 2 }, e: { r: 1, c: 4 } }, { s: { r: 1, c: 6 }, e: { r: 1, c: 10 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } }, { s: { r: 2, c: 2 }, e: { r: 2, c: 4 } }, { s: { r: 2, c: 6 }, e: { r: 2, c: 10 } },
+      { s: { r: 4, c: 0 }, e: { r: 4, c: 1 } }, { s: { r: 4, c: 2 }, e: { r: 4, c: 3 } },
+    ];
+    ws["!merges"] = merge;
+
+    XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+    /* generate XLSX file and send to client */
+    XLSX.writeFile(wb, "sheetjs.xlsx")
+  }
   useEffect(() => {
     if (isSschedule === true) {
       setSchedulerDay([]);
@@ -355,6 +372,9 @@ const UsersToolbar = props => {
             >
               THÊM SẢN PHẨM
         </Button>
+            <Button variant="contained" component="span" className={classes.importButton} onClick={handleExport} >
+              Export
+          </Button>
             <Dialog
               fullWidth={true}
               maxWidth={'sm'}
@@ -668,8 +688,8 @@ const UsersToolbar = props => {
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus 
-                 disabled={!formState.isValid}
+                <Button onClick={handleAccept} color="primary" autoFocus
+                  disabled={!formState.isValid}
                 >
                   Xác nhận
           </Button>

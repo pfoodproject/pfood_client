@@ -130,6 +130,7 @@ const OrdersTable = () => {
   }));
 
   const [detailData, setDetailData] = useState([]);
+  const [total, setTotal] = useState(0);
   const [open, setOpen] = useState(false);
   const [isLoadingDetail, setIsLoadingDetail] = useState(true);
 
@@ -171,6 +172,7 @@ const OrdersTable = () => {
       setIsLoadingDetail(true);
       const result = await callApiUnauthWithHeader(`partner/detailorderbyid`, 'GET', { orderid: orderid })
       setDetailData(result.data);
+      setTotal(result.data.orderDetail.map(a => a.total*a.price).reduce((a, b) => a+b))
       setOpen(true);
     };
     fetchData(rowData.orderid);
@@ -184,6 +186,7 @@ const OrdersTable = () => {
   const handleClose = () => {
     setOpen(false);
     setDetailData([]);
+    setTotal(0);
   }
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -355,8 +358,22 @@ const OrdersTable = () => {
                       </Grid>
                       <Grid
                         item
-                        md={12}
-                        xs={12}>
+                        md={6}
+                        xs={6}>
+                        <TextField
+                          fullWidth
+                          helperText=""
+                          label="Tổng số tiền"
+                          margin="dense"
+                          value={total}
+                          variant="outlined"
+                          disabled
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        md={6}
+                        xs={6}>
                         <TextField
                           fullWidth
                           helperText=""
