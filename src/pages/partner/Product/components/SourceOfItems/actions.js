@@ -1,10 +1,10 @@
 import * as Types from './constants';
 
 // Fetch SourceOfItems
-export const fetchSourceOfItems = (partnerId) => {
+export const fetchSourceOfItems = (obj) => {
     return {
         type : Types.FETCH_SOURCEOFITEMS,
-        partnerId
+        obj
     }
 }
 

@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   importButton: {
-    marginRight: theme.spacing(1)
+    marginLeft: '10px'
   },
   exportButton: {
-    marginRight: theme.spacing(1)
+    marginLeft: theme.spacing(1)
   },
   searchInput: {
     marginRight: theme.spacing(1)
@@ -260,14 +260,34 @@ const UsersToolbar = props => {
   }
 
   const handleExport = () => {
-    const ws = XLSX.utils.aoa_to_sheet(data);
+    let newArr = [];
+    data.forEach(element => {
+      newArr.push(Object.assign({}, element))
+    });
+
+    //  newArr.pop();
+    let bind = newArr.map(obj => {
+      let rs = obj;
+      delete rs.id;
+      delete rs.categoryID;
+      delete rs.scheduleDay;
+      delete rs.schedulePrice;
+      delete rs.scheduleAmount;
+      delete rs.scheduleTimeFrom;
+      delete rs.scheduleTimeTo;
+      delete rs.StatusID;
+      delete rs.tableData;
+      return rs;
+    })
+    const ws = XLSX.utils.json_to_sheet(bind);
+    ws.A1.v = 'Tên sản phẩm';
+    ws.B1.v = 'Loại sản phẩm';
+    ws.C1.v = 'Mô tả';
+    ws.D1.v = 'Ảnh';
+    ws.E1.v = 'Giá gốc';
+    ws.F1.v = 'Trạng thái';
     const wb = XLSX.utils.book_new();
-    const merge = [
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } }, { s: { r: 0, c: 2 }, e: { r: 0, c: 3 } },
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 1 } }, { s: { r: 1, c: 2 }, e: { r: 1, c: 4 } }, { s: { r: 1, c: 6 }, e: { r: 1, c: 10 } },
-      { s: { r: 2, c: 0 }, e: { r: 2, c: 1 } }, { s: { r: 2, c: 2 }, e: { r: 2, c: 4 } }, { s: { r: 2, c: 6 }, e: { r: 2, c: 10 } },
-      { s: { r: 4, c: 0 }, e: { r: 4, c: 1 } }, { s: { r: 4, c: 2 }, e: { r: 4, c: 3 } },
-    ];
+    const merge = [];
     ws["!merges"] = merge;
 
     XLSX.utils.book_append_sheet(wb, ws, "SheetJS");

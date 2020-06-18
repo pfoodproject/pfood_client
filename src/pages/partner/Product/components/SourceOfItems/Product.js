@@ -16,14 +16,53 @@ import {
   SaveAlt,
   Search,
   ViewColumn,
+
 } from '@material-ui/icons';
-import { Grid, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { Grid, TextField, Button } from '@material-ui/core';
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { fetchSourceOfItems } from './actions';
 import moment from 'moment';
 
+const useStyles = makeStyles(theme => ({
+  root: {},
+  row: {
+    height: '42px',
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1)
+  },
+  spacer: {
+    flexGrow: 1
+  },
+  importButton: {
+    marginRight: theme.spacing(1)
+  },
+  exportButton: {
+    marginRight: theme.spacing(1)
+  },
+  searchInput: {
+    marginRight: theme.spacing(1)
+  },
+  dialogContent: {
+    overflowX: 'hidden'
+  }, paper: {
+    display: 'flex',
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: 'wrap',
+  },
+  divider: {
+    alignSelf: 'stretch',
+    height: 'auto',
+    margin: theme.spacing(1, 0.5),
+  },
+  textField: {
+    width: '100%'
+  }
+}));
 
 const ItemsTable = () => {
+  const classes = useStyles();
   const columns = [
     { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height: 40, borderRadius: '50%' }} />, filtering: false },
     { title: 'Tên sản phẩm', field: 'ItemName' },
@@ -39,13 +78,13 @@ const ItemsTable = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [values, setValues] = useState({
-    starttime: '',
-    endtime: ''
+    starttime: null,
+    endtime: null
   });
   const firstUpdate = useRef(true);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   useEffect(() => {
-    dispatch(fetchSourceOfItems(store));
+    dispatch(fetchSourceOfItems({partnerId: store}));
   }, [dispatch, store]);
 
   // useEffect(() => {
@@ -68,6 +107,21 @@ const ItemsTable = () => {
     }
     setIsLoading(false);
   }, [data]);
+
+  const handleChange = event => {
+    event.persist();
+    setValues(values => ({
+      ...values,
+      [event.target.name]: event.target.value
+    }));
+  };
+
+  const handleAccept = () => {
+    // console.log(formState);
+    dispatch(fetchSourceOfItems({partnerId: store, starttime: values.starttime, endtime: values.endtime}));
+    // dispatch(addProduct(formState.values));
+    // setOpen(false);
+  };
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -95,12 +149,13 @@ const ItemsTable = () => {
         <div>Loading ...</div>
       ) : (
           <React.Fragment>
-            <Grid container>
-              <Grid item
+            <Grid container spacing={3}>
+              <Grid item container
                 lg={6}
                 md={6}
                 xl={6}
                 xs={6}
+                spacing={3}
               >
                 <Grid item
                   lg={6}
@@ -111,8 +166,7 @@ const ItemsTable = () => {
                   <TextField
                     id="time"
                     label="Thời gian từ"
-                    type="time"
-                    defaultValue="00:00"
+                    type="datetime-local"
                     required
                     className={classes.textField}
                     name="starttime"
@@ -120,11 +174,8 @@ const ItemsTable = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    inputProps={{
-                      step: 300, // 5 min
-                    }}
+                    variant="outlined"
                     onChange={handleChange}
-                    disabled={!isSschedule}
                   />
                 </Grid>
                 <Grid item
@@ -136,7 +187,7 @@ const ItemsTable = () => {
                   <TextField
                     id="time"
                     label="Thời gian đến"
-                    type="time"
+                    type="datetime-local"
                     defaultValue="00:00"
                     required
                     className={classes.textField}
@@ -145,11 +196,8 @@ const ItemsTable = () => {
                     InputLabelProps={{
                       shrink: true,
                     }}
-                    inputProps={{
-                      step: 300, // 5 min
-                    }}
+                    variant="outlined"
                     onChange={handleChange}
-                    disabled={!isSschedule}
                   />
                 </Grid>
               </Grid>
@@ -158,9 +206,13 @@ const ItemsTable = () => {
                 md={6}
                 xl={6}
                 xs={6}
+                style={{ margin: 'auto' }}
               >
-                <Button onClick={handleAccept} color="primary" autoFocus disabled={isUpdate || !formState.isValid} >
-                  Xác nhận
+                <Button onClick={handleAccept} color="primary"
+                  variant="contained"
+                //  disabled={isUpdate || !formState.isValid} 
+                >
+                  Tìm kiếm
           </Button>
               </Grid>
             </Grid>
