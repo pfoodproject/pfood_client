@@ -1,11 +1,11 @@
 import { put, call, takeLatest } from 'redux-saga/effects'
-import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
+import callApiUnAuth,{callApiUnauthWithHeader} from '../../../../../utils/apis/apiUnAuth';
 // import {imagesUpload} from '../../../../../utils/apis/apiAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
-function fetchSourceOfItemsApi(partnerId) {
-    return callApiUnAuth(`partner/sourceofitems/${partnerId}`, 'GET', [])
+function fetchSourceOfItemsApi(partnerId, header) {
+    return callApiUnauthWithHeader(`partner/sourceofitems/${partnerId}`, 'GET', header)
         .then(res => res)
         .catch(error => error.response.data);
 }
@@ -36,8 +36,15 @@ function addSourceOfItemsApi(item) {
 
 function* fetchPSourceOfItemsApi(action) {
     try {
-        const { partnerId } = action
-        let items = yield call(fetchSourceOfItemsApi, partnerId)   
+        const { obj } = action;
+        let header = {};
+        if(obj.starttime){
+            header.starttime = obj.starttime
+        }
+        if(obj.endtime){
+            header.endtime = obj.endtime
+        }
+        let items = yield call(fetchSourceOfItemsApi, obj.partnerId, header)   
         // if (msg.success === true) {      
                   
         yield put(actions.fetchSourceOfItemsSuccess(items.data));

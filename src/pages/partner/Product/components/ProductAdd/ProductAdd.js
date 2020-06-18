@@ -313,7 +313,7 @@ const ProductAdd = props => {
             Huỷ
           </Button>
           <Button onClick={handleSubmit} color="primary" autoFocus 
-          // disabled={!formState.isValid}
+           disabled={!formState.isValid}
           >
             Xác nhận
           </Button>

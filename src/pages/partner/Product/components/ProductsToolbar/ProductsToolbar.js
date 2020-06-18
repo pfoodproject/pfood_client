@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch, useStore, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -12,7 +12,7 @@ import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { addProduct } from '../../actions'
 import validate from 'validate.js';
-
+import * as XLSX from 'xlsx';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -25,10 +25,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   importButton: {
-    marginRight: theme.spacing(1)
+    marginLeft: '10px'
   },
   exportButton: {
-    marginRight: theme.spacing(1)
+    marginLeft: theme.spacing(1)
   },
   searchInput: {
     marginRight: theme.spacing(1)
@@ -102,7 +102,9 @@ const UsersToolbar = props => {
   const [productOldNew, setProductOldNew] = useState('old');
   const [productByCate, setProductByCate] = useState({});
   const store = useStore().getState().partnerInfo;
-
+  const { data } = useSelector(state => ({
+    data: state.product.lst
+  }));
   const [formState, setFormState] = useState({
     isValid: false,
     values: {
@@ -159,14 +161,14 @@ const UsersToolbar = props => {
     };
     fetchData();
   }, [formState.values.category]);
-  
+
   const handleClose = () => {
     setSchedulerDay([]);
     setFormState(formState => ({
       ...formState,
       values: {
         PartnerID: store.token.user.PartnerID,
-        productId:'',
+        productId: '',
         ItemName: '',
         defaultprice: null,
         description: '',
@@ -179,8 +181,8 @@ const UsersToolbar = props => {
       },
       touched: {}
     }));
-    
-    
+
+
     setIsSschedule(false)
     setOpen(false);
   };
@@ -207,7 +209,7 @@ const UsersToolbar = props => {
   const handleChangeOldNew = event => {
     event.persist();
     setProductOldNew(event.target.value)
-    if(event.target.value==='new'){
+    if (event.target.value === 'new') {
       setFormState(formState => ({
         ...formState,
         values: {
@@ -216,7 +218,7 @@ const UsersToolbar = props => {
           ItemName: ''
         }
       }));
-    }else{            
+    } else {
       setFormState(formState => ({
         ...formState,
         values: {
@@ -242,8 +244,8 @@ const UsersToolbar = props => {
     }));
   };
   const handleAccept = () => {
-     console.log(formState);
-    
+    console.log(formState);
+
     dispatch(addProduct(formState.values));
     setOpen(false);
   };
@@ -257,6 +259,41 @@ const UsersToolbar = props => {
     setIsSschedule(!isSschedule)
   }
 
+  const handleExport = () => {
+    let newArr = [];
+    data.forEach(element => {
+      newArr.push(Object.assign({}, element))
+    });
+
+    //  newArr.pop();
+    let bind = newArr.map(obj => {
+      let rs = obj;
+      delete rs.id;
+      delete rs.categoryID;
+      delete rs.scheduleDay;
+      delete rs.schedulePrice;
+      delete rs.scheduleAmount;
+      delete rs.scheduleTimeFrom;
+      delete rs.scheduleTimeTo;
+      delete rs.StatusID;
+      delete rs.tableData;
+      return rs;
+    })
+    const ws = XLSX.utils.json_to_sheet(bind);
+    ws.A1.v = 'Tên sản phẩm';
+    ws.B1.v = 'Loại sản phẩm';
+    ws.C1.v = 'Mô tả';
+    ws.D1.v = 'Ảnh';
+    ws.E1.v = 'Giá gốc';
+    ws.F1.v = 'Trạng thái';
+    const wb = XLSX.utils.book_new();
+    const merge = [];
+    ws["!merges"] = merge;
+
+    XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+    /* generate XLSX file and send to client */
+    XLSX.writeFile(wb, "sheetjs.xlsx")
+  }
   useEffect(() => {
     if (isSschedule === true) {
       setSchedulerDay([]);
@@ -355,6 +392,9 @@ const UsersToolbar = props => {
             >
               THÊM SẢN PHẨM
         </Button>
+            <Button variant="contained" component="span" className={classes.importButton} onClick={handleExport} >
+              Export
+          </Button>
             <Dialog
               fullWidth={true}
               maxWidth={'sm'}
@@ -668,8 +708,8 @@ const UsersToolbar = props => {
                 <Button autoFocus onClick={handleClose} color="primary">
                   Huỷ
           </Button>
-                <Button onClick={handleAccept} color="primary" autoFocus 
-                 disabled={!formState.isValid}
+                <Button onClick={handleAccept} color="primary" autoFocus
+                  disabled={!formState.isValid}
                 >
                   Xác nhận
           </Button>
