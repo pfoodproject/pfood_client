@@ -25,6 +25,7 @@ import moment from 'moment';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import validate from 'validate.js';
+// import PromotionEdit from '../PromotionEdit';
 
 const schema = {
   condition: {
@@ -59,6 +60,14 @@ const Promotion = () => {
     { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => moment(rowData.starttime).format('hh:mm:ss DD-MM-YYYY') },
     { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).format('hh:mm:ss DD-MM-YYYY') },
     { title: 'Trạng thái', field: 'status' },
+    {
+      title: '', field: 'status', render: rowData => {
+
+        if (rowData.status !== 'Đã kết thúc') {
+          return (<Button variant="outlined" color="primary" onClick={() => handleEdit(rowData)}>Sửa</Button>)
+        }
+      }, filtering: false
+    }
   ];
 
   const [isLoading, setIsLoading] = useState(true);
@@ -75,6 +84,15 @@ const Promotion = () => {
     };
     fetchData(store);
   }, [store]);
+  const [openEdit, setOpenEdit] = useState(false);
+  const closeEdit = () => {
+    setOpenEdit(false);
+  }
+  const [editData, setEditData] = useState({});
+  const handleEdit = (rowData) => {
+    setOpenEdit(true);
+    setEditData(rowData)
+  }
 
   const [item, setItem] = useState([]);
   const [type, setType] = useState([]);
@@ -362,6 +380,7 @@ const Promotion = () => {
                 </Grid>
               </Grid>
             </Grid>
+            {/* <PromotionEdit open={openEdit} updateParent={closeEdit} data={editData} /> */}
           </Grid>
 
         )}

@@ -81,6 +81,7 @@ const UsersTable = () => {
   const columns = [
     { title: 'Avatar', field: 'ItemImage', render: rowData => <img src={rowData.ItemImage} alt={rowData.ItemName} style={{ width: 40, height: 40, borderRadius: '50%' }} />, filtering: false },
     { title: 'Tên sản phẩm', field: 'ItemName' },
+    { title: 'Giá gốc', field: 'defaultprice', filtering: false },
     { title: 'Loại', field: 'categoryName' },
     { title: 'Trạng thái', field: 'StatusName' },
     {
@@ -275,11 +276,9 @@ const UsersTable = () => {
         scheduleTimeTo: "12:00",
       },
     }));
-    console.log(rowData);
     if (rowData.scheduleDay !== null && rowData.scheduleDay !== "") {
 
       rowData.scheduleDay = rowData.scheduleDay.toString();
-      console.log(rowData);
 
       setSchedulerDay(rowData.scheduleDay.split(','));
       // setValues({
@@ -327,7 +326,6 @@ const UsersTable = () => {
       errors: {}
     }));
     setOpen(false);
-    console.log(isSschedule);
     
   };
 
@@ -362,7 +360,6 @@ const UsersTable = () => {
     }));
   };
   const handleAccept = () => {
-    console.log(formState.values);
 
     dispatch(updateProduct(formState.values));
     setIsUpdate(true);
