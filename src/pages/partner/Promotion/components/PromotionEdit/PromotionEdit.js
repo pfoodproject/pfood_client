@@ -9,36 +9,18 @@ import { useStore } from 'react-redux';
 // import { DropzoneArea } from 'material-ui-dropzone'
 import validate from 'validate.js';
 const schema = {
-  Summary: {
-    presence: { allowEmpty: false, message: 'Số lượng không được để trống !' },
-    length: {
-      maximum: 10,
-      message: ' Độ dài không hợp lệ !'
-    },
-    numericality: {
-      onlyInteger: true,
-      greaterThan: 0,
-      message: "Số lượng phải lớn hơn 0"
-    }
+  condition: {
+    presence: { allowEmpty: false, message: 'Số lượng không được để trống !' }
   },
-  Price: {
-    presence: { allowEmpty: false, message: 'Giá không được để trống !' },
-    length: {
-      maximum: 10,
-      message: ' Độ dài không hợp lệ !'
-    },
-    numericality: {
-      onlyInteger: true,
-      greaterThan: 0,
-      message: "Giá phải lớn hơn 0"
-    }
+  type: {
+    presence: { allowEmpty: false, message: 'Giá không được để trống !' }
   },
   StartTime: {
     presence: { allowEmpty: false, message: 'Thời gian bắt đầu không được để trống !' },
-    datetime: {
-      earliest: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-      message: "Thời gian bắt đầu phải lớn hơn hiện tại !"
-    }
+    // datetime: {
+    //   earliest: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
+    //   message: "Thời gian bắt đầu phải lớn hơn hiện tại !"
+    // }
   },
   EndTime: {
     presence: { allowEmpty: false, message: 'Thời gian kết thúc không được để trống !' },
@@ -104,7 +86,7 @@ const PromotionEdit = props => {
     };
     fetchData(store);
   }, [store]);
-
+  
   useEffect(() => {    
     setFormState(formState => ({
       ...formState,
@@ -168,15 +150,12 @@ const PromotionEdit = props => {
   };
   const dispatch = useDispatch();
   const handleSubmit = () => {
+    // console.log(formState.values);
+    
     dispatch(updatePromotion(formState.values))
     props.updateParent()
   }
-  // const handleChangeFile = file => {
-  //   setData({
-  //     ...data,
-  //     Image: file
-  //   })
-  // };
+
 
   const hasError = field =>
     formState.touched[field] && formState.errors[field] ? true : false;
@@ -209,6 +188,7 @@ const PromotionEdit = props => {
                     onChange={handleChange}
                     required
                     select
+                    disabled={props.data.status==='Đang diễn ra' ? true : false}
                     value={formState.values.condition}
                     error={hasError('condition')}
                     helperText={
@@ -241,6 +221,7 @@ const PromotionEdit = props => {
                     onChange={handleChange}
                     required
                     select
+                    disabled={props.data.status==='Đang diễn ra' ? true : false}
                     value={formState.values.type}
                     error={hasError('type')}
                     helperText={
@@ -274,6 +255,7 @@ const PromotionEdit = props => {
                     InputLabelProps={{
                       shrink: true,
                     }}
+                    disabled={props.data.status==='Đang diễn ra' ? true : false}
                     error={hasError('StartTime')}
                     helperText={
                       hasError('StartTime') ? formState.errors.StartTime[0] : null
@@ -315,7 +297,7 @@ const PromotionEdit = props => {
             Huỷ
           </Button>
           <Button onClick={handleSubmit} color="primary" autoFocus 
-           disabled={!formState.isValid}
+          //  disabled={!formState.isValid}
           >
             Xác nhận
           </Button>

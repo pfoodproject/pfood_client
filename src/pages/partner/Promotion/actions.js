@@ -23,11 +23,10 @@ export const fetchPromotionFail = (msg) => {
 }
 
 // Update Promotion
-export const updatePromotion = (promotionid, status) => {
+export const updatePromotion = (promotion) => {
     return {
         type : Types.UPDATE_PROMOTION,
-        promotionid,
-        status
+        promotion
     }
 }
 
@@ -41,6 +40,28 @@ export const updatePromotionSuccess = (response) => {
 export const updatePromotionFail = (response) => {
     return {
         type : Types.UPDATE_PROMOTION_FAIL,
+        response
+    }
+}
+
+// Add Promotion
+export const addPromotion = (promotion) => {
+    return {
+        type : Types.ADD_PROMOTION,
+        promotion
+    }
+}
+
+export const addPromotionSuccess = (response) => {
+    return {
+        type : Types.ADD_PROMOTION_SUCCESS,
+        response
+    }
+}
+
+export const addPromotionFail = (response) => {
+    return {
+        type : Types.ADD_PROMOTION_FAIL,
         response
     }
 }

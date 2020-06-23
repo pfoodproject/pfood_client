@@ -25,13 +25,13 @@ import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import validate from 'validate.js';
 import PromotionEdit from '../PromotionEdit';
-import { fetchPromotion } from '../../actions';
+import { fetchPromotion, addPromotion } from '../../actions';
 const schema = {
   condition: {
-    presence: { allowEmpty: false, message: 'Số lượng không được để trống !' }
+    presence: { allowEmpty: false, message: 'Điều kiện áp dụng không được để trống !' }
   },
   type: {
-    presence: { allowEmpty: false, message: 'Giá không được để trống !' }
+    presence: { allowEmpty: false, message: 'Chính sách khuyến mãi không được để trống !' }
   },
   StartTime: {
     presence: { allowEmpty: false, message: 'Thời gian bắt đầu không được để trống !' },
@@ -56,11 +56,7 @@ const Promotion = () => {
   const columns = [
     { title: 'Loại khuyến mãi', field: 'promotiontypename' },
     { title: 'Điều kiện khuyến mãi', field: 'conditionname' },
-    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => {
-      // console.log(rowData);
-      
-      return moment('2020-06-30T14:42:00.000Z').format('hh:mm:ss a DD-MM-YYYY')
-    } },
+    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => moment(rowData.starttime).format('hh:mm:ss a DD-MM-YYYY') },
     { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).format('hh:mm:ss a DD-MM-YYYY') },
     { title: 'Trạng thái', field: 'status' },
     {
@@ -77,12 +73,25 @@ const Promotion = () => {
   const firstUpdate = useRef(true);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
   const dispatch = useDispatch();
-  const { data, msg, type, msgSourceOfItems, typeSourceOfItems, count } = useSelector(state => ({
+  const { data, msg, type, count } = useSelector(state => ({
     data: state.promotion.lst,
     msg: state.promotion.msg,
     type: state.promotion.type,
     count: state.promotion.count
   }));
+
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    if (type === 'success' && type !== null) {
+      NotificationManager.success(type, msg, 3000);
+    } else if (type !== 'success' && type !== '') {
+
+      NotificationManager.error(type, msg, 3000);
+    }
+  }, [msg, type, count]);
   
   useEffect(() => {
     const fetchData = async (userid) => {
@@ -179,21 +188,16 @@ const Promotion = () => {
 
   const handleSubmit = async () => {
     setIsCreating(true);
-    const rs = await callApiUnAuth(`partner/promotion`, 'POST', formState.values);
-    if (rs.data.type === 'success') {
-      const resultItem = await callApiUnAuth(`partner/promotion/${store}`, 'GET', [])
-      setItem(resultItem.data);
-      setFormState(formState => ({
-        ...formState,
-        values: {
-          ...formState.values,
-          partnerId: store
-        }
-      }))
-      NotificationManager.success(rs.data.type, rs.data.msg, 3000);
-    } else {
-      NotificationManager.error('Error', rs.data.msg, 3000);
-    }
+
+    dispatch(addPromotion(formState.values))
+      // setFormState(formState => ({
+      //   ...formState,
+      //   values: {
+      //     ...formState.values,
+      //     partnerId: store
+      //   }
+      // }))
+     
    
     setIsCreating(false);
   }

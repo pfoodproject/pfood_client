@@ -10,8 +10,14 @@ function fetchPromotionApi(partnerId) {
 }
 
 
-function updatePromotionApi(promotionid, status) {
-    return callApiUnAuth(`partner/promotion`, 'PUT', {promotionid: promotionid, status:status})
+function updatePromotionApi(promotion) {
+    return callApiUnAuth(`partner/promotion`, 'PUT', promotion)
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
+function addPromotionApi(promotion) {
+    return callApiUnAuth(`partner/promotion`, 'POST', promotion)
         .then(res => res)
         .catch(error => error.response.data);
 }
@@ -34,9 +40,10 @@ function* fetchPromotion(action) {
 
 function* updatePromotion(action) {
     try {
-        const { promotionid, status } = action
+        const { promotion } = action
         
-        let rsEdit=  yield call(updatePromotionApi, promotionid, status)
+        
+        let rsEdit=  yield call(updatePromotionApi, promotion)
         
         if (rsEdit.data.type === 'success') {     
         yield put(actions.updatePromotionSuccess(rsEdit.data));
@@ -49,10 +56,29 @@ function* updatePromotion(action) {
     }
 }
 
+function* addPromotion(action) {
+    try {
+        const { promotion } = action
+        
+        
+        let rsAdd=  yield call(addPromotionApi, promotion)
+        
+        if (rsAdd.data.type === 'success') {     
+        yield put(actions.addPromotionSuccess(rsAdd.data));
+        } else {
+        yield put(actions.addPromotionFail(rsAdd.data));
+        }
+
+    } catch (error) {
+        yield put(actions.addPromotionFail(error));
+    }
+}
+
 
 function* watchSaga() {
     yield takeLatest(Types.FETCH_PROMOTION, fetchPromotion);
     yield takeLatest(Types.UPDATE_PROMOTION, updatePromotion);
+    yield takeLatest(Types.ADD_PROMOTION, addPromotion);
 }
 
 export default watchSaga;

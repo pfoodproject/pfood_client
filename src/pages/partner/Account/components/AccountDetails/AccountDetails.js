@@ -82,7 +82,7 @@ const AccountDetails = props => {
         noValidate
       >
         <CardHeader
-          subheader="!@#$%^&*()_+"
+          // subheader="!@#$%^&*()_+"
           title="Thông tin đối tác"
         />
         <Divider />
