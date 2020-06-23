@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import MaterialTable from 'material-table';
 import {
   AddBox,
@@ -17,16 +18,14 @@ import {
   Search,
   ViewColumn,
 } from '@material-ui/icons';
-
-import { useStore } from 'react-redux';
 import { Grid, TextField, Button } from '@material-ui/core';
 import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
 import moment from 'moment';
 import 'react-notifications/lib/notifications.css';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import validate from 'validate.js';
-// import PromotionEdit from '../PromotionEdit';
-
+import PromotionEdit from '../PromotionEdit';
+import { fetchPromotion } from '../../actions';
 const schema = {
   condition: {
     presence: { allowEmpty: false, message: 'Số lượng không được để trống !' }
@@ -57,8 +56,12 @@ const Promotion = () => {
   const columns = [
     { title: 'Loại khuyến mãi', field: 'promotiontypename' },
     { title: 'Điều kiện khuyến mãi', field: 'conditionname' },
-    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => moment(rowData.starttime).format('hh:mm:ss DD-MM-YYYY') },
-    { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).format('hh:mm:ss DD-MM-YYYY') },
+    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => {
+      // console.log(rowData);
+      
+      return moment('2020-06-30T14:42:00.000Z').format('hh:mm:ss a DD-MM-YYYY')
+    } },
+    { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).format('hh:mm:ss a DD-MM-YYYY') },
     { title: 'Trạng thái', field: 'status' },
     {
       title: '', field: 'status', render: rowData => {
@@ -73,29 +76,36 @@ const Promotion = () => {
   const [isLoading, setIsLoading] = useState(true);
   const firstUpdate = useRef(true);
   const store = useStore().getState().partnerInfo.token.user.PartnerID;
+  const dispatch = useDispatch();
+  const { data, msg, type, msgSourceOfItems, typeSourceOfItems, count } = useSelector(state => ({
+    data: state.promotion.lst,
+    msg: state.promotion.msg,
+    type: state.promotion.type,
+    count: state.promotion.count
+  }));
+  
   useEffect(() => {
     const fetchData = async (userid) => {
-      const resultItem = await callApiUnAuth(`partner/promotion/${userid}`, 'GET', [])
+      dispatch(fetchPromotion(store));
       const resultPromotionType = await callApiUnAuth(`partner/promotiontype`, 'GET', [])
       const resultPromotionCondition = await callApiUnAuth(`partner/promotioncondition`, 'GET', [])
-      setItem(resultItem.data);
-      setType(resultPromotionType.data);
+      setPType(resultPromotionType.data);
       setCondition(resultPromotionCondition.data);
     };
     fetchData(store);
-  }, [store]);
+  }, [dispatch, store]);
   const [openEdit, setOpenEdit] = useState(false);
   const closeEdit = () => {
     setOpenEdit(false);
   }
   const [editData, setEditData] = useState({});
-  const handleEdit = (rowData) => {
+  const handleEdit = (rowData) => {    
     setOpenEdit(true);
     setEditData(rowData)
   }
 
   const [item, setItem] = useState([]);
-  const [type, setType] = useState([]);
+  const [pType, setPType] = useState([]);
   const [condition, setCondition] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -147,7 +157,7 @@ const Promotion = () => {
       return;
     }
     setIsLoading(false);
-  }, [item]);
+  }, [data]);
 
   const handleChange = event => {
     event.persist();    
@@ -241,7 +251,7 @@ const Promotion = () => {
               <MaterialTable
                 title="Sản Phẩm"
                 columns={columns}
-                data={item}
+                data={data}
                 icons={tableIcons}
                 // options={{
                 //   selection: true
@@ -308,7 +318,7 @@ const Promotion = () => {
                     variant="outlined"
                   >
                     <option></option>
-                    {type.map(option => (
+                    {pType.map(option => (
                       <option
                         key={option.promotiontypeid}
                         value={option.promotiontypeid}
@@ -380,7 +390,7 @@ const Promotion = () => {
                 </Grid>
               </Grid>
             </Grid>
-            {/* <PromotionEdit open={openEdit} updateParent={closeEdit} data={editData} /> */}
+            <PromotionEdit open={openEdit} updateParent={closeEdit} data={editData} />
           </Grid>
 
         )}

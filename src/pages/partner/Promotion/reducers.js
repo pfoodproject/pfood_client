@@ -6,34 +6,34 @@ var initialState = {
   count: 0
 };
 
-const order = (state = initialState, action) => {
+const promotion = (state = initialState, action) => {
 
   switch (action.type) {
-    case Types.FETCH_ORDER:
+    case Types.FETCH_PROMOTION:
       return state
-    case Types.FETCH_ORDER_SUCCESS:
+    case Types.FETCH_PROMOTION_SUCCESS:
       {        
-        state.lst = action.listOrder        
+        state.lst = action.listPromotion        
         return state
       }
-    case Types.FETCH_ORDER_FAIL:
+    case Types.FETCH_PROMOTION_FAIL:
       return action.msg
     //
-    case Types.UPDATE_ORDER:
+    case Types.UPDATE_PROMOTION:
       return state
-    case Types.UPDATE_ORDER_SUCCESS:
+    case Types.UPDATE_PROMOTION_SUCCESS:
       {
         state.count++;
         state.msg = action.response.msg
         state.type = action.response.type
         state.lst.find((e, i) => {          
-          if (e.orderid === action.response.order[0].orderid) {            
-            state.lst[i] = action.response.order[0]
+          if (e.promotionid === action.response.promotion[0].promotionid) {            
+            state.lst[i] = action.response.promotion[0]
           }
         })
         return state
       }
-    case Types.UPDATE_ORDER_FAIL:
+    case Types.UPDATE_PROMOTION_FAIL:
       {
         state.count++;
         state.msg = action.response.msg
@@ -47,4 +47,4 @@ const order = (state = initialState, action) => {
 };
 
 
-export default order;    
+export default promotion;    

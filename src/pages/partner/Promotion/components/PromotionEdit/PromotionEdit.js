@@ -3,7 +3,9 @@ import { useDispatch } from 'react-redux';
 import moment from 'moment';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import { addSourceOfItems } from '../SourceOfItems/actions';
+import { updatePromotion } from '../../actions';
+import callApiUnAuth from '../../../../../utils/apis/apiUnAuth';
+import { useStore } from 'react-redux';
 // import { DropzoneArea } from 'material-ui-dropzone'
 import validate from 'validate.js';
 const schema = {
@@ -89,17 +91,29 @@ const PromotionEdit = props => {
     errors: {}
   });
 
+  const [pType, setPType] = useState([]);
+  const [condition, setCondition] = useState([]);
+  const store = useStore().getState().partnerInfo.token.user.PartnerID;
+
   useEffect(() => {
+    const fetchData = async (userid) => {
+      const resultPromotionType = await callApiUnAuth(`partner/promotiontype`, 'GET', [])
+      const resultPromotionCondition = await callApiUnAuth(`partner/promotioncondition`, 'GET', [])
+      setPType(resultPromotionType.data);
+      setCondition(resultPromotionCondition.data);
+    };
+    fetchData(store);
+  }, [store]);
+
+  useEffect(() => {    
     setFormState(formState => ({
       ...formState,
       values: {
-        ItemID: props.data.id,
-        Summary: '',
-        Price: '',
-        StartTime: moment(Date.now()).format('YYYY-MM-DDTHH:mm'),
-        EndTime: moment(new Date().setTime(new Date().getTime() + (60*60*1000))).format('YYYY-MM-DDTHH:mm'),
-        Description: '',
-        Image: ''
+        promotionid: props.data.promotionid,
+        type: props.data.promotiontypeid,
+        condition: props.data.promotionconditionid,
+        StartTime: moment(props.data.starttime).format('YYYY-MM-DDTHH:mm'),
+        EndTime: moment(props.data.endtime).format('YYYY-MM-DDTHH:mm'),
       },
       isValid: false,
       touched: {},
@@ -154,7 +168,7 @@ const PromotionEdit = props => {
   };
   const dispatch = useDispatch();
   const handleSubmit = () => {
-    dispatch(addSourceOfItems(formState.values))
+    dispatch(updatePromotion(formState.values))
     props.updateParent()
   }
   // const handleChangeFile = file => {
@@ -184,128 +198,116 @@ const PromotionEdit = props => {
             spacing={3}
           >
             <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                error={hasError('Summary')}
-                helperText={
-                  hasError('Summary') ? formState.errors.Summary[0] : null
-                }
-                label="Số lượng"
-                margin="dense"
-                name="Summary"
-                onChange={handleChange}
-                type="number"
-                required
-                value={formState.values.Summary}
-                variant="outlined"
-              />
-            </Grid>
+                  item
+                  md={12}
+                  xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Điều kiện áp dụng"
+                    margin="dense"
+                    name="condition"
+                    onChange={handleChange}
+                    required
+                    select
+                    value={formState.values.condition}
+                    error={hasError('condition')}
+                    helperText={
+                      hasError('condition') ? formState.errors.condition[0] : null
+                    }
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option></option>
+                    {condition.map(option => (
+                      <option
+                        key={option.conditionid}
+                        value={option.conditionid}
+                      >
+                        {option.conditionname}
+                      </option>
+                    ))}
+                  </TextField>
+                </Grid>
 
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                error={hasError('Price')}
-                helperText={
-                  hasError('Price') ? formState.errors.Price[0] : null
-                }
-                label="Giá"
-                margin="dense"
-                name="Price"
-                type="number"
-                onChange={handleChange}
-                required
-                value={formState.values.Price}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                error={hasError('StartTime')}
-                helperText={
-                  hasError('StartTime') ? formState.errors.StartTime[0] : null
-                }
-                label="Thời gian mở bán"
-                margin="dense"
-                name="StartTime"
-                type="datetime-local"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={handleChange}
-                required
-                value={formState.values.StartTime}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                error={hasError('EndTime')}
-                helperText={
-                  hasError('EndTime') ? formState.errors.EndTime[0] : null
-                }
-                label="Thời gian kết thúc"
-                margin="dense"
-                name="EndTime"
-                type="datetime-local"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={handleChange}
-                required
-                value={formState.values.EndTime}
-                variant="outlined"
-              />
-            </Grid>
-            {/* <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                helperText=""
-                label="Mô tả"
-                margin="dense"
-                name="Description"
-                onChange={handleChange}
-                required
-                value={data.Description}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={12}
-              xs={12}
-            >
-              <DropzoneArea
-                onChange={handleChangeFile}
-                acceptedFiles={['image/*']}
-                filesLimit={1}
-                dropzoneText={'Ảnh sản phẩm'}
-                showPreviews={true}
-                showPreviewsInDropzone={false}
-                initialFiles={[]}
-              />
-            </Grid> */}
+                <Grid
+                  item
+                  md={12}
+                  xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Chính sách khuyến mãi"
+                    margin="dense"
+                    name="type"
+                    onChange={handleChange}
+                    required
+                    select
+                    value={formState.values.type}
+                    error={hasError('type')}
+                    helperText={
+                      hasError('type') ? formState.errors.type[0] : null
+                    }
+                    SelectProps={{ native: true }}
+                    variant="outlined"
+                  >
+                    <option></option>
+                    {pType.map(option => (
+                      <option
+                        key={option.promotiontypeid}
+                        value={option.promotiontypeid}
+                      >
+                        {option.promotiontypename}
+                      </option>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    label="Thời gian bắt đầu"
+                    margin="dense"
+                    name="StartTime"
+                    type="datetime-local"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    error={hasError('StartTime')}
+                    helperText={
+                      hasError('StartTime') ? formState.errors.StartTime[0] : null
+                    }
+                    value={formState.values.StartTime}
+                    onChange={handleChange}
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <TextField
+                    fullWidth
+                    label="Thời gian kết thúc"
+                    margin="dense"
+                    name="EndTime"
+                    type="datetime-local"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    error={hasError('EndTime')}
+                    helperText={
+                      hasError('EndTime') ? formState.errors.EndTime[0] : null
+                    }
+                    value={formState.values.EndTime}
+                    onChange={handleChange}
+                    required
+                    variant="outlined"
+                  />
+                </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
