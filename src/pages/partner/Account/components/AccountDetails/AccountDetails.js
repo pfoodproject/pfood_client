@@ -82,7 +82,7 @@ const AccountDetails = props => {
         noValidate
       >
         <CardHeader
-          subheader="!@#$%^&*()_+"
+          // subheader="!@#$%^&*()_+"
           title="Thông tin đối tác"
         />
         <Divider />
@@ -120,6 +120,7 @@ const AccountDetails = props => {
                 name="PartnerEmail"
                 onChange={handleChange}
                 required
+                disabled
                 value={values.PartnerEmail}
                 variant="outlined"
               />
@@ -181,6 +182,7 @@ const AccountDetails = props => {
                 onChange={handleChange}
                 type="number"
                 required
+                disabled
                 value={values.PartnerPhone}
                 variant="outlined"
               />

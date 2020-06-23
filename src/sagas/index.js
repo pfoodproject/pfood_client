@@ -5,6 +5,7 @@ import OrderSaga from '../pages/partner/Order/sagas';
 import sourceOfItemsSaga from '../pages/partner/Product/components/SourceOfItems/sagas';
 import PartnerSaga from '../pages/admin/PartnerController/sagas';
 import ProductSaga from '../pages/admin/ProductController/sagas';
+import PromotionSaga from '../pages/partner/Promotion/sagas';
 import UserSaga from '../pages/admin/UserController/sagas';
 import ParamSaga from '../pages/admin/ParamController/sagas';
 import NoticationSaga from '../pages/admin/Notication/sagas';
@@ -22,5 +23,5 @@ export default function* IndexSaga () {
   yield fork(UserSaga);
   yield fork(ParamSaga);
   yield fork(NoticationSaga);
-
+  yield fork(PromotionSaga);
 }

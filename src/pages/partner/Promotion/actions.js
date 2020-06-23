@@ -1,46 +1,67 @@
 import * as Types from './constants';
 
-// fetch order
-export const fetchOrder = (partnerId) => {
+// fetch promotion
+export const fetchPromotion = (partnerId) => {
     return {
-        type : Types.FETCH_ORDER,
+        type : Types.FETCH_PROMOTION,
         partnerId
     }
 }
 
-export const fetchOrderSuccess = (listOrder) => {
+export const fetchPromotionSuccess = (listPromotion) => {
     return {
-        type : Types.FETCH_ORDER_SUCCESS,
-        listOrder
+        type : Types.FETCH_PROMOTION_SUCCESS,
+        listPromotion
     }
 }
 
-export const fetchOrderFail = (msg) => {
+export const fetchPromotionFail = (msg) => {
     return {
-        type : Types.FETCH_ORDER_FAIL,
+        type : Types.FETCH_PROMOTION_FAIL,
         msg
     }
 }
 
-// Update Order
-export const updateOrder = (orderid, status) => {
+// Update Promotion
+export const updatePromotion = (promotion) => {
     return {
-        type : Types.UPDATE_ORDER,
-        orderid,
-        status
+        type : Types.UPDATE_PROMOTION,
+        promotion
     }
 }
 
-export const updateOrderSuccess = (response) => {
+export const updatePromotionSuccess = (response) => {
     return {
-        type : Types.UPDATE_ORDER_SUCCESS,
+        type : Types.UPDATE_PROMOTION_SUCCESS,
         response
     }
 }
 
-export const updateOrderFail = (response) => {
+export const updatePromotionFail = (response) => {
     return {
-        type : Types.UPDATE_ORDER_FAIL,
+        type : Types.UPDATE_PROMOTION_FAIL,
+        response
+    }
+}
+
+// Add Promotion
+export const addPromotion = (promotion) => {
+    return {
+        type : Types.ADD_PROMOTION,
+        promotion
+    }
+}
+
+export const addPromotionSuccess = (response) => {
+    return {
+        type : Types.ADD_PROMOTION_SUCCESS,
+        response
+    }
+}
+
+export const addPromotionFail = (response) => {
+    return {
+        type : Types.ADD_PROMOTION_FAIL,
         response
     }
 }

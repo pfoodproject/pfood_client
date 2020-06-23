@@ -3,56 +3,82 @@ import callApiUnAuth from '../../../utils/apis/apiUnAuth';
 import * as actions from './actions'
 import * as Types from './constants'
 
-function fetchOrderApi(partnerId) {
-    return callApiUnAuth(`partner/order/${partnerId}`, 'GET', [])
+function fetchPromotionApi(partnerId) {
+    return callApiUnAuth(`partner/promotion/${partnerId}`, 'GET', [])
         .then(res => res)
         .catch(error => error.response.data);
 }
 
 
-function updateOrderApi(orderid, status) {
-    return callApiUnAuth(`partner/order`, 'PUT', {orderid: orderid, status:status})
+function updatePromotionApi(promotion) {
+    return callApiUnAuth(`partner/promotion`, 'PUT', promotion)
         .then(res => res)
         .catch(error => error.response.data);
 }
 
-function* fetchOrder(action) {
+function addPromotionApi(promotion) {
+    return callApiUnAuth(`partner/promotion`, 'POST', promotion)
+        .then(res => res)
+        .catch(error => error.response.data);
+}
+
+function* fetchPromotion(action) {
     try {
         const { partnerId } = action
-        let order = yield call(fetchOrderApi, partnerId)           
+        let promotion = yield call(fetchPromotionApi, partnerId)           
         // if (msg.success === true) {            
-        yield put(actions.fetchOrderSuccess(order.data));
+        yield put(actions.fetchPromotionSuccess(promotion.data));
         // } else {
         // yield put(actions.fetchPartnerFail(partner));
         // }
 
     } catch (error) {
-        yield put(actions.fetchOrderFail(error));
+        yield put(actions.fetchPromotionFail(error));
     }
 }
 
 
-function* updateOrder(action) {
+function* updatePromotion(action) {
     try {
-        const { orderid, status } = action
+        const { promotion } = action
         
-        let rsEdit=  yield call(updateOrderApi, orderid, status)
+        
+        let rsEdit=  yield call(updatePromotionApi, promotion)
         
         if (rsEdit.data.type === 'success') {     
-        yield put(actions.updateOrderSuccess(rsEdit.data));
+        yield put(actions.updatePromotionSuccess(rsEdit.data));
         } else {
-        yield put(actions.updateOrderFail(rsEdit.data));
+        yield put(actions.updatePromotionFail(rsEdit.data));
         }
 
     } catch (error) {
-        yield put(actions.updateOrderFail(error));
+        yield put(actions.updatePromotionFail(error));
+    }
+}
+
+function* addPromotion(action) {
+    try {
+        const { promotion } = action
+        
+        
+        let rsAdd=  yield call(addPromotionApi, promotion)
+        
+        if (rsAdd.data.type === 'success') {     
+        yield put(actions.addPromotionSuccess(rsAdd.data));
+        } else {
+        yield put(actions.addPromotionFail(rsAdd.data));
+        }
+
+    } catch (error) {
+        yield put(actions.addPromotionFail(error));
     }
 }
 
 
 function* watchSaga() {
-    yield takeLatest(Types.FETCH_ORDER, fetchOrder);
-    yield takeLatest(Types.UPDATE_ORDER, updateOrder);
+    yield takeLatest(Types.FETCH_PROMOTION, fetchPromotion);
+    yield takeLatest(Types.UPDATE_PROMOTION, updatePromotion);
+    yield takeLatest(Types.ADD_PROMOTION, addPromotion);
 }
 
 export default watchSaga;
