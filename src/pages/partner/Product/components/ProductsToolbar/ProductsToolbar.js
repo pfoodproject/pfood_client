@@ -6,13 +6,14 @@ import { makeStyles, withStyles } from '@material-ui/styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, FormControlLabel, Checkbox, Paper, Radio, RadioGroup } from '@material-ui/core';
 import { DropzoneArea } from 'material-ui-dropzone'
 // import { importProduct } from '../../actions';
-import { callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
+import callApiUnauth,{ callApiUnauthWithHeader } from '../../../../../utils/apis/apiUnAuth';
 import { CheckBoxOutlineBlank, CheckBox } from '@material-ui/icons';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { addProduct } from '../../actions'
 import validate from 'validate.js';
 import * as XLSX from 'xlsx';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 const useStyles = makeStyles(theme => ({
   root: {},
   row: {
@@ -243,11 +244,17 @@ const UsersToolbar = props => {
       }
     }));
   };
-  const handleAccept = () => {
+  const handleAccept = async () => {
     console.log(formState);
-
-    dispatch(addProduct(formState.values));
-    setOpen(false);
+    const result = await callApiUnauth(`partner/checkproductexist`, 'POST', {name: formState.values.ItemName})
+    
+    if (result.data === true) {
+      NotificationManager.error('fail', 'Sản phẩm đã có. Vui lòng kiểm tra lại!', 3000);
+    }else {
+      dispatch(addProduct(formState.values));
+      setOpen(false);
+    }
+    
   };
 
   // const handleChangeFileImport = file => {
@@ -358,6 +365,7 @@ const UsersToolbar = props => {
       {...rest}
       className={clsx(classes.root, className)}
     >
+      <NotificationContainer />
       {isLoading ? (
         <React.Fragment></React.Fragment>
       ) : (
