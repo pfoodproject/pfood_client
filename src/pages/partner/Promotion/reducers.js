@@ -26,6 +26,7 @@ const promotion = (state = initialState, action) => {
         state.count++;
         state.msg = action.response.msg
         state.type = action.response.type
+        // eslint-disable-next-line
         state.lst.find((e, i) => {
           if (e.promotionid === action.response.promotion[0].promotionid) {
             state.lst[i] = action.response.promotion[0]

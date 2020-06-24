@@ -113,7 +113,7 @@ const Promotion = () => {
     setEditData(rowData)
   }
 
-  const [item, setItem] = useState([]);
+  // const [item, setItem] = useState([]);
   const [pType, setPType] = useState([]);
   const [condition, setCondition] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
