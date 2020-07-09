@@ -34,8 +34,8 @@ const AdminTemp = (props) => {
     
     return (
         
-        <div> <Notication>
-            </Notication>{layout === 'Minimal' ? (
+        <div> 
+            {layout === 'Minimal' ? (
             <Minimal>
                 <Component route={route} />
             </Minimal>
