@@ -248,7 +248,7 @@ const UsersToolbar = props => {
     console.log(formState);
     const result = await callApiUnauth(`partner/checkproductexist`, 'POST', {name: formState.values.ItemName})
     
-    if (result.data === true) {
+    if (result.data === true && productOldNew==='new') {
       NotificationManager.error('fail', 'Sản phẩm đã có. Vui lòng kiểm tra lại!', 3000);
     }else {
       dispatch(addProduct(formState.values));
