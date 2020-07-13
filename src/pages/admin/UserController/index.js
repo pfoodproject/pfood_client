@@ -87,7 +87,7 @@ class Manager extends Component {
     return (
       <div >
         <div style={{ padding: "20px 10px 20px 10px", fontWeight: "bold" }}>
-          Kích hoạt sản phẩm đối tác đăng ký
+          Quản lý tài khoản khách hàng
         </div>
         <ReactTable
           style = {{width: "98%", margin:"10px"}}

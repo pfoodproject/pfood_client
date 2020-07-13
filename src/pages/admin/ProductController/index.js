@@ -90,7 +90,7 @@ class Manager extends Component {
       <div >
          
         <div style={{ padding: "20px 10px 20px 10px", fontWeight: "bold" }}>
-          Thay đổi tham số hệ thống 
+          Quản lý sản phẩm
         </div>
         <ReactTable
           style = {{width: "98%", margin:"10px"}}
