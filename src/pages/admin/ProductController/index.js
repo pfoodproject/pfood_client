@@ -71,7 +71,7 @@ class Manager extends Component {
     if (e.target.checked) {
       status = 1
     }
-    this.props.changeStatus({ "StatusID": status, "ItemID": row.original.ItemID }, this.afterChange)
+    this.props.changeStatus({ "StatusID": status, "ItemID": row.original.id }, this.afterChange)
 
   }
 
