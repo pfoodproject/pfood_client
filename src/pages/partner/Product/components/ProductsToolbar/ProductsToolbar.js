@@ -155,8 +155,8 @@ const UsersToolbar = props => {
         ...formState,
         values: {
           ...formState.values,
-          productId: result.data[0].itemid,
-          ItemName: result.data[0].itemname
+          productId: result.data[0] ? result.data[0].itemid : '',
+          ItemName: result.data[0] ? result.data[0].itemname : ''
         }
       }));
     };
