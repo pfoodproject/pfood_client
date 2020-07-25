@@ -224,8 +224,8 @@ const UsersToolbar = props => {
         ...formState,
         values: {
           ...formState.values,
-          productId: productByCate[0].itemid,
-          ItemName: productByCate[0].itemname
+          productId: productByCate[0] ? productByCate[0].itemid : '',
+          ItemName: productByCate[0] ? productByCate[0].itemname : ''
         }
       }));
     }
