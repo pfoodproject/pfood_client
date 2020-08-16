@@ -56,8 +56,8 @@ const Promotion = () => {
   const columns = [
     { title: 'Loại khuyến mãi', field: 'promotiontypename' },
     { title: 'Điều kiện khuyến mãi', field: 'conditionname' },
-    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => moment(rowData.starttime).format('hh:mm:ss a DD-MM-YYYY') },
-    { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).format('hh:mm:ss a DD-MM-YYYY') },
+    { title: 'Thời gian bắt đầu', field: 'starttime', render: rowData => moment(rowData.starttime).utcOffset(rowData.starttime).format('HH:mm:ss DD-MM-YYYY') },
+    { title: 'Thời gian kết thúc', field: 'endtime', render: rowData => moment(rowData.endtime).utcOffset(rowData.endtime).format('HH:mm:ss DD-MM-YYYY') },
     { title: 'Trạng thái', field: 'status' },
     {
       title: '', field: 'status', render: rowData => {
@@ -79,7 +79,7 @@ const Promotion = () => {
     type: state.promotion.type,
     count: state.promotion.count
   }));
-
+console.log(data);
   useEffect(() => {
     if (firstUpdate.current) {
       firstUpdate.current = false;
