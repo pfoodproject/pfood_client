@@ -136,9 +136,9 @@ const UsersTable = () => {
       firstUpdate.current = false;
       return;
     }
-    if (type === 'success' && type !== null) {
+    if (type === 'success' && type !== null && msg !='') {
       NotificationManager.success(type, msg, 3000);
-    } else if (type !== 'success' && type !== '') {
+    } else if (type !== 'success' && type !== '' && msg !='') {
 
       NotificationManager.error(type, msg, 3000);
     }
@@ -151,9 +151,9 @@ const UsersTable = () => {
       firstUpdate.current = false;
       return;
     }
-    if (typeSourceOfItems === 'success' && typeSourceOfItems !== null) {
+    if (typeSourceOfItems === 'success' && typeSourceOfItems !== null  && msgSourceOfItems !='') {
       NotificationManager.success(typeSourceOfItems, msgSourceOfItems, 3000);
-    } else if (typeSourceOfItems !== 'success' && typeSourceOfItems !== '') {
+    } else if (typeSourceOfItems !== 'success' && typeSourceOfItems !== '' && msgSourceOfItems !='') {
 
       NotificationManager.error(typeSourceOfItems, msgSourceOfItems, 3000);
     }

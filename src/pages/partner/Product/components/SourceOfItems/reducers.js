@@ -13,6 +13,8 @@ const product = (state = initialState, action) => {
       return state
     case Types.FETCH_SOURCEOFITEMS_SUCCESS:
       {
+        state.msg = ''
+        state.type = ''
         state.lst = action.items   
         return state
       }
@@ -32,6 +34,7 @@ const product = (state = initialState, action) => {
       return state
 
     default:
+      state.msg=''
       return state
   }
 };

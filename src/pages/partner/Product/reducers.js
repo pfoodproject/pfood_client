@@ -88,6 +88,7 @@ const product = (state = initialState, action) => {
       return state
 
     default:
+      state.msg=''
       return state
   }
 };
