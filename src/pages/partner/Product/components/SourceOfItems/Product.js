@@ -69,8 +69,8 @@ const ItemsTable = () => {
     { title: 'Mô tả', field: 'Description', filtering: false },
     { title: 'Số lượng', field: 'Summary', filtering: false },
     { title: 'Giá', field: 'Price', filtering: false },
-    { title: 'Thời gian mở bán', field: 'StartTime', render: rowData => moment(rowData.StartTime).format('DD-MM-YYYY hh:mm'), filtering: false },
-    { title: 'Thời gian kết thúc', field: 'EndTime', render: rowData => moment(rowData.EndTime).format('DD-MM-YYYY hh:mm'), filtering: false },
+    { title: 'Thời gian mở bán', field: 'StartTime', render: rowData => moment(rowData.StartTime).utcOffset(rowData.StartTime).format('DD-MM-YYYY hh:mm'), filtering: false },
+    { title: 'Thời gian kết thúc', field: 'EndTime', render: rowData => moment(rowData.EndTime).utcOffset(rowData.EndTime).format('DD-MM-YYYY hh:mm'), filtering: false },
     { title: 'Lượt xem', field: 'view', filtering: false },
   ];
   // const [data, setData] = useState([]);

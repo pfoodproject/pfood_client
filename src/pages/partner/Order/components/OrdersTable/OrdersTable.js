@@ -64,7 +64,7 @@ const OrdersTable = () => {
     { title: 'Mã đơn hàng', field: 'orderid', filtering: false },
     { title: 'Tên khách hàng', field: 'CustomerName' },
     { title: 'Trạng thái', field: 'StatusName' },
-    { title: 'Ngày tạo', field: 'adddate', render: rowData => <div>{moment(rowData.adddate).format('hh:mm:ss DD/MM/YYYY')}</div>, filtering: false },
+    { title: 'Ngày tạo', field: 'adddate', render: rowData => <div>{moment(rowData.adddate).utcOffset(rowData.adddate).format('hh:mm:ss DD/MM/YYYY')}</div>, filtering: false },
     {
       title: '', field: 'StatusID', render: rowData => {
 
