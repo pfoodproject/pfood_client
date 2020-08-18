@@ -143,13 +143,14 @@ const UsersToolbar = props => {
     }
   }, [category]);
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
+    const result = await callApiUnauthWithHeader(`partner/itemsbycategory/category000000000001`, 'GET', {})
     setFormState(formState => ({
-      isValid: false,
+      ...formState,
       values: {
         PartnerID: store.token.user.PartnerID,
-        productId: '',
-        ItemName: '',
+        productId: result.data[0] ? result.data[0].itemid : '',
+        ItemName: result.data[0] ? result.data[0].itemname : '',
         defaultprice: null,
         description: '',
         category: 'category000000000001',
@@ -159,8 +160,7 @@ const UsersToolbar = props => {
         schedulePrice: null,
         scheduleAmount: null
       },
-      touched: {},
-      errors: {}
+      touched: {}
     }));
 
 
