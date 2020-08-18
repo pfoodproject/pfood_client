@@ -145,7 +145,7 @@ const UsersToolbar = props => {
 
   const handleClickOpen = () => {
     setFormState(formState => ({
-      ...formState,
+      isValid: false,
       values: {
         PartnerID: store.token.user.PartnerID,
         productId: '',
@@ -159,7 +159,8 @@ const UsersToolbar = props => {
         schedulePrice: null,
         scheduleAmount: null
       },
-      touched: {}
+      touched: {},
+      errors: {}
     }));
 
 
