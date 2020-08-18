@@ -144,6 +144,26 @@ const UsersToolbar = props => {
   }, [category]);
 
   const handleClickOpen = () => {
+    setFormState(formState => ({
+      ...formState,
+      values: {
+        PartnerID: store.token.user.PartnerID,
+        productId: '',
+        ItemName: '',
+        defaultprice: null,
+        description: '',
+        category: 'category000000000001',
+        scheduleDay: [],
+        scheduleTimeFrom: "12:00",
+        scheduleTimeTo: "12:00",
+        schedulePrice: null,
+        scheduleAmount: null
+      },
+      touched: {}
+    }));
+
+
+    setIsSschedule(false)
     setOpen(true);
   };
 
